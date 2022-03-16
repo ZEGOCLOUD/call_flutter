@@ -1,4 +1,4 @@
-package com.zegocloud.zego_call_flutter
+package com.zegocloud.call
 
 import io.flutter.embedding.android.FlutterActivity
 

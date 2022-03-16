@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -23,9 +24,11 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:zego_call_flutter/page/room/room_main_page.dart';
 import 'package:zego_call_flutter/page/login/login_page.dart';
 
-void main() {
-  FlutterBugly.postCatchedException(() {
+Future<void> main() async {
+  FlutterBugly.postCatchedException(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((_) {
       runApp(const ZegoApp());
@@ -44,8 +47,9 @@ class ZegoApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Wakelock.enable(); //  always bright
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top]); //  hide status bar and bottom navigation bar
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+      SystemUiOverlay.top
+    ]); //  hide status bar and bottom navigation bar
 
     if (Platform.isAndroid) {
       supportAndroidRunBackground();
