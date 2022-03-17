@@ -377,7 +377,7 @@ class RoomMainPage extends HookWidget with WidgetsBindingObserver {
             userService.logout();
 
             Navigator.of(context).pop(true);
-            Navigator.pushReplacementNamed(context, PageRouteNames.login);
+            Navigator.pushReplacementNamed(context, PageRouteNames.auth);
           },
         ),
       ],
@@ -401,6 +401,6 @@ class RoomMainPage extends HookWidget with WidgetsBindingObserver {
     Fluttertoast.showToast(
         msg: AppLocalizations.of(context)!.toastKickoutError,
         backgroundColor: Colors.grey);
-    Navigator.pushReplacementNamed(context, PageRouteNames.login);
+    Navigator.pushReplacementNamed(context, PageRouteNames.auth);
   }
 }
