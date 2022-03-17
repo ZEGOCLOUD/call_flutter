@@ -25,7 +25,6 @@ import 'package:zego_call_flutter/constants/zego_page_constant.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 import 'package:zego_call_flutter/page/room/room_main_page.dart';
-import 'package:zego_call_flutter/page/login/login_page.dart';
 
 Future<void> main() async {
   FlutterBugly.postCatchedException(() async {

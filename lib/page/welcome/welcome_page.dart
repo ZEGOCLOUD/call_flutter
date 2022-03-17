@@ -1,248 +1,147 @@
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:zego_call_flutter/page/welcome/welcome_title_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
 
-import 'package:zego_call_flutter/page/auth/auth_gate.dart';
-import 'package:zego_call_flutter/constants/zego_page_constant.dart';
-
-/// Displayed as a profile image if the user doesn't have one.
-const placeholderImage =
-    'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
-
-/// Profile page shows after sign in or registerationg
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends StatelessWidget {
   // ignore: public_member_api_docs
   const ProfilePage({Key? key}) : super(key: key);
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _ProfilePageState createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-  late User user;
-  late TextEditingController controller;
-
-  String? photoURL;
-
-  bool showSaveButton = false;
-  bool isLoading = false;
-
-  @override
-  void initState() {
-    user = FirebaseAuth.instance.currentUser!;
-    controller = TextEditingController(text: user.displayName);
-
-    controller.addListener(_onNameChanged);
-
-    FirebaseAuth.instance.userChanges().listen((event) {
-      if (event != null && mounted) {
-        setState(() {
-          user = event;
-        });
-      }
-    });
-
-    log(user.toString());
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.removeListener(_onNameChanged);
-
-    super.dispose();
-  }
-
-  void setIsLoading() {
-    setState(() {
-      isLoading = !isLoading;
-    });
-  }
-
-  void _onNameChanged() {
-    setState(() {
-      if (controller.text == user.displayName || controller.text.isEmpty) {
-        showSaveButton = false;
-      } else {
-        showSaveButton = true;
-      }
-    });
-  }
-
-  /// Map User provider data into a list of Provider Ids.
-  List get userProviders => user.providerData.map((e) => e.providerId).toList();
-
-  Future updateDisplayName() async {
-    await user.updateDisplayName(controller.text);
-
-    setState(() {
-      showSaveButton = false;
-    });
-
-    // ignore: use_build_context_synchronously
-    // ScaffoldSnackbar.of(context).show('Name updated');
-  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
-        body: Stack(
-          children: [
-            Center(
-              child: SizedBox(
-                width: 400,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          maxRadius: 60,
-                          backgroundImage: NetworkImage(
-                            user.photoURL ?? placeholderImage,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 10.h,
+                  ),
+                  WelcomeTitleBar(),
+                  SizedBox(
+                    height: 280.h,
+                    width: 686.w,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          image: DecorationImage(
+                        image: AssetImage(StyleIconUrls.welcomeCardBg),
+                        fit: BoxFit.fill,
+                      )),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Image(
+                              image:
+                                  AssetImage(StyleIconUrls.welcomeCardBanner)),
+                          SizedBox(
+                            width: 20.w,
                           ),
-                        ),
-                        Positioned.directional(
-                          textDirection: Directionality.of(context),
-                          end: 0,
-                          bottom: 0,
-                          child: Material(
-                            clipBehavior: Clip.antiAlias,
-                            color: Theme.of(context).colorScheme.secondary,
-                            borderRadius: BorderRadius.circular(40),
-                            child: InkWell(
-                              onTap: () async {
-                                final photoURL = await getPhotoURLFromUser();
-
-                                if (photoURL != null) {
-                                  await user.updatePhotoURL(photoURL);
-                                }
-                              },
-                              radius: 50,
-                              child: const SizedBox(
-                                width: 35,
-                                height: 35,
-                                child: Icon(Icons.edit),
-                              ),
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxWidth: 321.w),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: 67.h,
+                                ),
+                                Text(
+                                  'One-On-One Call',
+                                  style: TextStyle(
+                                      fontSize: 36.sp, color: Colors.white),
+                                ),
+                                Flexible(
+                                  child: Text(
+                                    'Deliver exceptional real-time voice and video communications regardless of distance',
+                                    style: TextStyle(
+                                        fontSize: 20.sp, color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      textAlign: TextAlign.center,
-                      controller: controller,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        alignLabelWithHint: true,
-                        label: Center(
-                          child: Text(
-                            'Click to add a display name',
-                          ),
-                        ),
+                        ],
                       ),
                     ),
-                    Text(user.email ?? user.phoneNumber ?? 'User'),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (userProviders.contains('phone'))
-                          const Icon(Icons.phone),
-                        if (userProviders.contains('password'))
-                          const Icon(Icons.mail),
-                        if (userProviders.contains('google.com'))
-                          SizedBox(
-                            width: 24,
-                            child: Image.network(
-                              'https://upload.wikimedia.org/wikipedia/commons/0/09/IOS_Google_icon.png',
+                  ),
+                  const Expanded(child: SizedBox()),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Contact us button
+                      Container(
+                        width: 320.w,
+                        height: 98.h,
+                        decoration: const BoxDecoration(
+                          color: Color(0xffF3F4F7),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Image(
+                              image: AssetImage(StyleIconUrls.welcomeContactUs),
                             ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 40),
-                    TextButton(
-                      onPressed: _signOut,
-                      child: const Text('Sign out'),
-                    ),
-                  ],
-                ),
+                            TextButton(
+                                onPressed: () {
+                                  // TODO jump to contact us
+                                },
+                                child: const Text(
+                                  'Contact us',
+                                  style: TextStyle(color: Color(0xff2A2A2A)),
+                                )),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20.w,
+                      ),
+                      // Get more button
+                      Container(
+                        width: 320.w,
+                        height: 98.h,
+                        decoration: const BoxDecoration(
+                          color: Color(0xffF3F4F7),
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Image(
+                              image: AssetImage(StyleIconUrls.welcomeGetMore),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  // TODO jump to contact us
+                                },
+                                child: const Text(
+                                  'Get more',
+                                  style: TextStyle(color: Color(0xff2A2A2A)),
+                                )),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 96.h,
+                  ),
+                ],
               ),
             ),
-            Positioned.directional(
-              textDirection: Directionality.of(context),
-              end: 40,
-              top: 40,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: !showSaveButton
-                    ? SizedBox(key: UniqueKey())
-                    : TextButton(
-                  onPressed: isLoading ? null : updateDisplayName,
-                  child: const Text('Save changes'),
-                ),
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
-  }
-
-  Future<String?> getPhotoURLFromUser() async {
-    String? photoURL;
-
-    // Update the UI - wait for the user to enter the SMS code
-    await showDialog<String>(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('New image Url:'),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Update'),
-            ),
-            OutlinedButton(
-              onPressed: () {
-                photoURL = null;
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-          content: Container(
-            padding: const EdgeInsets.all(20),
-            child: TextField(
-              onChanged: (value) {
-                photoURL = value;
-              },
-              textAlign: TextAlign.center,
-              autofocus: true,
-            ),
-          ),
-        );
-      },
-    );
-
-    return photoURL;
-  }
-
-  /// Example code for sign out.
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
-    Navigator.pushReplacementNamed(context, PageRouteNames.auth);
   }
 }
