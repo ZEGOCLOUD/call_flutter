@@ -50,6 +50,8 @@ dependencies:
   flutter_background: ^1.1.0
   flutter_bugly: ^0.4.3
   firebase_core: ^1.13.1
+  firebase_auth: ^3.3.11
+  google_sign_in: ^5.2.4
 
 dev_dependencies:
   flutter_test:
@@ -139,6 +141,11 @@ flutter:
     - images/seat_5.png
     - images/seat_6.png
     - images/seat_7.png
+    - images/title_bar_settings.png
+    - images/welcome_card_banner.png
+    - images/welcome_card_bg.png
+    - images/welcome_contact_us.png
+    - images/welcome_get_more.png
 
     - images/2.0x/navigator_back.png
     - images/2.0x/navigator_back.png
@@ -171,6 +178,11 @@ flutter:
     - images/2.0x/seat_5.png
     - images/2.0x/seat_6.png
     - images/2.0x/seat_7.png
+    - images/2.0x/title_bar_settings.png
+    - images/2.0x/welcome_card_banner.png
+    - images/2.0x/welcome_card_bg.png
+    - images/2.0x/welcome_contact_us.png
+    - images/2.0x/welcome_get_more.png
 
     - images/3.0x/navigator_back.png
     - images/3.0x/navigator_back.png
@@ -203,3 +215,8 @@ flutter:
     - images/3.0x/seat_5.png
     - images/3.0x/seat_6.png
     - images/3.0x/seat_7.png
+    - images/3.0x/title_bar_settings.png
+    - images/3.0x/welcome_card_banner.png
+    - images/3.0x/welcome_card_bg.png
+    - images/3.0x/welcome_contact_us.png
+    - images/3.0x/welcome_get_more.png

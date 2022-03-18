@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -12,6 +13,8 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:flutter_bugly/flutter_bugly.dart';
+import 'package:zego_call_flutter/page/auth/auth_gate.dart';
+import 'package:zego_call_flutter/page/welcome/welcome_page.dart';
 
 import 'package:zego_call_flutter/service/zego_room_manager.dart';
 import 'package:zego_call_flutter/service/zego_user_service.dart';
@@ -22,7 +25,6 @@ import 'package:zego_call_flutter/constants/zego_page_constant.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 import 'package:zego_call_flutter/page/room/room_main_page.dart';
-import 'package:zego_call_flutter/page/login/login_page.dart';
 
 Future<void> main() async {
   FlutterBugly.postCatchedException(() async {
@@ -94,9 +96,12 @@ class ZegoApp extends StatelessWidget {
                     Locale('en', ''), // English, no country code
                     Locale('zh', ''),
                   ],
-                  initialRoute: PageRouteNames.login,
+                  initialRoute: FirebaseAuth.instance.currentUser != null
+                      ? PageRouteNames.welcome
+                      : PageRouteNames.auth,
                   routes: {
-                    PageRouteNames.login: (context) => const LoginPage(),
+                    PageRouteNames.auth: (context) => const AuthGate(),
+                    PageRouteNames.welcome: (context) => const ProfilePage(),
                     PageRouteNames.roomMain: (context) => roomMainLoadingPage(),
                   },
                 ),
