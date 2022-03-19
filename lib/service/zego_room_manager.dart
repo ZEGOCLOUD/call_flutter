@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'dart:async';
 
 import 'package:zego_express_engine/zego_express_engine.dart';
@@ -16,6 +19,7 @@ class ZegoRoomManager extends ChangeNotifier {
   ZegoRoomService roomService = ZegoRoomService();
   ZegoLoadingService loadingService = ZegoLoadingService();
   ZegoUserService userService = ZegoUserService();
+  ZegoCallService callService = ZegoCallService();
 
   _onRoomLeave() {
     // Reset all service data

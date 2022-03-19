@@ -67,6 +67,8 @@ class ZegoApp extends StatelessWidget {
               create: (context) => ZegoRoomManager.shared.userService),
           ChangeNotifierProvider(
               create: (context) => ZegoRoomManager.shared.loadingService),
+          ChangeNotifierProvider(
+              create: (context) => ZegoRoomManager.shared.callService),
           // ChangeNotifierProxyProvider<ZegoSpeakerSeatService, ZegoUserService>(
           //   create: (context) => context.read<ZegoUserService>(),
           //   update: (_, seats, users) {
