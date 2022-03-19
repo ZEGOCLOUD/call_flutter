@@ -30,7 +30,7 @@ class ZegoRoomManager extends ChangeNotifier {
     userService.onRoomEnter();
   }
 
-  Future<void> initWithAPPID(int appID, String appSign, String serverSecret,
+  Future<void> initWithAPPID(int appID, String serverSecret,
       ZegoRoomCallback callback) async {
     ZegoExpressEngine.onRoomStreamUpdate = _onRoomStreamUpdate;
     ZegoExpressEngine.onApiCalledResult = _onApiCalledResult;
