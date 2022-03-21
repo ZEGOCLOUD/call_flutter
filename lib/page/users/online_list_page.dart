@@ -14,25 +14,22 @@ class OnlineListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          decoration:
-          const BoxDecoration(color: StyleColors.roomPopUpPageBackgroundColor),
-          padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 0),
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(
-                height: 72.h,
-                width: double.infinity,
-                child: Consumer<ZegoUserService>(
-                    builder: (_, userService, child) => Center(
-                        child:
-                        Text('Online Users')))),
-            Consumer<ZegoUserService>(
-                builder: (_, userService, child) => SizedBox(
+      padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 0),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        SizedBox(
+            height: 72.h,
+            width: double.infinity,
+            child: Consumer<ZegoUserService>(
+                builder: (_, userService, child) =>
+                    Center(child: Text('Online Users')))),
+        Consumer<ZegoUserService>(
+            builder: (_, userService, child) => SizedBox(
                   width: double.infinity,
                   height: 658.h,
                   child: ListView.builder(
-                    itemExtent: 108.h,
+                    itemExtent: 148.h,
                     padding: EdgeInsets.only(
-                        left: 36.w, top: 20.h, right: 46.w, bottom: 20.h),
+                        left: 32.w, top: 32.h, right: 32.w, bottom: 32.h),
                     itemCount: userService.userList.length,
                     itemBuilder: (_, i) {
                       ZegoUserInfo user = userService.userList[i];
@@ -40,8 +37,7 @@ class OnlineListPage extends StatelessWidget {
                     },
                   ),
                 )),
-          ]),
-        )
-    );
+      ]),
+    ));
   }
 }

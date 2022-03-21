@@ -8,6 +8,9 @@ class StyleColors {
   static const Color blue = Color(0xff0055FF);
   static Color blueDisableColor = blue.withOpacity(0.3);
 
+  static const Color userListButtonBgColor = Color(0xffF3F4F7);
+  static const Color userListSeparateLineColor = Color(0xffE6E6E6);
+
   static const Color roomPopUpPageBackgroundColor = Colors.white;
 }
 
@@ -28,9 +31,13 @@ class StyleIconUrls {
 
 /// constant style
 class StyleConstant {
-  static const roomMemberListNameText = TextStyle(
-    color: StyleColors.dark,
-    fontSize: 14.0,
+  static const userListNameText = TextStyle(
+    color: Color(0xff2A2A2A),
+    fontSize: 16.0,
+  );
+  static const userListIDText = TextStyle(
+    color: Color(0xffA4A4A4),
+    fontSize: 12.0,
   );
   static const loadingText = TextStyle(
       color: Colors.white, fontSize: 10.0, decoration: TextDecoration.none);
