@@ -11,31 +11,31 @@ class ZegoUserInfo {
 
   int lastChanged = 0;
 
-  String state = "offline";
+  bool mic = false;
+  bool camera = false;
 
 
   ZegoRoomUserRole userRole = ZegoRoomUserRole.roomUserRoleListener;
 
   ZegoUserInfo.empty();
 
-  ZegoUserInfo(this.userID, this.displayName, this.lastChanged, this.state);
+  ZegoUserInfo(this.userID, this.displayName, this.lastChanged);
 
   bool isEmpty() {
     return userID.isEmpty || displayName.isEmpty;
   }
 
-  ZegoUserInfo clone() => ZegoUserInfo(userID, displayName, lastChanged, state);
+  ZegoUserInfo clone() => ZegoUserInfo(userID, displayName, lastChanged);
 
   ZegoUserInfo.fromJson(Map<String, dynamic> json)
       : userID = json['uid'],
         displayName = json['display_name'],
-        lastChanged = json['last_changed'],
-        state = json['state'];
+        lastChanged = json['last_changed'];
 
-  Map<String, dynamic> toJson() => {'userID': userID, 'display_name': displayName, 'last_changed': lastChanged, 'state': state};
+  Map<String, dynamic> toJson() => {'userID': userID, 'display_name': displayName, 'last_changed': lastChanged};
 
   @override
   String toString() {
-    return "UserInfo [userId=$userID,display_name=$displayName,last_changed=$lastChanged,state=$state]";
+    return "UserInfo [userId=$userID,display_name=$displayName,last_changed=$lastChanged]";
   }
 }

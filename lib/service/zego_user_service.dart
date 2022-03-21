@@ -99,7 +99,7 @@ class ZegoUserService extends ChangeNotifier {
 
   Future<void> getOnlineUsers() async {
     final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child('users/').get();
+    final snapshot = await ref.child('online_user/').get();
     var _userList = <ZegoUserInfo>[];
     if (snapshot.exists) {
       print(snapshot.value);
@@ -108,9 +108,7 @@ class ZegoUserService extends ChangeNotifier {
         map.forEach((key, value) async {
           var userMap = new Map<String, dynamic>.from(value);
           var model = ZegoUserInfo.fromJson(userMap);
-          if (model.state == 'online') {
-            _userList.add(model);
-          }
+          _userList.add(model);
           userDic[model.userID] = model;
         });
       }
@@ -124,7 +122,7 @@ class ZegoUserService extends ChangeNotifier {
 
   Future<void> _setUserStatus(bool online) async {
     var user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference ref = FirebaseDatabase.instance.ref("users/${user.uid}");
+    DatabaseReference ref = FirebaseDatabase.instance.ref("online_user/${user.uid}");
     var state = online ? "online" : "offline";
     var time = DateTime
         .now()
@@ -138,7 +136,6 @@ class ZegoUserService extends ChangeNotifier {
     await ref.set({
       "uid": uid,
       "display_name": name,
-      "state": state,
       "last_changed": time,
     });
 
@@ -149,7 +146,7 @@ class ZegoUserService extends ChangeNotifier {
     final connectedRef = FirebaseDatabase.instance.ref(".info/connected");
     connectedRef.onValue.listen((event) async {
       final connected = event.snapshot.value as bool? ?? false;
-      DatabaseReference ref = FirebaseDatabase.instance.ref("users/${localUserInfo.userID}");
+      DatabaseReference ref = FirebaseDatabase.instance.ref("online_user/${localUserInfo.userID}");
 
       if (localUserInfo.userID.length > 0) {
         if (connected) {
