@@ -6,6 +6,32 @@ import 'package:zego_call_flutter/common/style/styles.dart';
 
 import '../../service/zego_user_service.dart';
 
+class WelcomeToolBarButton extends StatelessWidget {
+  final String iconAssetName;
+  final String text;
+
+  const WelcomeToolBarButton(
+      {required this.iconAssetName, required this.text, Key? key})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Image(
+          image: AssetImage(iconAssetName),
+        ),
+        Text(
+          text,
+          style: const TextStyle(color: Color(0xff2A2A2A)),
+        ),
+      ],
+    );
+  }
+}
+
 class WelcomeToolBar extends StatelessWidget {
   const WelcomeToolBar({Key? key}) : super(key: key);
 
@@ -23,22 +49,13 @@ class WelcomeToolBar extends StatelessWidget {
             color: Color(0xffF3F4F7),
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Image(
-                image: AssetImage(StyleIconUrls.welcomeContactUs),
-              ),
-              TextButton(
-                  onPressed: () {
-                    // TODO jump to contact us
-                  },
-                  child: const Text(
-                    'Contact us',
-                    style: TextStyle(color: Color(0xff2A2A2A)),
-                  )),
-            ],
+          child: GestureDetector(
+            child: const WelcomeToolBarButton(
+                iconAssetName: StyleIconUrls.welcomeContactUs,
+                text: 'Contact us'),
+            onTap: () {
+              // TODO jump to contact us
+            },
           ),
         ),
         SizedBox(
@@ -52,24 +69,14 @@ class WelcomeToolBar extends StatelessWidget {
             color: Color(0xffF3F4F7),
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Image(
-                image: AssetImage(StyleIconUrls.welcomeGetMore),
-              ),
-              TextButton(
-                  onPressed: () {
-                    // TODO jump to contact us
-                    var userService = context.read<ZegoUserService>();
-                    userService.getOnlineUsers();
-                  },
-                  child: const Text(
-                    'Get more',
-                    style: TextStyle(color: Color(0xff2A2A2A)),
-                  )),
-            ],
+          child: GestureDetector(
+            child: const WelcomeToolBarButton(
+                iconAssetName: StyleIconUrls.welcomeGetMore, text: 'Get more'),
+            onTap: () {
+              // TODO jump to contact us
+              var userService = context.read<ZegoUserService>();
+              userService.getOnlineUsers();
+            },
           ),
         ),
       ],
