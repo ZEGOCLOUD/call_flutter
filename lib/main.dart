@@ -14,6 +14,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:flutter_bugly/flutter_bugly.dart';
 import 'package:zego_call_flutter/page/auth/auth_gate.dart';
+import 'package:zego_call_flutter/page/users/online_list_page.dart';
 import 'package:zego_call_flutter/page/welcome/welcome_page.dart';
 
 import 'package:zego_call_flutter/service/zego_room_manager.dart';
@@ -25,6 +26,7 @@ import 'package:zego_call_flutter/constants/zego_page_constant.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 import 'package:zego_call_flutter/page/room/room_main_page.dart';
+import 'package:zego_call_flutter/page/users/online_list_page.dart';
 
 Future<void> main() async {
   FlutterBugly.postCatchedException(() async {
@@ -102,6 +104,7 @@ class ZegoApp extends StatelessWidget {
                   routes: {
                     PageRouteNames.auth: (context) => const AuthGate(),
                     PageRouteNames.welcome: (context) => const ProfilePage(),
+                    PageRouteNames.onlineList: (context) => const OnlineListPage(),
                     PageRouteNames.roomMain: (context) => roomMainLoadingPage(),
                   },
                 ),
