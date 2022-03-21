@@ -16,6 +16,7 @@ import 'package:flutter_bugly/flutter_bugly.dart';
 import 'package:zego_call_flutter/page/auth/auth_gate.dart';
 import 'package:zego_call_flutter/page/users/online_list_page.dart';
 import 'package:zego_call_flutter/page/welcome/welcome_page.dart';
+import 'package:zego_call_flutter/service/zego_call_service.dart';
 
 import 'package:zego_call_flutter/service/zego_room_manager.dart';
 import 'package:zego_call_flutter/service/zego_user_service.dart';
@@ -69,14 +70,14 @@ class ZegoApp extends StatelessWidget {
               create: (context) => ZegoRoomManager.shared.loadingService),
           ChangeNotifierProvider(
               create: (context) => ZegoRoomManager.shared.callService),
-          // ChangeNotifierProxyProvider<ZegoSpeakerSeatService, ZegoUserService>(
-          //   create: (context) => context.read<ZegoUserService>(),
-          //   update: (_, seats, users) {
-          //     if (users == null) throw ArgumentError.notNull('users');
-          //     users.updateSpeakerSet(seats.speakerIDSet);
-          //     return users;
-          //   },
-          // ),
+          ChangeNotifierProxyProvider<ZegoUserService, ZegoCallService>(
+            create: (context) => context.read<ZegoCallService>(),
+            update: (_, userService, callService) {
+              if (callService == null) throw ArgumentError.notNull('call');
+              callService.updateUserDic(userService.userDic);
+              return callService;
+            },
+          ),
         ],
         child: GestureDetector(
           onTap: () {

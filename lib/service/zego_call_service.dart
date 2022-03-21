@@ -1,7 +1,12 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import "package:firebase_messaging/firebase_messaging.dart";
+
+import '../model/zego_user_info.dart';
 
 // // This provided handler must be a top-level function and cannot be anonymous otherwise an ArgumentError will be thrown.
 // Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -14,13 +19,13 @@ enum ZegoCallTimeoutType {
   kZegoCallTimeoutTypeInvitee
 }
 
-class ZegoUserInfo {}
-
 class ZegoCallService extends ChangeNotifier {
   late final FirebaseMessaging _messaging;
+  late Map<String, ZegoUserInfo> _userDic;
 
   ZegoCallService() {
     _registerNotification();
+    _addCallObserve();
   }
 
   late Function(ZegoUserInfo info, ZegoCallType type) onReceiveCallInvite;
@@ -29,7 +34,42 @@ class ZegoCallService extends ChangeNotifier {
   late Function() onReceiveCallEnded;
   late Function(ZegoCallTimeoutType type) onReceiveCallTimeout;
 
-  Future<int> callUser(String userID, String token, ZegoCallType type) async {
+  void updateUserDic(Map<String, ZegoUserInfo> userDic) {
+    _userDic = userDic;
+  }
+
+  Future<int> callUser(
+      String calleeUserID, String token, ZegoCallType type) async {
+    ZegoUserInfo callee = _userDic[calleeUserID] ?? ZegoUserInfo.empty();
+    if (callee.userID.isEmpty) {
+      return -1;
+    }
+    var caller = FirebaseAuth.instance.currentUser!;
+
+    var nowTime = DateTime.now().microsecondsSinceEpoch;
+    var callID = "${caller.uid}$nowTime";
+    DatabaseReference ref = FirebaseDatabase.instance.ref("call/$callID");
+    var json = {
+      'call_time': nowTime,
+      'finish_time': 0,
+      'is_video': type == ZegoCallType.kZegoCallTypeVideo,
+      'users': {
+        caller.uid + 'test': {
+          // TODO
+          "display_name": caller.displayName,
+          "role": 0,
+          "heartbeat_time": 0,
+          "connected_time": 0
+        },
+        callee.userID: {
+          "display_name": callee.displayName,
+          "role": 1,
+          "heartbeat_time": 0,
+          "connected_time": 0
+        }
+      }
+    };
+    await ref.set(json);
     return 0;
   }
 
@@ -38,7 +78,7 @@ class ZegoCallService extends ChangeNotifier {
   }
 
   Future<int> respondCall(
-      String userID, String token, ZegoCallType type) async {
+      String callerUserID, String token, ZegoCallType type) async {
     return 0;
   }
 
@@ -78,5 +118,24 @@ class ZegoCallService extends ChangeNotifier {
     } else {
       log('User declined or has not accepted permission');
     }
+  }
+
+  void _addCallObserve() {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('call');
+    ref.onChildAdded.listen((event) {
+      var selfUserID = FirebaseAuth.instance.currentUser?.uid;
+      var callID = event.snapshot.key;
+      var callInfo = event.snapshot.value as Map<dynamic, dynamic>;
+      var users = callInfo['users'] as Map<String, dynamic>;
+      var callerID = '';
+      bool isSelfBeenCall = false;
+      users.forEach((key, value) {
+        if (value['role'] == 0) {
+          callerID = key;
+        } else if (key == selfUserID) {
+          isSelfBeenCall = value['role'] == 1;
+        }
+      });
+    });
   }
 }

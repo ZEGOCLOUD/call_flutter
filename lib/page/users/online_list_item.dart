@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_call_flutter/service/zego_call_service.dart';
 
 import '../../common/style/styles.dart';
 import '../../model/zego_user_info.dart';
@@ -25,7 +26,14 @@ class OnlineListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        OnlineListAvatar(userName: userInfo.displayName),
+        SizedBox(
+          width: 84.w,
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+              userInfo.photoUrl,
+            ),
+          ),
+        ),
         SizedBox(width: 26.w),
         Container(
           decoration: const BoxDecoration(
@@ -44,12 +52,22 @@ class OnlineListItem extends StatelessWidget {
                   GestureDetector(
                       child: const OnlineListButton(
                           iconAssetName: StyleIconUrls.memberAudioCall),
-                      onTap: onAudioCallTap),
+                      onTap: () async {
+                        context.read<ZegoCallService>().callUser(
+                            userInfo.userID,
+                            'token',
+                            ZegoCallType.kZegoCallTypeVoice);
+                      }),
                   SizedBox(width: 32.w),
                   GestureDetector(
                       child: const OnlineListButton(
                           iconAssetName: StyleIconUrls.memberVideoCall),
-                      onTap: onVideoCallTap),
+                      onTap: () async {
+                        context.read<ZegoCallService>().callUser(
+                            userInfo.userID,
+                            'token',
+                            ZegoCallType.kZegoCallTypeVideo);
+                      }),
                 ],
               ),
             ],
