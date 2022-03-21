@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -7,62 +6,55 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/style/styles.dart';
 import '../../model/zego_user_info.dart';
-import '../../common/user_avatar.dart';
+
+import 'package:zego_call_flutter/page/users/online_list_elements.dart';
 
 class OnlineListItem extends StatelessWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);
   final ZegoUserInfo userInfo;
+
+  void onAudioCallTap() {
+    // TODO call to audio
+  }
+
+  void onVideoCallTap() {
+    // TODO call to video
+  }
+
   @override
   Widget build(BuildContext context) {
-    var avatarIndex = getUserAvatarIndex(userInfo.displayName);
     return Row(
       children: [
-        SizedBox(
-          width: 84.w,
-          height: 84.h,
-          child: CircleAvatar(
-            foregroundImage: AssetImage("images/seat_$avatarIndex.png"),
+        OnlineListAvatar(userName: userInfo.displayName),
+        SizedBox(width: 26.w),
+        Container(
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                  width: 1.0, color: StyleColors.userListSeparateLineColor),
             ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children:[
-            SizedBox(
-              width: 300.w,
-              height: 33.h,
-              child: Text(userInfo.displayName, style: StyleConstant.roomMemberListNameText),
-            ),
-            SizedBox(
-              width: 300.w,
-              height: 33.h,
-              child: Text(userInfo.userID, style: StyleConstant.roomMemberListNameText),
-            ),
-          ],
-        ),
-        Row(
+          ),
+          child: Row(
             children: [
-              SizedBox(
-                width: 84.w,
-                height: 84.h,
-                child: TextButton(
-                  child: const Text('Video'),
-                  onPressed: () {
-                    // TODO call to video
-                  }
-                ),
-              ),
-              SizedBox(
-                width: 84.w,
-                height: 84.h,
-                child: TextButton(
-                    child: const Text('Audio'),
-                    onPressed: () {
-                      // TODO call to audio
-                    }
-                ),
+              OnlineListUserInfo(
+                  userName: userInfo.displayName, userID: userInfo.userID),
+              SizedBox(width: 36.w),
+              Row(
+                children: [
+                  GestureDetector(
+                      child: const OnlineListButton(
+                          iconAssetName: StyleIconUrls.memberAudioCall),
+                      onTap: onAudioCallTap),
+                  SizedBox(width: 32.w),
+                  GestureDetector(
+                      child: const OnlineListButton(
+                          iconAssetName: StyleIconUrls.memberVideoCall),
+                      onTap: onVideoCallTap),
+                ],
               ),
             ],
-        ),
+          ),
+        )
       ],
     );
   }
