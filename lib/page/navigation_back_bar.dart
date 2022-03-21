@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:zego_call_flutter/common/style/styles.dart';
 
-class NavigationBackBar extends StatelessWidget {
+class NavigationBackBar extends HookWidget {
   final String targetBackUrl;
+  String title;
 
-  const NavigationBackBar({required this.targetBackUrl, Key? key})
+  NavigationBackBar(
+      {required this.targetBackUrl, this.title = "Back", Key? key})
       : super(key: key);
 
   @override
@@ -25,7 +28,13 @@ class NavigationBackBar extends StatelessWidget {
                       image: const AssetImage(StyleIconUrls.navigatorBack),
                       width: 88.w),
                   SizedBox(width: 5.w),
-                  const Text('Back', style: StyleConstant.backText)
+                  SizedBox(
+                    width: 655.w,
+                    child: Text(title,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: StyleConstant.backText),
+                  )
                 ],
               ),
               onTap: () {
