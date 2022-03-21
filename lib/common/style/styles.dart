@@ -39,6 +39,14 @@ class StyleConstant {
     color: Color(0xffA4A4A4),
     fontSize: 12.0,
   );
+  static const backText = TextStyle(
+    color: Colors.blue,
+    fontSize: 18.0,
+  );
+  static const userListTitle = TextStyle(
+    color: Color(0xff2A2A2A),
+    fontSize: 28.0,
+  );
   static const loadingText = TextStyle(
       color: Colors.white, fontSize: 10.0, decoration: TextDecoration.none);
 }
