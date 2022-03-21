@@ -8,14 +8,49 @@ import "package:firebase_messaging/firebase_messaging.dart";
 //   print("Handling a background message: ${message.messageId}");
 // }
 
+enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
+enum ZegoCallTimeoutType {
+  kZegoCallTimeoutTypeInviter,
+  kZegoCallTimeoutTypeInvitee
+}
+
+class ZegoUserInfo {}
+
 class ZegoCallService extends ChangeNotifier {
   late final FirebaseMessaging _messaging;
+
+  ZegoCallService() {
+    _registerNotification();
+  }
+
+  late Function(ZegoUserInfo info, ZegoCallType type) onReceiveCallInvite;
+  late Function(ZegoUserInfo info) onReceiveCallCancel;
+  late Function(ZegoUserInfo info, ZegoCallType type) onReceiveCallResponse;
+  late Function() onReceiveCallEnded;
+  late Function(ZegoCallTimeoutType type) onReceiveCallTimeout;
+
+  Future<int> callUser(String userID, String token, ZegoCallType type) async {
+    return 0;
+  }
+
+  Future<int> cancelCall(String userID) async {
+    return 0;
+  }
+
+  Future<int> respondCall(
+      String userID, String token, ZegoCallType type) async {
+    return 0;
+  }
+
+  Future<int> endCall() async {
+    return 0;
+  }
 
   void _registerNotification() async {
     // 1. Instantiate Firebase Messaging
     _messaging = FirebaseMessaging.instance;
-    String? token = await FirebaseMessaging.instance.getToken();
-    log("FCM Token $token");
+    // String? token = await FirebaseMessaging.instance.getToken();
+    // log("FCM Token $token");
 
     // 2. On iOS, this helps to take the user permissions
     NotificationSettings settings = await _messaging.requestPermission(
@@ -43,9 +78,5 @@ class ZegoCallService extends ChangeNotifier {
     } else {
       log('User declined or has not accepted permission');
     }
-  }
-
-  ZegoCallService() {
-    _registerNotification();
   }
 }
