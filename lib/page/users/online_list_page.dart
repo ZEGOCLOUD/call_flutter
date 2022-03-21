@@ -27,7 +27,7 @@ class OnlineListPage extends HookWidget {
             child: Container(
       padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 0),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        const NavigationBackBar(targetBackUrl: PageRouteNames.welcome),
+        NavigationBackBar(targetBackUrl: PageRouteNames.welcome),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
         Consumer<ZegoUserService>(

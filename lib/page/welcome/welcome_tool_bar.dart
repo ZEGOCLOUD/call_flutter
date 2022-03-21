@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../service/zego_user_service.dart';
+import '../broswer.dart';
 
 class WelcomeToolBarButton extends StatelessWidget {
   final String iconAssetName;
@@ -35,6 +37,8 @@ class WelcomeToolBarButton extends StatelessWidget {
 
 class WelcomeToolBar extends StatelessWidget {
   const WelcomeToolBar({Key? key}) : super(key: key);
+  final String getMoreURL = "https://www.zegocloud.com/";
+  final String contactUSURL = "https://www.zegocloud.com/talk";
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +59,7 @@ class WelcomeToolBar extends StatelessWidget {
                 iconAssetName: StyleIconUrls.welcomeContactUs,
                 text: 'Contact us'),
             onTap: () {
-              // TODO jump to contact us
+              _launchURL(context, contactUSURL);
             },
           ),
         ),
@@ -74,13 +78,17 @@ class WelcomeToolBar extends StatelessWidget {
             child: const WelcomeToolBarButton(
                 iconAssetName: StyleIconUrls.welcomeGetMore, text: 'Get more'),
             onTap: () {
-              // TODO jump to contact us
-              var userService = context.read<ZegoUserService>();
-              userService.getOnlineUsers();
+              _launchURL(context, getMoreURL);
             },
           ),
         ),
       ],
     );
+  }
+
+  void _launchURL(BuildContext context, String targetURL) async {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return Browser(url: targetURL);
+    }));
   }
 }
