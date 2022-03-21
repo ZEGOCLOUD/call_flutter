@@ -118,6 +118,8 @@ class ZegoUserService extends ChangeNotifier {
     } else {
       print('No data available.');
     }
+
+    notifyListeners();
   }
 
   Future<void> _setUserStatus(bool online) async {

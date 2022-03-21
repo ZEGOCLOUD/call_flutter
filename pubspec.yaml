@@ -111,6 +111,14 @@ flutter:
   assets:
     - assets/key_center.json
 
+    - images/seat_0.png
+    - images/seat_1.png
+    - images/seat_2.png
+    - images/seat_3.png
+    - images/seat_4.png
+    - images/seat_5.png
+    - images/seat_6.png
+    - images/seat_7.png
     - images/navigator_back.png
     - images/room_top_quit.png
     - images/title_bar_settings.png
@@ -121,6 +129,14 @@ flutter:
     - images/welcome_contact_us.png
     - images/welcome_get_more.png
 
+    - images/2.0x/seat_0.png
+    - images/2.0x/seat_1.png
+    - images/2.0x/seat_2.png
+    - images/2.0x/seat_3.png
+    - images/2.0x/seat_4.png
+    - images/2.0x/seat_5.png
+    - images/2.0x/seat_6.png
+    - images/2.0x/seat_7.png
     - images/2.0x/navigator_back.png
     - images/2.0x/room_top_quit.png
     - images/2.0x/title_bar_settings.png
@@ -131,6 +147,14 @@ flutter:
     - images/2.0x/welcome_contact_us.png
     - images/2.0x/welcome_get_more.png
 
+    - images/3.0x/seat_0.png
+    - images/3.0x/seat_1.png
+    - images/3.0x/seat_2.png
+    - images/3.0x/seat_3.png
+    - images/3.0x/seat_4.png
+    - images/3.0x/seat_5.png
+    - images/3.0x/seat_6.png
+    - images/3.0x/seat_7.png
     - images/3.0x/navigator_back.png
     - images/3.0x/room_top_quit.png
     - images/3.0x/title_bar_settings.png
