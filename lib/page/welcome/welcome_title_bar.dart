@@ -4,9 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
+
+import '../../service/zego_user_service.dart';
 
 /// Displayed as a profile image if the user doesn't have one.
 const placeholderImage =

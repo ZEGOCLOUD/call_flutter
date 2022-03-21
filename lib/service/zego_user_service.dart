@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-
-import 'package:zego_call_flutter/constants/zego_custom_command_constant.dart';
 import 'package:zego_call_flutter/model/zego_room_user_role.dart';
 import 'package:zego_call_flutter/model/zego_user_info.dart';
-import 'package:zego_call_flutter/service/zego_room_manager.dart';
-import 'package:zego_call_flutter/common/room_info_content.dart';
+import 'package:firebase_database/firebase_database.dart';
+
 
 enum LoginState {
   loginStateLoggedOut,
@@ -48,6 +49,13 @@ class ZegoUserService extends ChangeNotifier {
   }
 
   ZegoUserService() {
+    FirebaseAuth.instance.authStateChanges().listen((event) {
+      if (event != null) {
+        _setUserStatus(true);
+      } else {
+        _setUserStatus(false);
+      }
+    });
   }
 
   registerMemberJoinCallback(MemberChangeCallback callback) {
@@ -71,19 +79,11 @@ class ZegoUserService extends ChangeNotifier {
     userList.clear();
     userDic.clear();
     // We need to reuse local user id after leave room
-    localUserInfo.userRole = ZegoRoomUserRole.roomUserRoleListener;
     totalUsersNum = 0;
   }
 
   onRoomEnter() {
     hadRoomReconnectedTimeout = false;
-
-    _updateUserRole(_preSpeakerSet);
-  }
-
-  ZegoUserInfo getUserByID(String userID) {
-    var userInfo = userDic[userID] ?? ZegoUserInfo.empty();
-    return userInfo.clone();
   }
 
   Future<int> fetchOnlineRoomUsersNum(String roomID) async {
@@ -123,98 +123,75 @@ class ZegoUserService extends ChangeNotifier {
     return 0;
   }
 
-  void _onRoomMemberJoined(
-      String roomID, List<Map<String, dynamic>> memberList) {
-    var userInfoList = <ZegoUserInfo>[];
-    for (final item in memberList) {
-      var member = ZegoUserInfo.formJson(item);
-      if (userDic.containsKey(member.userID)) {
-        continue; //  duplicate user
-      }
 
-      userList.add(member);
-      userDic[member.userID] = member;
-
-      if (member.userID.isNotEmpty) {
-        userInfoList.add(member.clone());
-      }
-    }
-
-    _updateUserRole(_preSpeakerSet); //  memberList hasn't role attribute
-
-    for (final callback in _memberJoinedCallbackSet) {
-      callback([...userInfoList]);
-    }
-
-    notifyListeners();
-  }
-
-  void _onRoomMemberLeave(
-      String roomID, List<Map<String, dynamic>> memberList) {
-    var userInfoList = <ZegoUserInfo>[];
-    for (final item in memberList) {
-      var member = ZegoUserInfo.formJson(item);
-      userList.removeWhere((element) => element.userID == member.userID);
-      userDic.removeWhere((key, value) => key == member.userID);
-
-      if (member.userID.isNotEmpty && localUserInfo.userID != member.userID) {
-        userInfoList.add(member.clone());
-      }
-      for (final callback in _memberLeaveCallbackSet) {
-        callback([...userInfoList]);
-      }
-    }
-    notifyListeners();
-  }
-
-  void _onReceiveCustomPeerMessage(List<Map<String, dynamic>> messageListJson) {
-    for (final item in messageListJson) {
-      var messageJson = item['message'];
-      Map<String, dynamic> messageDic = jsonDecode(messageJson);
-      int actionType = messageDic['actionType'];
-      if (zegoCustomCommandType.invitation ==
-          ZegoCustomCommandTypeExtension.mapValue[actionType]) {
-        // receive invitation
-        RoomInfoContent toastContent = RoomInfoContent.empty();
-        toastContent.toastType =
-            RoomInfoType.roomHostInviteToSpeak; //  clear in receiver
-        notifyInfo = json.encode(toastContent.toJson());
-      }
-    }
-    notifyListeners();
-  }
 
   void updateSpeakerSet(Set<String> speakerSet) {
-    if (setEquals(_preSpeakerSet, speakerSet)) {
-      return;
-    }
-    _preSpeakerSet = {...speakerSet};
-    _updateUserRole(speakerSet);
   }
 
-  void _updateUserRole(Set<String> speakerList) {
-    var hostID = ZegoRoomManager.shared.roomService.roomInfo.hostID;
-    // Leave room or init
-    if (hostID.isEmpty) {
-      return;
-    }
-    // Update local user role
-    if (hostID == localUserInfo.userID) {
-      localUserInfo.userRole = ZegoRoomUserRole.roomUserRoleHost;
-    } else if (speakerList.contains(localUserInfo.userID)) {
-      localUserInfo.userRole = ZegoRoomUserRole.roomUserRoleSpeaker;
-    } else {
-      localUserInfo.userRole = ZegoRoomUserRole.roomUserRoleListener;
-    }
-    for (var user in userList) {
-      if (user.userID == hostID) {
-        user.userRole = ZegoRoomUserRole.roomUserRoleHost;
-      } else if (speakerList.contains(user.userID)) {
-        user.userRole = ZegoRoomUserRole.roomUserRoleSpeaker;
-      } else {
-        user.userRole = ZegoRoomUserRole.roomUserRoleListener;
-      }
-    }
-    notifyListeners();
+// databse
+  Future<void> _setLocalUserInfo(bool online) async {
+    var user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference ref = FirebaseDatabase.instance.ref("users/${user.uid}");
+    var name = user.displayName;
+    // var uid = user.uid;
+    // var platform = "android";
+    // if (Platform.isIOS) {
+    //   platform = "ios";
+    // }
+    await ref.set({
+      "username": name,
+    });
   }
+
+  Future<void> _setUserStatus(bool online) async {
+    var user = FirebaseAuth.instance.currentUser!;
+    DatabaseReference ref = FirebaseDatabase.instance.ref("status/${user.uid}");
+    var state = online ? "online" : "offline";
+    var time = DateTime.now().millisecondsSinceEpoch;
+    var name = user.displayName;
+    var uid = user.uid;
+    var avatar = user.photoURL;
+    await ref.set({
+      "uid": uid,
+      "name": name,
+      "state": state,
+      "last_changed": time,
+      "avatar": avatar,
+    });
+  }
+
+  Future<void> getOnlineUsers() async{
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('status/').get();
+    var _userList = <ZegoUserInfo>[];
+    if (snapshot.exists) {
+      print(snapshot.value);
+      var map = snapshot.value as Map<dynamic, dynamic>?;
+      if (map != null) {
+        map.forEach((key, value) async {
+            var userMap = new Map<String, dynamic>.from(value);
+            var model = ZegoUserInfo.fromJson(userMap);
+            if (model.state == 'online') {
+              _userList.add(model);
+            }
+        });
+      }
+      userList = _userList;
+    } else {
+      print('No data available.');
+    }
+  }
+
+  Future<void> test() async {
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('status/').get();
+    if (snapshot.exists) {
+      print(snapshot.value);
+    } else {
+      print('No data available.');
+    }
+  }
+
+
+
 }

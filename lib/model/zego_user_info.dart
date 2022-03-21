@@ -9,27 +9,36 @@ class ZegoUserInfo {
   /// User name, cannot be null.
   String userName = "";
 
-  /// User role
+  int last_changed = 0;
+
+  String state = "offline";
+
+  String? avatar = "";
+
+
   ZegoRoomUserRole userRole = ZegoRoomUserRole.roomUserRoleListener;
 
   ZegoUserInfo.empty();
 
-  ZegoUserInfo(this.userID, this.userName, this.userRole);
+  ZegoUserInfo(this.userID, this.userName, this.last_changed, this.state, this.avatar);
 
   bool isEmpty() {
     return userID.isEmpty || userName.isEmpty;
   }
 
-  ZegoUserInfo clone() => ZegoUserInfo(userID, userName, userRole);
+  ZegoUserInfo clone() => ZegoUserInfo(userID, userName, last_changed, state, avatar);
 
-  ZegoUserInfo.formJson(Map<String, dynamic> json)
-      : userID = json['userID'],
-        userName = json['userName'];
+  ZegoUserInfo.fromJson(Map<String, dynamic> json)
+      : userID = json['uid'],
+        userName = json['name'],
+        last_changed = json['last_changed'],
+        state = json['state'],
+        avatar = json['avatar'];
 
-  Map<String, dynamic> toJson() => {'userID': userID, 'userName': userName};
+  Map<String, dynamic> toJson() => {'userID': userID, 'userName': userName, 'last_changed': last_changed, 'state': state, 'avatar': avatar};
 
   @override
   String toString() {
-    return "UserInfo [userId=$userID,userName=$userName,userRole=$userRole]";
+    return "UserInfo [userId=$userID,userName=$userName,last_changed=$last_changed,state=$state, avatar=$avatar]";
   }
 }

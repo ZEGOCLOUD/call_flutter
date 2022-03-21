@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zego_call_flutter/page/welcome/welcome_title_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
+
+import '../../constants/zego_page_constant.dart';
+import '../../service/zego_user_service.dart';
 
 class ProfilePage extends StatelessWidget {
   // ignore: public_member_api_docs
@@ -94,6 +98,7 @@ class ProfilePage extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   // TODO jump to contact us
+                                  Navigator.pushReplacementNamed(context, PageRouteNames.onlineList);
                                 },
                                 child: const Text(
                                   'Contact us',
@@ -123,6 +128,8 @@ class ProfilePage extends StatelessWidget {
                             TextButton(
                                 onPressed: () {
                                   // TODO jump to contact us
+                                  var userService = context.read<ZegoUserService>();
+                                  userService.getOnlineUsers();
                                 },
                                 child: const Text(
                                   'Get more',
@@ -144,4 +151,5 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
+
 }

@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
+
+import '../../service/zego_user_service.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 class AuthGate extends StatefulWidget {
