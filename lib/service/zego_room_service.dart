@@ -9,6 +9,8 @@ import 'package:zego_call_flutter/common/room_info_content.dart';
 import 'package:zego_call_flutter/constants/zego_room_constant.dart';
 import 'package:zego_call_flutter/model/zego_room_info.dart';
 
+import '../model/zego_user_info.dart';
+
 typedef RoomCallback = Function(int);
 typedef RoomLeaveCallback = VoidCallback;
 typedef RoomEnterCallback = VoidCallback;
@@ -23,6 +25,8 @@ class ZegoRoomService extends ChangeNotifier {
   RoomLeaveCallback? roomLeaveCallback;
   RoomEnterCallback? roomEnterCallback;
 
+  List<ZegoUserInfo> userList = [];
+
   String notifyInfo = '';
 
   void clearNotifyInfo() {
@@ -34,12 +38,6 @@ class ZegoRoomService extends ChangeNotifier {
   ZegoRoomService() {
   }
 
-  onRoomLeave() {}
-
-  onRoomEnter() {
-    roomDisconnectSuccess = false;
-  }
-
   String get _localUserID {
     return ZegoRoomManager.shared.userService.localUserInfo.userID;
   }
@@ -48,20 +46,10 @@ class ZegoRoomService extends ChangeNotifier {
     return ZegoRoomManager.shared.userService.localUserInfo.displayName;
   }
 
-  /// Create a room.
-  /// <p>Description: This method can be used to create a room. The room creator will be the Host by default when the
-  /// room is created successfully.</>
-  /// <p>Call this method at: After user logs in </>
-  ///
-  /// @param roomID   roomID refers to the room ID, the unique identifier of the room. This is required to join a room
-  ///                 and cannot be null.
-  /// @param roomName roomName refers to the room name. This is used for display in the room and cannot be null.
-  /// @param token    token refers to the authentication token. To get this, see the documentation:
-  ///                 https://doc-en.zego.im/article/11648
-  Future<int> createRoom(String roomID, String roomName, String token) async {
-    roomDisconnectSuccess = false;
+  onRoomLeave() {}
 
-    return 0;
+  onRoomEnter() {
+    roomDisconnectSuccess = false;
   }
 
   /// Join a room.
@@ -74,6 +62,14 @@ class ZegoRoomService extends ChangeNotifier {
   Future<int> joinRoom(String roomID, String token) async {
     roomDisconnectSuccess = false;
 
+    var config = ZegoRoomConfig.defaultConfig();
+    config.token = token;
+    config.maxMemberCount = 0;
+    var user = ZegoUser(_localUserID, _localUserName);
+    ZegoExpressEngine.instance.loginRoom(roomInfo.roomID, user, config: config);
+    var soundConfig = ZegoSoundLevelConfig(1000, false);
+    ZegoExpressEngine.instance.startSoundLevelMonitor(config: soundConfig);
+
     return 0;
   }
 
@@ -82,37 +78,9 @@ class ZegoRoomService extends ChangeNotifier {
   /// leaves, and all users in the room will be forced to leave the room.</>
   /// <p>Call this method at: After joining a room</>
   Future<int> leaveRoom() async {
+    // ZegoExpressEngine.instance.logoutRoom(roomID);
 
     return 0;
   }
 
-  /// Disable text chat in the room.
-  /// <p>Description: This method can be used to disable the text chat in the room.</>
-  /// <p>Call this method at: After joining a room</>
-  ///
-  /// @param disable  refers to the parameter that whether to disable the text chat. To disable the text chat, set it
-  ///                 to [true]; To allow the text chat, set it to [false].
-  Future<int> disableTextMessage(bool disable) async {
-
-
-    notifyListeners();
-    return 0;
-  }
-
-  Future<void> _onRoomStateChanged(int state, int event) async {
-
-  }
-
-  void _onRoomInfoUpdate(String roomID, Map<String, dynamic> roomInfoJson) {
-
-    notifyListeners();
-  }
-
-  Future<void> _loginRtcRoom() async {
-
-  }
-
-  void _updateRoomInfo(RoomInfo updatedRoomInfo) {
-
-  }
 }

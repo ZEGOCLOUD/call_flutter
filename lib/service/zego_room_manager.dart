@@ -32,13 +32,10 @@ class ZegoRoomManager extends ChangeNotifier {
 
   Future<void> initWithAPPID(int appID, String serverSecret,
       ZegoRoomCallback callback) async {
-    ZegoExpressEngine.onRoomStreamUpdate = _onRoomStreamUpdate;
-    ZegoExpressEngine.onApiCalledResult = _onApiCalledResult;
     ZegoEngineProfile profile =
         ZegoEngineProfile(appID, ZegoScenario.General);
     profile.enablePlatformView = true;  //  for play stream with platformView
     ZegoExpressEngine.createEngineWithProfile(profile).then((value) {
-      ZegoExpressEngine.instance.enableCamera(false); // demo is pure audio
     });
 
     // setup service
