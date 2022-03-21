@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:zego_call_flutter/common/style/styles.dart';
+
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../model/zego_user_info.dart';
 import '../../service/zego_user_service.dart';
+import '../navigation_back_bar.dart';
 import 'online_list_item.dart';
+import 'online_list_title_bar.dart';
+import 'package:zego_call_flutter/constants/zego_page_constant.dart';
 
 class OnlineListPage extends StatelessWidget {
   const OnlineListPage({Key? key}) : super(key: key);
@@ -13,15 +16,13 @@ class OnlineListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
+        body: SafeArea(
+            child: Container(
       padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 0),
-      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-            height: 72.h,
-            width: double.infinity,
-            child: Consumer<ZegoUserService>(
-                builder: (_, userService, child) =>
-                    Center(child: Text('Online Users')))),
+      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        const NavigationBackBar(targetBackUrl: PageRouteNames.welcome),
+        SizedBox(height: 10.h),
+        const OnlineListTitleBar(),
         Consumer<ZegoUserService>(
             builder: (_, userService, child) => SizedBox(
                   width: double.infinity,
@@ -38,6 +39,6 @@ class OnlineListPage extends StatelessWidget {
                   ),
                 )),
       ]),
-    ));
+    )));
   }
 }
