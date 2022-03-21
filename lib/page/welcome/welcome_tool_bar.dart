@@ -23,6 +23,7 @@ class WelcomeToolBarButton extends StatelessWidget {
         Image(
           image: AssetImage(iconAssetName),
         ),
+        const SizedBox(width: 5),
         Text(
           text,
           style: const TextStyle(color: Color(0xff2A2A2A)),
