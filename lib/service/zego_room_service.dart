@@ -45,7 +45,7 @@ class ZegoRoomService extends ChangeNotifier {
   }
 
   String get _localUserName {
-    return ZegoRoomManager.shared.userService.localUserInfo.userName;
+    return ZegoRoomManager.shared.userService.localUserInfo.displayName;
   }
 
   /// Create a room.

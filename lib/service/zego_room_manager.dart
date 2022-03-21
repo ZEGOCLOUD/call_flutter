@@ -44,7 +44,7 @@ class ZegoRoomManager extends ChangeNotifier {
     // setup service
     roomService.roomEnterCallback = _onRoomEnter;
     roomService.roomLeaveCallback = _onRoomLeave;
-    userService.userOfflineCallback = _onRoomLeave;
+    // userService.userOfflineCallback = _onRoomLeave;
     // userService.registerMemberJoinCallback(messageService.onRoomMemberJoined);
     // userService.registerMemberLeaveCallback(messageService.onRoomMemberLeave);
   }

@@ -7,24 +7,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/style/styles.dart';
 import '../../model/zego_user_info.dart';
-
-const placeholderImage =
-    'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
+import '../../common/user_avatar.dart';
 
 class OnlineListItem extends StatelessWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);
   final ZegoUserInfo userInfo;
   @override
   Widget build(BuildContext context) {
+    var avatarIndex = getUserAvatarIndex(userInfo.displayName);
     return Row(
       children: [
         SizedBox(
           width: 84.w,
           height: 84.h,
           child: CircleAvatar(
-            maxRadius: 37.w,
-            backgroundImage: NetworkImage(
-              userInfo.avatar ?? placeholderImage),
+            foregroundImage: AssetImage("images/seat_$avatarIndex.png"),
             ),
         ),
         Column(
@@ -33,7 +30,7 @@ class OnlineListItem extends StatelessWidget {
             SizedBox(
               width: 300.w,
               height: 33.h,
-              child: Text(userInfo.userName, style: StyleConstant.roomMemberListNameText),
+              child: Text(userInfo.displayName, style: StyleConstant.roomMemberListNameText),
             ),
             SizedBox(
               width: 300.w,
