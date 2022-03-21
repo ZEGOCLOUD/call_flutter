@@ -6,22 +6,21 @@ import 'package:zego_call_flutter/service/zego_room_manager.dart';
 abstract class IZegoStreamService {
   void startPlaying(String userID, int playingViewID);
 
-  Widget? createPlayingView(Function(int viewID) onViewCreated) {
+  Widget? createPlayingView(Function(int playingViewID) onViewCreated) {
     return ZegoExpressEngine.instance.createPlatformView(onViewCreated);
   }
 }
 
 class ZegoStreamService extends IZegoStreamService {
-
   @override
   void startPlaying(String userID, int playingViewID) {
     var streamID = _generateStreamID(userID);
-    //  ZegoExpressEngine.createEngine's pros enablePlatformView should be true
 
     ZegoCanvas canvas = ZegoCanvas.view(playingViewID);
 
-    if(ZegoRoomManager.shared.userService.localUserInfo.userID == userID) {
-      ZegoExpressEngine.instance.startPreview(canvas: canvas, channel: ZegoPublishChannel.Main);
+    if (ZegoRoomManager.shared.userService.localUserInfo.userID == userID) {
+      ZegoExpressEngine.instance
+          .startPreview(canvas: canvas, channel: ZegoPublishChannel.Main);
     } else {
       ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
     }
