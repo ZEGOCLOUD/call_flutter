@@ -28,8 +28,9 @@ class StyleIconUrls {
   static const String authLogo = 'images/auth_logo.png';
   static const String authIconGoogle = 'images/auth_icon_google.png';
 
-  static const String memberVideoCall = 'images/member_video_call.png';
-  static const String memberAudioCall = 'images/member_audio_call.png';
+  static const String userListDefault = 'images/user_list_default.png';
+  static const String userLIstVideoCall = 'images/user_list_video_call.png';
+  static const String userListAudioCall = 'images/user_list_audio_call.png';
 
   static const String welcomeCardBanner = 'images/welcome_card_banner.png';
   static const String welcomeCardBg = 'images/welcome_card_bg.png';
@@ -73,6 +74,11 @@ class StyleConstant {
     color: Color(0xffA4A4A4),
     fontSize: 12.0,
   );
+  static const userListEmptyText = TextStyle(
+    color: Color(0xffA4A4A4),
+    fontSize: 15.0,
+  );
+
   static const backText = TextStyle(
     color: Colors.blue,
     fontSize: 18.0,

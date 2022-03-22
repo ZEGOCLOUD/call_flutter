@@ -48,14 +48,14 @@ class OnlineListItem extends StatelessWidget {
                 children: [
                   GestureDetector(
                       child: const OnlineListButton(
-                          iconAssetName: StyleIconUrls.memberAudioCall),
+                          iconAssetName: StyleIconUrls.userListAudioCall),
                       onTap: () {
                         onAudioCallTap(context);
                       }),
                   SizedBox(width: 32.w),
                   GestureDetector(
                       child: const OnlineListButton(
-                          iconAssetName: StyleIconUrls.memberVideoCall),
+                          iconAssetName: StyleIconUrls.userLIstVideoCall),
                       onTap: () {
                         onVideoCallTap(context);
                       }),

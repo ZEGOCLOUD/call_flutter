@@ -124,8 +124,9 @@ flutter:
     - images/navigator_back.png
     - images/room_top_quit.png
     - images/title_bar_settings.png
-    - images/member_video_call.png
-    - images/member_audio_call.png
+    - images/user_list_default.png
+    - images/user_list_video_call.png
+    - images/user_list_audio_call.png
     - images/welcome_card_banner.png
     - images/welcome_card_bg.png
     - images/welcome_contact_us.png
@@ -142,8 +143,9 @@ flutter:
     - images/2.0x/navigator_back.png
     - images/2.0x/room_top_quit.png
     - images/2.0x/title_bar_settings.png
-    - images/2.0x/member_video_call.png
-    - images/2.0x/member_audio_call.png
+    - images/2.0x/user_list_default.png
+    - images/2.0x/user_list_video_call.png
+    - images/2.0x/user_list_audio_call.png
     - images/2.0x/welcome_card_banner.png
     - images/2.0x/welcome_card_bg.png
     - images/2.0x/welcome_contact_us.png
@@ -160,8 +162,9 @@ flutter:
     - images/3.0x/navigator_back.png
     - images/3.0x/room_top_quit.png
     - images/3.0x/title_bar_settings.png
-    - images/3.0x/member_video_call.png
-    - images/3.0x/member_audio_call.png
+    - images/3.0x/user_list_default.png
+    - images/3.0x/user_list_video_call.png
+    - images/3.0x/user_list_audio_call.png
     - images/3.0x/welcome_card_banner.png
     - images/3.0x/welcome_card_bg.png
     - images/3.0x/welcome_contact_us.png
