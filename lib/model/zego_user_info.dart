@@ -28,9 +28,9 @@ class ZegoUserInfo {
   ZegoUserInfo clone() => ZegoUserInfo(userID, displayName, lastChanged);
 
   ZegoUserInfo.fromJson(Map<String, dynamic> json)
-      : userID = json['user_id'],
+      : userID = json['user_id'] ?? "",
         displayName = json['display_name'],
-        photoUrl = json['photo_url'] ?? "",
+        photoUrl = json['photo_url'] ?? "https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png",
         lastChanged = json['last_changed'];
 
   Map<String, dynamic> toJson() => {

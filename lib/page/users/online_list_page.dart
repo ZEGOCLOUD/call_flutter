@@ -26,14 +26,8 @@ class OnlineListPage extends HookWidget {
       AwesomeNotifications()
           .actionStream
           .listen((ReceivedNotification receivedNotification) {
-        Navigator.of(context).pushNamed(
-          PageRouteNames.calling,
-          // arguments: {
-          //   // your page params. I recommend you to pass the
-          //   // entire *receivedNotification* object
-          //   id: receivedNotification.id
-          // }
-        );
+        Navigator.of(context).pushNamed(PageRouteNames.calling,
+            arguments: receivedNotification.payload);
       });
 
       return null;
