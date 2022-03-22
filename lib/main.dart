@@ -20,6 +20,7 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:zego_call_flutter/page/auth/auth_gate.dart';
 import 'package:zego_call_flutter/page/calling/calling_page.dart';
 import 'package:zego_call_flutter/page/settings/settings_page.dart';
+import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_page.dart';
 import 'package:zego_call_flutter/page/users/online_list_page.dart';
 import 'package:zego_call_flutter/page/welcome/welcome_page.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
@@ -80,8 +81,15 @@ Future<void> main() async {
   });
 }
 
-class ZegoApp extends StatelessWidget {
+class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);
+
+  @override
+  _ZegoAppState createState() => _ZegoAppState();
+}
+
+class _ZegoAppState extends State<ZegoApp> {
+  Offset _offset = Offset(300, 500);
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +155,22 @@ class ZegoApp extends StatelessWidget {
                     PageRouteNames.onlineList: (context) =>
                         const OnlineListPage(),
                     PageRouteNames.roomMain: (context) => roomMainLoadingPage(),
+                  },
+                  builder: (context, child) {
+                    return Stack(
+                      children: [
+                        child!,
+                        Positioned(
+                          left: _offset.dx,
+                          top: _offset.dy,
+                          child: GestureDetector(
+                            onPanUpdate: (d) => setState(() =>
+                                _offset += Offset(d.delta.dx, d.delta.dy)),
+                            child: MiniOverlayPage(),
+                          ),
+                        ),
+                      ],
+                    );
                   },
                 ),
               )),

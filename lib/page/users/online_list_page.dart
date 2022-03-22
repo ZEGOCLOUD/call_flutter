@@ -22,13 +22,17 @@ class OnlineListPage extends HookWidget {
       var userService = context.read<ZegoUserService>();
       userService.getOnlineUsers();
 
-      // On calling notification tap
-      AwesomeNotifications()
-          .actionStream
-          .listen((ReceivedNotification receivedNotification) {
-        Navigator.of(context).pushNamed(PageRouteNames.calling,
-            arguments: receivedNotification.payload);
-      });
+      try {
+        // On calling notification tap
+        AwesomeNotifications()
+            .actionStream
+            .listen((ReceivedNotification receivedNotification) {
+          Navigator.of(context).pushNamed(PageRouteNames.calling,
+              arguments: receivedNotification.payload);
+        });
+      } catch (e) {
+        print(e);
+      }
 
       return null;
     }, const []);
