@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -14,6 +15,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:flutter_bugly/flutter_bugly.dart';
 import 'package:zego_call_flutter/page/auth/auth_gate.dart';
+import 'package:zego_call_flutter/page/calling/calling_page.dart';
 import 'package:zego_call_flutter/page/users/online_list_page.dart';
 import 'package:zego_call_flutter/page/welcome/welcome_page.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
@@ -28,10 +30,45 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 import 'package:zego_call_flutter/page/room/room_main_page.dart';
 import 'package:zego_call_flutter/page/users/online_list_page.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 Future<void> main() async {
   FlutterBugly.postCatchedException(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    AwesomeNotifications().initialize(
+        // set the icon to null if you want to use the default app icon
+        '',
+        [
+          NotificationChannel(
+              channelGroupKey: 'basic_channel_group',
+              channelKey: 'basic_channel',
+              channelName: 'Basic notifications',
+              channelDescription: 'Notification channel for basic tests',
+              defaultColor: Color(0xFF9D50DD),
+              playSound: true,
+              ledColor: Colors.white)
+        ],
+        // Channel groups are only visual and are not required
+        channelGroups: [
+          NotificationChannelGroup(
+              channelGroupkey: 'basic_channel_group',
+              channelGroupName: 'Basic group')
+        ],
+        debug: true);
+
+    // Declared as global, outside of any class
+    Future<void> _firebaseMessagingBackgroundHandler(
+        RemoteMessage message) async {
+      // If you're going to use other Firebase services in the background, such as Firestore,
+      // make sure you call `initializeApp` before using other Firebase services.
+      await Firebase.initializeApp();
+
+      print("Handling a background message: ${message.messageId}");
+
+      // Use this method to automatically convert the push data, in case you gonna use our data standard
+      AwesomeNotifications().createNotificationFromJsonData(message.data);
+    }
+
     await Firebase.initializeApp();
 
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -106,8 +143,10 @@ class ZegoApp extends StatelessWidget {
                       : PageRouteNames.auth,
                   routes: {
                     PageRouteNames.auth: (context) => const AuthGate(),
-                    PageRouteNames.welcome: (context) => const ProfilePage(),
-                    PageRouteNames.onlineList: (context) => const OnlineListPage(),
+                    PageRouteNames.welcome: (context) => const WelcomePage(),
+                    PageRouteNames.calling: (context) => const CallingPage(),
+                    PageRouteNames.onlineList: (context) =>
+                        const OnlineListPage(),
                     PageRouteNames.roomMain: (context) => roomMainLoadingPage(),
                   },
                 ),

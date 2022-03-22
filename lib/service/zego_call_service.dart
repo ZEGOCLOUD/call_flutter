@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:math' as math;
 
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,6 +27,7 @@ class ZegoCallService extends ChangeNotifier {
   ZegoCallService() {
     _registerNotification();
     _addCallObserve();
+    _requireNotificationsPermissions();
   }
 
   late Function(ZegoUserInfo info, ZegoCallType type) onReceiveCallInvite;
@@ -126,16 +128,41 @@ class ZegoCallService extends ChangeNotifier {
       var selfUserID = FirebaseAuth.instance.currentUser?.uid;
       var callID = event.snapshot.key;
       var callInfo = event.snapshot.value as Map<dynamic, dynamic>;
-      var users = callInfo['users'] as Map<String, dynamic>;
+      var users = Map<String, dynamic>.from(callInfo['users']);
       var callerID = '';
+      var callerName = '';
+      var callerPhotoUrl = '';
       bool isSelfBeenCall = false;
       users.forEach((key, value) {
         if (value['role'] == 0) {
           callerID = key;
+          callerName = value['display_name'];
+          // callerPhotoUrl = value['photo_url'];
         } else if (key == selfUserID) {
           isSelfBeenCall = value['role'] == 1;
         }
       });
+      AwesomeNotifications().createNotification(
+          content: NotificationContent(
+        id: 1,
+        // largeIcon: callerPhotoUrl,
+        icon: callerPhotoUrl,
+        channelKey: 'basic_channel',
+        title: '$callerName',
+        body: 'Invite you to call...',
+        // category: NotificationCategory.Call,
+      ));
+    });
+  }
+
+  void _requireNotificationsPermissions() {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        // This is just a basic example. For real apps, you must show some
+        // friendly dialog box before call the request method.
+        // This is very important to not harm the user experience
+        AwesomeNotifications().requestPermissionToSendNotifications();
+      }
     });
   }
 }

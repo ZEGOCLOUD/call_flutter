@@ -55,6 +55,7 @@ dependencies:
   firebase_database: ^9.0.8
   webview_flutter: ^3.0.1
   firebase_messaging: ^11.2.11
+  awesome_notifications: any
 
 dev_dependencies:
   flutter_test:

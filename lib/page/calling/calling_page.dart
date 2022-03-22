@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:zego_call_flutter/page/welcome/welcome_one_on_one_bg.dart';
-import 'package:zego_call_flutter/page/welcome/welcome_title_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/page/welcome/welcome_tool_bar.dart';
 
-class WelcomePage extends StatelessWidget {
+class CallingPage extends StatelessWidget {
   // ignore: public_member_api_docs
-  const WelcomePage({Key? key}) : super(key: key);
+  const CallingPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +22,8 @@ class WelcomePage extends StatelessWidget {
                   SizedBox(
                     height: 10.h,
                   ),
-                  const WelcomeTitleBar(),
-                  const WelcomeOneOnOneBg(),
+                  const Text('Calling'),
                   const Expanded(child: SizedBox()),
-                  const WelcomeToolBar(),
                   SizedBox(
                     height: 96.h,
                   ),
@@ -40,5 +35,4 @@ class WelcomePage extends StatelessWidget {
       ),
     );
   }
-
 }
