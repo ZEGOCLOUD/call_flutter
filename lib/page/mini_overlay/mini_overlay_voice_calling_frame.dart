@@ -9,11 +9,15 @@ import 'mini_overlay_state.dart';
 
 class MiniOverlayVoiceCallingFrame extends StatefulWidget {
   MiniOverlayVoiceCallingFrame(
-      {Key? key, required this.waitingDuration, required this.onIdleStateEntry})
+      {Key? key,
+      required this.onIdleStateEntry,
+      this.waitingDuration = 60,
+      this.defaultState = MiniOverlayPageVoiceCallingState.kWaiting})
       : super(key: key);
 
   // The duration may change on full screen calling page
-  var waitingDuration = 60;
+  int waitingDuration;
+  MiniOverlayPageVoiceCallingState defaultState;
   VoidCallback onIdleStateEntry;
 
   @override
@@ -24,7 +28,7 @@ class MiniOverlayVoiceCallingFrame extends StatefulWidget {
 class _MiniOverlayVoiceCallingFrameState
     extends State<MiniOverlayVoiceCallingFrame> {
   MiniOverlayPageVoiceCallingState currentState =
-      MiniOverlayPageVoiceCallingState.kIdle;
+      MiniOverlayPageVoiceCallingState.kWaiting;
 
   final machine = sm.Machine<MiniOverlayPageVoiceCallingState>();
   late sm.State<MiniOverlayPageVoiceCallingState> stateIdle;
@@ -68,7 +72,7 @@ class _MiniOverlayVoiceCallingFrameState
       ..onTimeout(const Duration(seconds: 2), () => stateIdle.enter());
 
     machine.start();
-    machine.current = stateWaiting;
+    machine.current = widget.defaultState;
 
     super.initState();
   }

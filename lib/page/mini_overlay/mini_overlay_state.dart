@@ -11,6 +11,7 @@ enum MiniOverlayPageVoiceCallingState {
 
 enum MiniOverlayPageVideoCallingState {
   kIdle,
+  kWaiting,
   kCalleeWithVideo,
   kOnlyCallerWithVideo,
   kBothWithoutVideo,
