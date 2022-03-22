@@ -8,9 +8,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Browser extends HookWidget {
   final String url;
+  final String backURL;
   late WebViewController webViewController;
 
-  Browser({required this.url, Key? key}) : super(key: key);
+  Browser({required this.url, required this.backURL, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +22,7 @@ class Browser extends HookWidget {
         body: SafeArea(
       child: Column(
         children: [
-          NavigationBackBar(
-              targetBackUrl: PageRouteNames.welcome, title: title.value),
+          NavigationBackBar(targetBackUrl: backURL, title: title.value),
           SizedBox(
             height: 1130.h,
             child: WebView(
@@ -32,9 +33,8 @@ class Browser extends HookWidget {
                 javascriptMode: JavascriptMode.unrestricted,
                 onPageFinished: (String url) {
                   String script = 'window.document.title';
-                  webViewController
-                      .runJavascriptReturningResult(script)
-                      .then((value) => title.value = value.replaceAll("\"", ""));
+                  webViewController.runJavascriptReturningResult(script).then(
+                      (value) => title.value = value.replaceAll("\"", ""));
                 }),
           )
         ],

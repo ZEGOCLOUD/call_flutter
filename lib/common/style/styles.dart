@@ -12,6 +12,11 @@ class StyleColors {
   static const Color userListSeparateLineColor = Color(0xffE6E6E6);
 
   static const Color roomPopUpPageBackgroundColor = Colors.white;
+
+  static const Color settingsVersion = gray;
+  static const Color settingsBackgroundColor = Color(0xffF4F5F6);
+  static const Color settingsTitleBackgroundColor = Colors.white;
+  static const Color settingsCellBackgroundColor = Colors.white;
 }
 
 /// icons
@@ -31,6 +36,26 @@ class StyleIconUrls {
 
 /// constant style
 class StyleConstant {
+  static const appBarTitleSize = 17.0;
+  static const settingsFontSize = 14.0;
+
+  static const settingAppBar = TextStyle(
+    color: Colors.black,
+    fontSize: appBarTitleSize,
+  );
+  static const settingTitle = TextStyle(
+    color: StyleColors.dark,
+    fontSize: settingsFontSize,
+  );
+  static const settingVersion = TextStyle(
+    color: StyleColors.settingsVersion,
+    fontSize: settingsFontSize,
+  );
+  static const settingLogout = TextStyle(
+    color: StyleColors.red,
+    fontSize: settingsFontSize,
+  );
+
   static const userListNameText = TextStyle(
     color: Color(0xff2A2A2A),
     fontSize: 16.0,
