@@ -119,8 +119,6 @@ flutter:
     - images/avatar/avatar_3.png
     - images/avatar/avatar_4.png
     - images/avatar/avatar_5.png
-    - images/avatar/avatar_6.png
-    - images/avatar/avatar_7.png
     - images/navigator_back.png
     - images/room_top_quit.png
     - images/title_bar_settings.png
@@ -137,8 +135,6 @@ flutter:
     - images/2.0x/avatar/avatar_3.png
     - images/2.0x/avatar/avatar_4.png
     - images/2.0x/avatar/avatar_5.png
-    - images/2.0x/avatar/avatar_6.png
-    - images/2.0x/avatar/avatar_7.png
     - images/2.0x/navigator_back.png
     - images/2.0x/room_top_quit.png
     - images/2.0x/title_bar_settings.png
@@ -155,8 +151,6 @@ flutter:
     - images/3.0x/avatar/avatar_3.png
     - images/3.0x/avatar/avatar_4.png
     - images/3.0x/avatar/avatar_5.png
-    - images/3.0x/avatar/avatar_6.png
-    - images/3.0x/avatar/avatar_7.png
     - images/3.0x/navigator_back.png
     - images/3.0x/room_top_quit.png
     - images/3.0x/title_bar_settings.png

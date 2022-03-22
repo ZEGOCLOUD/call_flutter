@@ -14,26 +14,23 @@ class OnlineListItem extends StatelessWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);
   final ZegoUserInfo userInfo;
 
-  void onAudioCallTap() {
-    // TODO call to audio
+  void onAudioCallTap(BuildContext context) async {
+    context
+        .read<ZegoCallService>()
+        .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVoice);
   }
 
-  void onVideoCallTap() {
-    // TODO call to video
+  void onVideoCallTap(BuildContext context) async {
+    context
+        .read<ZegoCallService>()
+        .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVideo);
   }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 84.w,
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              userInfo.photoUrl,
-            ),
-          ),
-        ),
+        OnlineListAvatar(userName: userInfo.displayName),
         SizedBox(width: 26.w),
         Container(
           decoration: const BoxDecoration(
@@ -52,21 +49,15 @@ class OnlineListItem extends StatelessWidget {
                   GestureDetector(
                       child: const OnlineListButton(
                           iconAssetName: StyleIconUrls.memberAudioCall),
-                      onTap: () async {
-                        context.read<ZegoCallService>().callUser(
-                            userInfo.userID,
-                            'token',
-                            ZegoCallType.kZegoCallTypeVoice);
+                      onTap: () {
+                        onAudioCallTap(context);
                       }),
                   SizedBox(width: 32.w),
                   GestureDetector(
                       child: const OnlineListButton(
                           iconAssetName: StyleIconUrls.memberVideoCall),
-                      onTap: () async {
-                        context.read<ZegoCallService>().callUser(
-                            userInfo.userID,
-                            'token',
-                            ZegoCallType.kZegoCallTypeVideo);
+                      onTap: () {
+                        onVideoCallTap(context);
                       }),
                 ],
               ),
