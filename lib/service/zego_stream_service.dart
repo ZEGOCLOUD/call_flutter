@@ -12,6 +12,15 @@ abstract class IZegoStreamService {
 }
 
 class ZegoStreamService extends IZegoStreamService {
+
+  ZegoStreamService() {
+    ZegoExpressEngine.onRoomStreamUpdate = _onRoomStreamUpdate;
+    ZegoExpressEngine.onApiCalledResult = _onApiCalledResult;
+    ZegoExpressEngine.onRemoteCameraStateUpdate = _onRemoteCameraStateUpdate;
+    ZegoExpressEngine.onRemoteMicStateUpdate = _onRemoteMicStateUpdate;
+  }
+
+
   @override
   void startPlaying(String userID, int playingViewID) {
     var streamID = _generateStreamID(userID);
@@ -26,8 +35,53 @@ class ZegoStreamService extends IZegoStreamService {
     }
   }
 
+  void muteMic(bool mute) {
+
+  }
+
+  void enableCamera(bool enable) {
+
+  }
+
+
   String _generateStreamID(String userID) {
     var roomID = ZegoRoomManager.shared.roomService.roomInfo.roomID;
     return roomID + "_" + userID + "_main";
   }
+
+  void _onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
+      List<ZegoStream> streamList, Map<String, dynamic> extendedData) {
+    for (final stream in streamList) {
+      if (updateType == ZegoUpdateType.Add) {
+        ZegoExpressEngine.instance.startPlayingStream(stream.streamID);
+      } else {
+        ZegoExpressEngine.instance.stopPlayingStream(stream.streamID);
+      }
+    }
+  }
+
+  void _onApiCalledResult(int errorCode, String funcName, String info) {
+    print("_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
+  }
+
+  void _onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    var tempArray = streamID.split('_');
+    if (tempArray.length >= 2) {
+      var uid = tempArray[1];
+      var user = ZegoRoomManager.shared.userService.userDic[uid];
+      user?.camera = state == ZegoRemoteDeviceState.Open;
+    }
+  }
+
+
+  void _onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    var tempArray = streamID.split('_');
+    if (tempArray.length >= 2) {
+      var uid = tempArray[1];
+      var user = ZegoRoomManager.shared.userService.userDic[uid];
+      user?.mic = state == ZegoRemoteDeviceState.Open;
+    }
+  }
+
+
 }

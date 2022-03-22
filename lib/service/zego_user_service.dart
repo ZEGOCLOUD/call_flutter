@@ -29,6 +29,7 @@ class ZegoUserService extends ChangeNotifier {
   }
 
   ZegoUserService() {
+    _setUserStatus(FirebaseAuth.instance.currentUser != null);
     FirebaseAuth.instance.authStateChanges().listen((event) {
       if (event != null) {
         _setUserStatus(true);
@@ -37,7 +38,6 @@ class ZegoUserService extends ChangeNotifier {
       }
     });
     _addConnectedObserve();
-    _addCallObserve();
   }
 
   onRoomLeave() {
@@ -57,8 +57,6 @@ class ZegoUserService extends ChangeNotifier {
   /// @param token    refers to the authentication token. To get this, refer to the documentation:
   ///                 https://doc-en.zego.im/article/11648
   Future<int> login(ZegoUserInfo info, String token) async {
-
-
     return 0;
   }
 
@@ -66,55 +64,26 @@ class ZegoUserService extends ChangeNotifier {
   /// <p>Description: This method can be used to log out from the current user account.</>
   /// <p>Call this method at: After the user login</>
   Future<int> logout() async {
-
     return 0;
-  }
-
-// databse
-  Future<void> callUser(String uid, bool isVideo) async {
-    ZegoUserInfo callee = userDic[uid] ?? ZegoUserInfo.empty();
-    if (callee.userID.length == 0) {
-      return;
-    }
-    var caller = FirebaseAuth.instance.currentUser!;
-    var callTime = DateTime.now().millisecondsSinceEpoch;
-    var callID = "caller.uid${callTime}";
-    DatabaseReference ref = FirebaseDatabase.instance.ref("call/${callID}");
-    var json = {
-      caller.uid : {
-        "username": caller.displayName,
-        "role": 0,
-        "heartbeat_time": 0,
-        "connected_time": 0
-      },
-      callee.userID : {
-        "username": callee.displayName,
-        "role": 1,
-        "heartbeat_time": 0,
-        "connected_time": 0
-      }
-    };
-    await ref.set(json);
   }
 
   Future<void> getOnlineUsers() async {
     final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child('users/').get();
+    final snapshot = await ref.child('online_user/').get();
     var _userList = <ZegoUserInfo>[];
     if (snapshot.exists) {
       print(snapshot.value);
       var map = snapshot.value as Map<dynamic, dynamic>?;
       if (map != null) {
         map.forEach((key, value) async {
-          var userMap = new Map<String, dynamic>.from(value);
+          var userMap = Map<String, dynamic>.from(value);
           var model = ZegoUserInfo.fromJson(userMap);
-          if (model.state == 'online') {
-            _userList.add(model);
-          }
+          _userList.add(model);
           userDic[model.userID] = model;
         });
       }
       userList = _userList;
+      notifyListeners();
     } else {
       print('No data available.');
     }
@@ -124,11 +93,9 @@ class ZegoUserService extends ChangeNotifier {
 
   Future<void> _setUserStatus(bool online) async {
     var user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference ref = FirebaseDatabase.instance.ref("users/${user.uid}");
-    var state = online ? "online" : "offline";
-    var time = DateTime
-        .now()
-        .millisecondsSinceEpoch;
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref("online_user/${user.uid}");
+    var time = DateTime.now().millisecondsSinceEpoch;
     var name = user.displayName;
     var uid = user.uid;
     var platform = "android";
@@ -136,40 +103,29 @@ class ZegoUserService extends ChangeNotifier {
       platform = "ios";
     }
     await ref.set({
-      "uid": uid,
+      "user_id": uid,
       "display_name": name,
-      "state": state,
+      "photo_url": user.photoURL,
       "last_changed": time,
     });
 
-    await ref.onDisconnect().remove();
+    // await ref.onDisconnect().remove();
   }
 
   void _addConnectedObserve() {
     final connectedRef = FirebaseDatabase.instance.ref(".info/connected");
     connectedRef.onValue.listen((event) async {
       final connected = event.snapshot.value as bool? ?? false;
-      DatabaseReference ref = FirebaseDatabase.instance.ref("users/${localUserInfo.userID}");
+      DatabaseReference ref =
+          FirebaseDatabase.instance.ref("online_user/${localUserInfo.userID}");
 
-      if (localUserInfo.userID.length > 0) {
+      if (localUserInfo.userID.isNotEmpty) {
         if (connected) {
           _setUserStatus(true);
         } else {
-          await ref.onDisconnect().remove();
+          // await ref.onDisconnect().remove();
         }
       }
     });
   }
-
-  void _addCallObserve() {
-    var caller = FirebaseAuth.instance.currentUser!;
-    var callTime = DateTime.now().millisecondsSinceEpoch;
-    var callID = "caller.uid${callTime}";
-    DatabaseReference ref = FirebaseDatabase.instance.ref('call');
-    ref.onChildAdded.listen((event) {
-      debugPrint("The ${event.snapshot.key} dinosaur's score is ${event.snapshot.value}.");
-    });
-  }
 }
-
-
