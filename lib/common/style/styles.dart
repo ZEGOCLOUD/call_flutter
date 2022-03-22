@@ -28,10 +28,10 @@ class StyleIconUrls {
   static const String memberVideoCall = 'images/member_video_call.png';
   static const String memberAudioCall = 'images/member_audio_call.png';
 
-  static const String welcomeCardBanner = 'images/welcome_card_banner.png';
-  static const String welcomeCardBg = 'images/welcome_card_bg.png';
-  static const String welcomeContactUs = 'images/welcome_contact_us.png';
-  static const String welcomeGetMore = 'images/welcome_get_more.png';
+  static const String welcomeCardBanner = 'images/welcome/welcome_card_banner.png';
+  static const String welcomeCardBg = 'images/welcome/welcome_card_bg.png';
+  static const String welcomeContactUs = 'images/welcome/welcome_contact_us.png';
+  static const String welcomeGetMore = 'images/welcome/welcome_get_more.png';
 }
 
 /// constant style
