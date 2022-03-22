@@ -9,11 +9,11 @@ import "package:firebase_messaging/firebase_messaging.dart";
 
 import '../model/zego_user_info.dart';
 
-// // This provided handler must be a top-level function and cannot be anonymous otherwise an ArgumentError will be thrown.
-// Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   print("Handling a background message: ${message.messageId}");
-// }
-
+enum ZegoResponseType {
+  kZegoResponseTypeAccept,
+  kZegoResponseTypeDecline,
+  kZegoResponseTypeBusy
+}
 enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
 enum ZegoCallTimeoutType {
   kZegoCallTimeoutTypeInviter,
@@ -81,7 +81,7 @@ class ZegoCallService extends ChangeNotifier {
   }
 
   Future<int> respondCall(
-      String callerUserID, String token, ZegoCallType type) async {
+      String callerUserID, String token, ZegoResponseType type) async {
     return 0;
   }
 
