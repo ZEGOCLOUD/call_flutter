@@ -36,7 +36,7 @@ class OnlineListPage extends HookWidget {
     return Scaffold(
         body: SafeArea(
             child: Container(
-      padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 0),
+      padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 5.h),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         const NavigationBackBar(
             targetBackUrl: PageRouteNames.welcome,
@@ -51,19 +51,39 @@ class OnlineListPage extends HookWidget {
                 },
                 child: SizedBox(
                   width: double.infinity,
-                  height: 658.h,
-                  child: ListView.builder(
-                    itemExtent: 148.h,
-                    padding: EdgeInsets.only(
-                        left: 32.w, top: 32.h, right: 32.w, bottom: 32.h),
-                    itemCount: userService.userList.length,
-                    itemBuilder: (_, i) {
-                      ZegoUserInfo user = userService.userList[i];
-                      return OnlineListItem(userInfo: user);
-                    },
-                  ),
+                  height: 1080.h,
+                  child: userService.userList.isEmpty
+                      ? emptyTips()
+                      : userListView(userService),
                 ))),
       ]),
     )));
+  }
+
+  Widget emptyTips() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(height: 368.h),
+        SizedBox(
+            width: 100.w,
+            height: 100.h,
+            child: Image.asset(StyleIconUrls.userListDefault)),
+        SizedBox(height: 16.h),
+        const Text("No Online User", style: StyleConstant.userListEmptyText),
+      ],
+    );
+  }
+
+  Widget userListView(ZegoUserService userService) {
+    return ListView.builder(
+      itemExtent: 148.h,
+      padding: EdgeInsets.only(left: 32.w, right: 32.w),
+      itemCount: userService.userList.length,
+      itemBuilder: (_, i) {
+        ZegoUserInfo user = userService.userList[i];
+        return OnlineListItem(userInfo: user);
+      },
+    );
   }
 }
