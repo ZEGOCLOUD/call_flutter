@@ -16,13 +16,8 @@ class OnlineListTitleBar extends StatelessWidget {
         padding: EdgeInsets.only(left: 32.w),
         height: 78.h,
         width: double.infinity,
-        child: Row(children: [
+        child: Row(children: const [
           Text('Online', style: StyleConstant.userListTitle),
-          TextButton(
-              onPressed: () async {
-                context.read<ZegoUserService>().getOnlineUsers();
-              },
-              child: Text('Refresh')),
         ]));
   }
 }

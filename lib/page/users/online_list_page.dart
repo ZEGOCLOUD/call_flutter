@@ -45,7 +45,11 @@ class OnlineListPage extends HookWidget {
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
         Consumer<ZegoUserService>(
-            builder: (_, userService, child) => SizedBox(
+            builder: (_, userService, child) => RefreshIndicator(
+                onRefresh: () async {
+                  userService.getOnlineUsers();
+                },
+                child: SizedBox(
                   width: double.infinity,
                   height: 658.h,
                   child: ListView.builder(
@@ -58,7 +62,7 @@ class OnlineListPage extends HookWidget {
                       return OnlineListItem(userInfo: user);
                     },
                   ),
-                )),
+                ))),
       ]),
     )));
   }

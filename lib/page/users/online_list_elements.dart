@@ -6,6 +6,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common/style/styles.dart';
 import '../../common/user_avatar.dart';
 
+class OnlineListAvatar extends StatelessWidget {
+  final String userName;
+
+  const OnlineListAvatar({required this.userName, Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var avatarIndex = getUserAvatarIndex(userName);
+    return SizedBox(
+      width: 84.w,
+      child: CircleAvatar(
+        foregroundImage: AssetImage("images/avatar/avatar_$avatarIndex.png"),
+      ),
+    );
+  }
+}
+
 class OnlineListUserInfo extends StatelessWidget {
   final String userID;
   final String userName;
