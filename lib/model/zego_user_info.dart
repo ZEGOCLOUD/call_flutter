@@ -30,7 +30,7 @@ class ZegoUserInfo {
   ZegoUserInfo.fromJson(Map<String, dynamic> json)
       : userID = json['user_id'],
         displayName = json['display_name'],
-        photoUrl = json['photo_url'] ?? "",
+        photoUrl = json['photo_url'],
         lastChanged = json['last_changed'];
 
   Map<String, dynamic> toJson() => {
