@@ -113,50 +113,56 @@ flutter:
   assets:
     - assets/key_center.json
 
-    - images/avatar/avatar_0.png
-    - images/avatar/avatar_1.png
-    - images/avatar/avatar_2.png
-    - images/avatar/avatar_3.png
-    - images/avatar/avatar_4.png
-    - images/avatar/avatar_5.png
+    - images/auth_logo.png
+    - images/auth_icon_google.png
+    - images/avatar_0.png
+    - images/avatar_1.png
+    - images/avatar_2.png
+    - images/avatar_3.png
+    - images/avatar_4.png
+    - images/avatar_5.png
     - images/navigator_back.png
     - images/room_top_quit.png
     - images/title_bar_settings.png
     - images/member_video_call.png
     - images/member_audio_call.png
-    - images/welcome/welcome_card_banner.png
-    - images/welcome/welcome_card_bg.png
-    - images/welcome/welcome_contact_us.png
-    - images/welcome/welcome_get_more.png
+    - images/welcome_card_banner.png
+    - images/welcome_card_bg.png
+    - images/welcome_contact_us.png
+    - images/welcome_get_more.png
 
-    - images/2.0x/avatar/avatar_0.png
-    - images/2.0x/avatar/avatar_1.png
-    - images/2.0x/avatar/avatar_2.png
-    - images/2.0x/avatar/avatar_3.png
-    - images/2.0x/avatar/avatar_4.png
-    - images/2.0x/avatar/avatar_5.png
+    - images/2.0x/auth_logo.png
+    - images/2.0x/auth_icon_google.png
+    - images/2.0x/avatar_0.png
+    - images/2.0x/avatar_1.png
+    - images/2.0x/avatar_2.png
+    - images/2.0x/avatar_3.png
+    - images/2.0x/avatar_4.png
+    - images/2.0x/avatar_5.png
     - images/2.0x/navigator_back.png
     - images/2.0x/room_top_quit.png
     - images/2.0x/title_bar_settings.png
     - images/2.0x/member_video_call.png
     - images/2.0x/member_audio_call.png
-    - images/2.0x/welcome/welcome_card_banner.png
-    - images/2.0x/welcome/welcome_card_bg.png
-    - images/2.0x/welcome/welcome_contact_us.png
-    - images/2.0x/welcome/welcome_get_more.png
+    - images/2.0x/welcome_card_banner.png
+    - images/2.0x/welcome_card_bg.png
+    - images/2.0x/welcome_contact_us.png
+    - images/2.0x/welcome_get_more.png
 
-    - images/3.0x/avatar/avatar_0.png
-    - images/3.0x/avatar/avatar_1.png
-    - images/3.0x/avatar/avatar_2.png
-    - images/3.0x/avatar/avatar_3.png
-    - images/3.0x/avatar/avatar_4.png
-    - images/3.0x/avatar/avatar_5.png
+    - images/3.0x/auth_logo.png
+    - images/3.0x/auth_icon_google.png
+    - images/3.0x/avatar_0.png
+    - images/3.0x/avatar_1.png
+    - images/3.0x/avatar_2.png
+    - images/3.0x/avatar_3.png
+    - images/3.0x/avatar_4.png
+    - images/3.0x/avatar_5.png
     - images/3.0x/navigator_back.png
     - images/3.0x/room_top_quit.png
     - images/3.0x/title_bar_settings.png
     - images/3.0x/member_video_call.png
     - images/3.0x/member_audio_call.png
-    - images/3.0x/welcome/welcome_card_banner.png
-    - images/3.0x/welcome/welcome_card_bg.png
-    - images/3.0x/welcome/welcome_contact_us.png
-    - images/3.0x/welcome/welcome_get_more.png
+    - images/3.0x/welcome_card_banner.png
+    - images/3.0x/welcome_card_bg.png
+    - images/3.0x/welcome_contact_us.png
+    - images/3.0x/welcome_get_more.png

@@ -29,7 +29,6 @@ class NavigationBackBar extends HookWidget {
         width: 750.w,
         height: 88.h,
         child: TextButton(
-          // <-- TextButton
           onPressed: () {
             Navigator.pushReplacementNamed(context, targetBackUrl);
           },
