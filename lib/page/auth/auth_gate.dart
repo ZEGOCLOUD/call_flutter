@@ -116,40 +116,29 @@ class _AuthGateState extends State<AuthGate> {
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: AnimatedSwitcher(
                           duration: const Duration(milliseconds: 200),
-                          child: isLoading
-                              ? Container(
-                                  color: Colors.grey[200],
-                                  height: 50,
-                                  width: double.infinity,
-                                )
-                              : Container(
-                                  width: 602 / 2,
-                                  height: 50,
-                                  decoration: const BoxDecoration(
-                                    color: Color(0xffF3F4F7),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20)),
-                                  ),
-                                  child: TextButton(
-                                    child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Image(
-                                              image: const AssetImage(
-                                                  StyleIconUrls.authIconGoogle),
-                                              height: 45.h),
-                                          const Text('Log in with Google')
-                                        ]),
-                                    onPressed: isPolicyCheck
-                                        ? _signInWithGoogle
-                                        : () {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    'Please tick to agree to the "Terms of Service" and "Privacy Policy"',
-                                                backgroundColor: Colors.grey);
-                                          },
-                                  ),
-                                ),
+                          child: Container(
+                            width: 602 / 2,
+                            height: 50,
+                            decoration: const BoxDecoration(
+                              color: Color(0xffF3F4F7),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                            ),
+                            child: TextButton(
+                              child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image(
+                                        image: const AssetImage(
+                                            StyleIconUrls.authIconGoogle),
+                                        height: 45.h),
+                                    const Text('Log in with Google')
+                                  ]),
+                              onPressed: isLoading
+                                  ? null //  disable button is loading
+                                  : onLogInGooglePressed,
+                            ),
+                          ),
                         ),
                       ),
                       SizedBox(height: 48.h),
@@ -172,6 +161,17 @@ class _AuthGateState extends State<AuthGate> {
     setState(() {
       isPolicyCheck = value;
     });
+  }
+
+  void onLogInGooglePressed() {
+    if (isPolicyCheck) {
+      _signInWithGoogle();
+    } else {
+      Fluttertoast.showToast(
+          msg:
+              'Please tick to agree to the "Terms of Service" and "Privacy Policy"',
+          backgroundColor: Colors.grey);
+    }
   }
 
   Future<void> _signInWithGoogle() async {
