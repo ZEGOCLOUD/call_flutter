@@ -38,6 +38,7 @@ class StyleIconUrls {
 class StyleConstant {
   static const appBarTitleSize = 17.0;
   static const settingsFontSize = 14.0;
+  static const browserFontSize = 14.0;
 
   static const settingAppBar = TextStyle(
     color: Colors.black,
@@ -53,6 +54,11 @@ class StyleConstant {
   );
   static const settingLogout = TextStyle(
     color: StyleColors.red,
+    fontSize: settingsFontSize,
+  );
+
+  static const browserTitle = TextStyle(
+    color: StyleColors.dark,
     fontSize: settingsFontSize,
   );
 

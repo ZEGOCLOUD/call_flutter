@@ -41,7 +41,6 @@ class OnlineListPage extends HookWidget {
         const NavigationBackBar(
             targetBackUrl: PageRouteNames.welcome,
             title: "Back",
-            titleAlign: TextAlign.center,
             titleStyle: StyleConstant.backText),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),

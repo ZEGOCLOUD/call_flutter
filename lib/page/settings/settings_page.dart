@@ -6,7 +6,7 @@ import 'package:zego_call_flutter/page/settings/settings_browser_block.dart';
 import 'package:zego_call_flutter/page/settings/settings_logout_block.dart';
 import 'package:zego_call_flutter/page/settings/settings_upload_log_block.dart';
 import 'package:zego_call_flutter/page/settings/settings_version_block.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 import '../../common/style/styles.dart';
 import '../../constants/zego_page_constant.dart';
@@ -25,7 +25,12 @@ class SettingsPage extends HookWidget {
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      NavigationBackBar(targetBackUrl: PageRouteNames.welcome),
+                      NavigationBackBar(
+                          targetBackUrl: PageRouteNames.welcome,
+                          title: AppLocalizations.of(context)!.roomPageSettings,
+                          titleAlign: TextAlign.center,
+                          titleStyle: StyleConstant.settingTitle,
+                          iconColor: StyleConstant.settingTitle.color),
                       Container(
                           decoration: const BoxDecoration(
                               color: StyleColors.settingsBackgroundColor),
