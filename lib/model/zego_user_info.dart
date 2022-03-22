@@ -8,12 +8,12 @@ class ZegoUserInfo {
 
   /// User name, cannot be null.
   String displayName = "";
+  String photoUrl = "";
 
   int lastChanged = 0;
 
   bool mic = false;
   bool camera = false;
-
 
   ZegoRoomUserRole userRole = ZegoRoomUserRole.roomUserRoleListener;
 
@@ -28,14 +28,20 @@ class ZegoUserInfo {
   ZegoUserInfo clone() => ZegoUserInfo(userID, displayName, lastChanged);
 
   ZegoUserInfo.fromJson(Map<String, dynamic> json)
-      : userID = json['uid'],
+      : userID = json['user_id'],
         displayName = json['display_name'],
+        photoUrl = json['photo_url'] ?? "",
         lastChanged = json['last_changed'];
 
-  Map<String, dynamic> toJson() => {'userID': userID, 'display_name': displayName, 'last_changed': lastChanged};
+  Map<String, dynamic> toJson() => {
+        'user_id': userID,
+        'display_name': displayName,
+        'photo_url': photoUrl,
+        'last_changed': lastChanged,
+      };
 
   @override
   String toString() {
-    return "UserInfo [userId=$userID,display_name=$displayName,last_changed=$lastChanged]";
+    return "UserInfo [user_id=$userID,display_name=$displayName,last_changed=$lastChanged]";
   }
 }
