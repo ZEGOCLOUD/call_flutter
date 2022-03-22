@@ -56,8 +56,7 @@ class ZegoCallService extends ChangeNotifier {
       'finish_time': 0,
       'is_video': type == ZegoCallType.kZegoCallTypeVideo,
       'users': {
-        caller.uid + 'test': {
-          // TODO uid change for test only
+        caller.uid: {
           "display_name": caller.displayName,
           "photo_url": caller.photoURL,
           "role": 0,
@@ -141,25 +140,25 @@ class ZegoCallService extends ChangeNotifier {
           isSelfBeenCall = value['role'] == 1;
         }
       });
-      // if (isSelfBeenCall) {
-      Map<String, String> notificationPayload = {
-        'call_id': callID!,
-        'caller_id': callerID,
-        'caller_name': callerName,
-        'caller_photo_url': callerPhotoUrl,
-      };
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-        id: 1,
-        // largeIcon: callerPhotoUrl,
-        // icon: callerPhotoUrl,
-        channelKey: 'basic_channel',
-        title: '$callerName',
-        body: 'Invite you to call...',
-        payload: notificationPayload,
-        category: NotificationCategory.Call,
-      ));
-      // }
+      if (isSelfBeenCall) {
+        Map<String, String> notificationPayload = {
+          'call_id': callID!,
+          'caller_id': callerID,
+          'caller_name': callerName,
+          'caller_photo_url': callerPhotoUrl,
+        };
+        AwesomeNotifications().createNotification(
+            content: NotificationContent(
+          id: 1,
+          // largeIcon: callerPhotoUrl,
+          // icon: callerPhotoUrl,
+          channelKey: 'basic_channel',
+          title: '$callerName',
+          body: 'Invite you to call...',
+          payload: notificationPayload,
+          category: NotificationCategory.Call,
+        ));
+      }
     });
   }
 
