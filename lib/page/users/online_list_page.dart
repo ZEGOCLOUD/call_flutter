@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../common/style/styles.dart';
 import '../../model/zego_user_info.dart';
 import '../../service/zego_user_service.dart';
 import '../navigation_back_bar.dart';
@@ -37,7 +38,10 @@ class OnlineListPage extends HookWidget {
             child: Container(
       padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 0),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        NavigationBackBar(targetBackUrl: PageRouteNames.welcome),
+        const NavigationBackBar(
+            targetBackUrl: PageRouteNames.welcome,
+            title: "Back",
+            titleStyle: StyleConstant.backText),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
         Consumer<ZegoUserService>(

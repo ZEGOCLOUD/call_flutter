@@ -2,14 +2,10 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
-
-import '../../service/zego_user_service.dart';
 
 /// Displayed as a profile image if the user doesn't have one.
 const placeholderImage =
@@ -44,13 +40,6 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
   @override
   void dispose() {
     super.dispose();
-  }
-
-  /// Example code for sign out.
-  Future<void> _signOut() async {
-    await FirebaseAuth.instance.signOut();
-    await GoogleSignIn().signOut();
-    Navigator.pushReplacementNamed(context, PageRouteNames.auth);
   }
 
   @override
@@ -91,10 +80,11 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
         ),
         const Expanded(child: SizedBox()),
         IconButton(
-          icon: Image.asset(StyleIconUrls.titleBarSettings),
-          iconSize: 68.w,
-          onPressed: _signOut,
-        ),
+            icon: Image.asset(StyleIconUrls.titleBarSettings),
+            iconSize: 68.w,
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, PageRouteNames.settings);
+            }),
       ],
     );
   }

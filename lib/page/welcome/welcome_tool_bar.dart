@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../service/zego_user_service.dart';
-import '../broswer.dart';
+import '../../constants/zego_page_constant.dart';
+import '../browser.dart';
 
 class WelcomeToolBarButton extends StatelessWidget {
   final String iconAssetName;
@@ -59,7 +57,7 @@ class WelcomeToolBar extends StatelessWidget {
                 iconAssetName: StyleIconUrls.welcomeContactUs,
                 text: 'Contact us'),
             onTap: () {
-              _launchURL(context, contactUSURL);
+              launchURL(context, contactUSURL);
             },
           ),
         ),
@@ -78,7 +76,7 @@ class WelcomeToolBar extends StatelessWidget {
             child: const WelcomeToolBarButton(
                 iconAssetName: StyleIconUrls.welcomeGetMore, text: 'Get more'),
             onTap: () {
-              _launchURL(context, getMoreURL);
+              launchURL(context, getMoreURL);
             },
           ),
         ),
@@ -86,9 +84,9 @@ class WelcomeToolBar extends StatelessWidget {
     );
   }
 
-  void _launchURL(BuildContext context, String targetURL) async {
+  void launchURL(BuildContext context, String targetURL) async {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return Browser(url: targetURL);
+      return Browser(url: targetURL, backURL: PageRouteNames.welcome);
     }));
   }
 }

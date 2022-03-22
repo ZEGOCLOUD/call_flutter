@@ -1,36 +1,34 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 
+import 'package:wakelock/wakelock.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:loader_overlay/loader_overlay.dart';
-import 'package:wakelock/wakelock.dart';
 import 'package:flutter_background/flutter_background.dart';
 import 'package:flutter_bugly/flutter_bugly.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
+
 import 'package:zego_call_flutter/page/auth/auth_gate.dart';
 import 'package:zego_call_flutter/page/calling/calling_page.dart';
+import 'package:zego_call_flutter/page/settings/settings_page.dart';
 import 'package:zego_call_flutter/page/users/online_list_page.dart';
 import 'package:zego_call_flutter/page/welcome/welcome_page.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
-
 import 'package:zego_call_flutter/service/zego_room_manager.dart';
 import 'package:zego_call_flutter/service/zego_user_service.dart';
 import 'package:zego_call_flutter/service/zego_loading_service.dart';
-
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
-import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
-
 import 'package:zego_call_flutter/page/room/room_main_page.dart';
-import 'package:zego_call_flutter/page/users/online_list_page.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 
 Future<void> main() async {
   FlutterBugly.postCatchedException(() async {
@@ -144,6 +142,7 @@ class ZegoApp extends StatelessWidget {
                   routes: {
                     PageRouteNames.auth: (context) => const AuthGate(),
                     PageRouteNames.welcome: (context) => const WelcomePage(),
+                    PageRouteNames.settings: (context) => const SettingsPage(),
                     PageRouteNames.calling: (context) => const CallingPage(),
                     PageRouteNames.onlineList: (context) =>
                         const OnlineListPage(),
