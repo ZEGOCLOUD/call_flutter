@@ -17,7 +17,7 @@ class OnlineListAvatar extends StatelessWidget {
     return SizedBox(
       width: 84.w,
       child: CircleAvatar(
-        foregroundImage: AssetImage("images/avatar/avatar_$avatarIndex.png"),
+        foregroundImage: AssetImage("images/avatar_$avatarIndex.png"),
       ),
     );
   }

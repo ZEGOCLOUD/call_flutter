@@ -6,10 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
-
-/// Displayed as a profile image if the user doesn't have one.
-const placeholderImage =
-    'https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png';
+import '../../common/user_avatar.dart';
 
 class WelcomeTitleBar extends StatefulWidget {
   const WelcomeTitleBar({Key? key}) : super(key: key);
@@ -44,15 +41,15 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
 
   @override
   Widget build(BuildContext context) {
+    var avatarIndex = getUserAvatarIndex(user.displayName ?? "");
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         CircleAvatar(
           maxRadius: 37.w,
-          backgroundImage: NetworkImage(
-            user.photoURL ?? placeholderImage,
-          ),
+          backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
         ),
         Container(
           padding: EdgeInsets.fromLTRB(36.w, 0, 0, 0),
@@ -69,7 +66,7 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
                 ),
               ),
               Text(
-                user.uid,
+                ("ID: ${user.uid}"),
                 style: TextStyle(
                   color: const Color(0xFF606060),
                   fontSize: 20.sp,
