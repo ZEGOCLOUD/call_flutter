@@ -1,12 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
+import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_be_invite_frame.dart';
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_state.dart';
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_video_calling_frame.dart';
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_voice_calling_frame.dart';
 
+import '../../model/zego_user_info.dart';
+import '../../service/zego_call_service.dart';
+
 class MiniOverlayPage extends StatefulWidget {
-  MiniOverlayPage({Key? key}) : super(key: key);
+  MiniOverlayPage({Key? key, required this.onPosUpdateRequest})
+      : super(key: key);
+
+  Function(double x, double y) onPosUpdateRequest;
 
   @override
   _MiniOverlayPageState createState() => _MiniOverlayPageState();
@@ -17,18 +25,40 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   // Both of the caller and callee disable the camera while calling
   bool fromVideoToVoice = false;
+  ZegoUserInfo inviteInfo = ZegoUserInfo.empty();
+  ZegoCallType inviteCallType = ZegoCallType.kZegoCallTypeVoice;
 
   final machine = sm.Machine<MiniOverlayPageState>();
   late sm.State<MiniOverlayPageState> stateIdle;
   late sm.State<MiniOverlayPageState> stateVoiceCalling;
   late sm.State<MiniOverlayPageState> stateVideoCalling;
+  late sm.State<MiniOverlayPageState> stateBeInvite;
 
   void updatePageCurrentState() {
     setState(() => currentState = machine.current!.identifier);
   }
 
+  void updatePagePosition() {
+    // TODO @adam get pos by screen data
+    if (machine.current!.identifier != MiniOverlayPageState.kBeInvite) {
+      widget.onPosUpdateRequest(300, 500);
+    } else {
+      widget.onPosUpdateRequest(20, 20);
+    }
+  }
+
   @override
   void initState() {
+    // Listen on CallService event
+    final callService = context.read<ZegoCallService>();
+    callService.onReceiveCallInvite = (ZegoUserInfo info, ZegoCallType type) {
+      setState(() {
+        inviteInfo = info;
+        inviteCallType = type;
+      });
+      stateBeInvite.enter();
+    };
+
     machine.onAfterTransition.listen((event) {
       updatePageCurrentState();
     });
@@ -40,6 +70,13 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
       });
     stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
     stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling);
+    stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite)
+      ..onExit(() {
+        setState(() {
+          inviteInfo = ZegoUserInfo.empty();
+          inviteCallType = ZegoCallType.kZegoCallTypeVoice;
+        });
+      });
     machine.start();
     machine.current = stateVoiceCalling; // TODO test
 
@@ -68,6 +105,14 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                 setState(() => fromVideoToVoice = true);
                 stateVoiceCalling.enter();
               });
+        case MiniOverlayPageState.kBeInvite:
+          return MiniOverlayBeInviteFrame(
+            callerID: inviteInfo.userID,
+            callerName: inviteInfo.displayName,
+            callType: inviteCallType,
+            onDecline: () => stateIdle.enter(),
+            onAccept: () => stateIdle.enter(),
+          );
       }
     }
 

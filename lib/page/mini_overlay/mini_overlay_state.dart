@@ -1,4 +1,4 @@
-enum MiniOverlayPageState { kIdle, kVoiceCalling, kVideoCalling }
+enum MiniOverlayPageState { kIdle, kVoiceCalling, kVideoCalling, kBeInvite }
 
 enum MiniOverlayPageVoiceCallingState {
   kIdle,
