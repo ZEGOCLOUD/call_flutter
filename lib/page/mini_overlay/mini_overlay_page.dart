@@ -49,38 +49,54 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    getContentByCurrentState() {
-      switch (currentState) {
-        case MiniOverlayPageState.kIdle:
-          return const SizedBox();
-        case MiniOverlayPageState.kVoiceCalling:
-          return Container(
-            width: 156.w,
-            height: 156.h,
+    switch (currentState) {
+      case MiniOverlayPageState.kIdle:
+        return const Text('');
+      case MiniOverlayPageState.kVoiceCalling:
+        return Column(
+          children: [
+            Container(
+              width: 156.w,
+              height: 156.h,
+              padding: EdgeInsets.all(12.0.w),
+              decoration: BoxDecoration(
+                color: const Color(0xffF3F4F7),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(100.0.w),
+                    bottomLeft: Radius.circular(100.0.w)),
+              ),
+              child: MiniOverlayVoiceCallingFrame(
+                waitingDuration: 10,
+                onIdleStateEntry: () => stateIdle.enter(),
+                defaultState: fromVideoToVoice
+                    ? MiniOverlayPageVoiceCallingState.kOnline
+                    : MiniOverlayPageVoiceCallingState.kWaiting,
+              ),
+            ),
+            SizedBox(
+              height: 105.h,
+              // 105 is voice & video position y diff to overlay page
+            )
+          ],
+        );
+      case MiniOverlayPageState.kVideoCalling:
+        return Container(
+            width: 157.w,
+            height: 261.h,
             padding: EdgeInsets.all(12.0.w),
             decoration: BoxDecoration(
               color: const Color(0xffF3F4F7),
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(100.0.w),
-                  bottomLeft: Radius.circular(100.0.w)),
+                  topLeft: Radius.circular(20.0.w),
+                  bottomLeft: Radius.circular(20.0.w)),
             ),
-            child: MiniOverlayVoiceCallingFrame(
-              waitingDuration: 10,
-              onIdleStateEntry: () => stateIdle.enter(),
-              defaultState: fromVideoToVoice
-                  ? MiniOverlayPageVoiceCallingState.kOnline
-                  : MiniOverlayPageVoiceCallingState.kWaiting,
-            ),
-          );
-        case MiniOverlayPageState.kVideoCalling:
-          return MiniOverlayVideoCallingFrame(
-              waitingDuration: 10,
-              onIdleStateEntry: () => stateIdle.enter(),
-              onBothWithoutVideoEntry: () {
-                setState(() => fromVideoToVoice = true);
-                stateVoiceCalling.enter();
-              });
-      }
+            child: MiniOverlayVideoCallingFrame(
+                waitingDuration: 10,
+                onIdleStateEntry: () => stateIdle.enter(),
+                onBothWithoutVideoEntry: () {
+                  setState(() => fromVideoToVoice = true);
+                  stateVoiceCalling.enter();
+                }));
     }
   }
 }

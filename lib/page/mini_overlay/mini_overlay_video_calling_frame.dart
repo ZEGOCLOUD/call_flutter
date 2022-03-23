@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../model/zego_user_info.dart';
 import '../../service/zego_call_service.dart';
@@ -85,48 +86,37 @@ class _MiniOverlayVoiceCallingFrameState
 
   @override
   Widget build(BuildContext context) {
-    getContentByCurrentState() {
-      switch (currentState) {
-        case MiniOverlayPageVideoCallingState.kIdle:
-          return const SizedBox();
-        case MiniOverlayPageVideoCallingState.kWaiting:
-          return Center(
-              child: Container(
-            color: Colors.cyan,
-            width: 100,
-            height: 50,
-            child: const Text(
-              'Waiting...',
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          ));
-        case MiniOverlayPageVideoCallingState.kCalleeWithVideo:
-          return Center(
-              child: Container(
-            color: Colors.cyan,
-            width: 100,
-            height: 50,
-            child: const Text(
-              'Show callee video here',
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          ));
-        case MiniOverlayPageVideoCallingState.kOnlyCallerWithVideo:
-          return Center(
-              child: Container(
-            color: Colors.cyan,
-            width: 100,
-            height: 50,
-            child: const Text(
-              'Show caller video here',
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          ));
-        case MiniOverlayPageVideoCallingState.kBothWithoutVideo:
-          return const SizedBox();
-      }
+    switch (currentState) {
+      case MiniOverlayPageVideoCallingState.kIdle:
+      case MiniOverlayPageVideoCallingState.kWaiting:
+        return const SizedBox();
+      case MiniOverlayPageVideoCallingState.kBothWithoutVideo:
+        return const SizedBox();
+      case MiniOverlayPageVideoCallingState.kCalleeWithVideo:
+        return createVideoView(const Text(
+          'Show callee video here',
+          style: TextStyle(color: Colors.white, fontSize: 12),
+        ));
+      case MiniOverlayPageVideoCallingState.kOnlyCallerWithVideo:
+        return createVideoView(const Text(
+          'Show caller video here',
+          style: TextStyle(color: Colors.white, fontSize: 12),
+        ));
     }
+  }
 
-    return getContentByCurrentState();
+  Widget createVideoView(Widget playingView) {
+    return Center(
+        child: Container(
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(8.0.w),
+            bottomLeft: Radius.circular(8.0.w)),
+      ),
+      width: 133.w,
+      height: 237.h,
+      child: playingView,
+    ));
   }
 }
