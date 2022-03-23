@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_state.dart';
+import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_video_calling_frame.dart';
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_voice_calling_frame.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,6 +15,9 @@ class MiniOverlayPage extends StatefulWidget {
 
 class _MiniOverlayPageState extends State<MiniOverlayPage> {
   MiniOverlayPageState currentState = MiniOverlayPageState.kIdle;
+
+  // Both of the caller and callee disable the camera while calling
+  bool fromVideoToVoice = false;
 
   final machine = sm.Machine<MiniOverlayPageState>();
   late sm.State<MiniOverlayPageState> stateIdle;
@@ -33,6 +36,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
     stateIdle = machine.newState(MiniOverlayPageState.kIdle)
       ..onTimeout(const Duration(seconds: 3), () => stateVoiceCalling.enter())
       ..onEntry(() {
+        setState(() => fromVideoToVoice = false);
         print("mini overlay page entry idle state...");
       });
     stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
@@ -45,28 +49,38 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    switch (currentState) {
-      case MiniOverlayPageState.kIdle:
-        return Container(width: 100, height: 100, color: Colors.grey);
-      case MiniOverlayPageState.kVoiceCalling:
-        return Container(
-          width: 156.w,
-          height: 156.h,
-          padding: EdgeInsets.all(12.0.w),
-          decoration: BoxDecoration(
-            color: const Color(0xffF3F4F7),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(100.0.w),
-                bottomLeft: Radius.circular(100.0.w)),
-          ),
-          child: MiniOverlayVoiceCallingFrame(
+    getContentByCurrentState() {
+      switch (currentState) {
+        case MiniOverlayPageState.kIdle:
+          return const SizedBox();
+        case MiniOverlayPageState.kVoiceCalling:
+          return Container(
+            width: 156.w,
+            height: 156.h,
+            padding: EdgeInsets.all(12.0.w),
+            decoration: BoxDecoration(
+              color: const Color(0xffF3F4F7),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(100.0.w),
+                  bottomLeft: Radius.circular(100.0.w)),
+            ),
+            child: MiniOverlayVoiceCallingFrame(
               waitingDuration: 10,
-              onIdleStateEntry: () {
-                stateIdle.enter();
-              }),
-        );
-      case MiniOverlayPageState.kVideoCalling:
-        return Container(width: 100, height: 100, color: Colors.blue);
+              onIdleStateEntry: () => stateIdle.enter(),
+              defaultState: fromVideoToVoice
+                  ? MiniOverlayPageVoiceCallingState.kOnline
+                  : MiniOverlayPageVoiceCallingState.kWaiting,
+            ),
+          );
+        case MiniOverlayPageState.kVideoCalling:
+          return MiniOverlayVideoCallingFrame(
+              waitingDuration: 10,
+              onIdleStateEntry: () => stateIdle.enter(),
+              onBothWithoutVideoEntry: () {
+                setState(() => fromVideoToVoice = true);
+                stateVoiceCalling.enter();
+              });
+      }
     }
   }
 }
