@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class MiniOverlayPage extends StatefulWidget {
   MiniOverlayPage({Key? key, required this.onPosUpdateRequest})
       : super(key: key);
 
-  Function(double x, double y) onPosUpdateRequest;
+  Function(bool visibility, Point<double> pos, Size size) onPosUpdateRequest;
 
   @override
   _MiniOverlayPageState createState() => _MiniOverlayPageState();
@@ -37,21 +38,28 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   void updatePageCurrentState() {
     setState(() => currentState = machine.current!.identifier);
+    updatePageDetails();
   }
 
-  void updatePagePosition() {
+  void updatePageDetails() {
     switch (machine.current!.identifier) {
       case MiniOverlayPageState.kIdle:
-        // TODO: Handle this case.
+        //  TODO test
+        widget.onPosUpdateRequest(
+            false, const Point(10, 10), const Size(100, 100));
+        // widget.onPosUpdateRequest(
+        //     false, const Point(0, 0), const Size(0, 0));
         break;
       case MiniOverlayPageState.kVoiceCalling:
-        widget.onPosUpdateRequest(594.w, 1058.h - 44.h);
+        widget.onPosUpdateRequest(
+            true, Point(594.w, 1058.h), Size(156.w, 156.h));
         break;
       case MiniOverlayPageState.kVideoCalling:
-        widget.onPosUpdateRequest(593.w, 953.h - 44.h);
+        widget.onPosUpdateRequest(
+            true, Point(593.w, 953.h), Size(157.w, 261.h));
         break;
       case MiniOverlayPageState.kBeInvite:
-        widget.onPosUpdateRequest(16.w, 60.h - 44.h);
+        widget.onPosUpdateRequest(true, Point(16.w, 60.h), Size(718.w, 160.h));
         break;
     }
   }
@@ -87,16 +95,30 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
         });
       });
     machine.start();
-    machine.current = stateVoiceCalling; // TODO test
+    machine.current = stateIdle;
 
     super.initState();
+
+    // TODO test
+    Future.delayed(const Duration(seconds: 5), () {
+      machine.current = stateBeInvite;
+      Future.delayed(const Duration(seconds: 5), () {
+        machine.current = stateIdle;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     switch (currentState) {
       case MiniOverlayPageState.kIdle:
-        return const Text('');
+        // return const Text('');
+        //  TODO test
+        return const Text('IDLE',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 20.0,
+            ));
       case MiniOverlayPageState.kVoiceCalling:
         return Column(
           children: [
@@ -143,13 +165,21 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                   stateVoiceCalling.enter();
                 }));
       case MiniOverlayPageState.kBeInvite:
-        return MiniOverlayBeInviteFrame(
-          callerID: inviteInfo.userID,
-          callerName: inviteInfo.displayName,
-          callType: inviteCallType,
-          onDecline: () => stateIdle.enter(),
-          onAccept: () => stateIdle.enter(),
-        );
+        return Container(
+            width: 718.w,
+            height: 160.h,
+            padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
+            decoration: BoxDecoration(
+              color: const Color(0xff333333).withOpacity(0.8),
+              borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
+            ),
+            child: MiniOverlayBeInviteFrame(
+              callerID: inviteInfo.userID,
+              callerName: inviteInfo.displayName,
+              callType: inviteCallType,
+              onDecline: () => stateIdle.enter(),
+              onAccept: () => stateIdle.enter(),
+            ));
     }
   }
 }

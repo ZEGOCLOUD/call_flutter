@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,9 @@ class ZegoApp extends StatefulWidget {
 }
 
 class _ZegoAppState extends State<ZegoApp> {
-  Offset _offset = Offset(300, 500);
+  Size overlaySize = Size(0, 0);
+  Offset overlayPos = Offset(0, 0);
+  bool overlayVisibility = true;
 
   @override
   Widget build(BuildContext context) {
@@ -160,21 +163,29 @@ class _ZegoAppState extends State<ZegoApp> {
                     return Stack(
                       children: [
                         child!,
-                        Positioned(
-                          left: _offset.dx,
-                          top: _offset.dy,
-                          child: GestureDetector(
-                            onPanUpdate: (d) => setState(() =>
-                                _offset += Offset(d.delta.dx, d.delta.dy)),
-                            child: MiniOverlayPage(
-                              onPosUpdateRequest: (double x, double y) {
-                                setState(() {
-                                  _offset = Offset(x, y);
-                                });
-                              },
-                            ),
-                          ),
-                        ),
+                        Visibility(
+                            visible: overlayVisibility,
+                            child: Positioned(
+                              left: overlayPos.dx,
+                              top: overlayPos.dy,
+                              child: GestureDetector(
+                                onPanUpdate: (d) => setState(() => overlayPos +=
+                                    Offset(d.delta.dx, d.delta.dy)),
+                                child: SizedBox(
+                                  width: overlaySize.width,
+                                  height: overlaySize.height,
+                                  child: MiniOverlayPage(
+                                    onPosUpdateRequest: (bool visibility,
+                                        Point<double> pos, Size size) {
+                                      setState(() {
+                                        overlayPos = Offset(pos.x, pos.y);
+                                        overlaySize = size;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            )),
                       ],
                     );
                   },
