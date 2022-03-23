@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +13,7 @@ import '../../model/zego_user_info.dart';
 import '../../service/zego_call_service.dart';
 
 class MiniOverlayPage extends StatefulWidget {
-  MiniOverlayPage({Key? key, required this.onPosUpdateRequest})
-      : super(key: key);
-
-  Function(double x, double y) onPosUpdateRequest;
+  MiniOverlayPage({Key? key}) : super(key: key);
 
   @override
   _MiniOverlayPageState createState() => _MiniOverlayPageState();
@@ -23,6 +21,10 @@ class MiniOverlayPage extends StatefulWidget {
 
 class _MiniOverlayPageState extends State<MiniOverlayPage> {
   MiniOverlayPageState currentState = MiniOverlayPageState.kIdle;
+
+  Size overlaySize = const Size(0, 0);
+  Offset overlayTopLeftPos = const Offset(0, 0);
+  bool overlayVisibility = true;
 
   // Both of the caller and callee disable the camera while calling
   bool fromVideoToVoice = false;
@@ -34,27 +36,6 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   late sm.State<MiniOverlayPageState> stateVoiceCalling;
   late sm.State<MiniOverlayPageState> stateVideoCalling;
   late sm.State<MiniOverlayPageState> stateBeInvite;
-
-  void updatePageCurrentState() {
-    setState(() => currentState = machine.current!.identifier);
-  }
-
-  void updatePagePosition() {
-    switch (machine.current!.identifier) {
-      case MiniOverlayPageState.kIdle:
-        // TODO: Handle this case.
-        break;
-      case MiniOverlayPageState.kVoiceCalling:
-        widget.onPosUpdateRequest(594.w, 1058.h - 44.h);
-        break;
-      case MiniOverlayPageState.kVideoCalling:
-        widget.onPosUpdateRequest(593.w, 953.h - 44.h);
-        break;
-      case MiniOverlayPageState.kBeInvite:
-        widget.onPosUpdateRequest(16.w, 60.h - 44.h);
-        break;
-    }
-  }
 
   @override
   void initState() {
@@ -68,33 +49,32 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
       stateBeInvite.enter();
     };
 
-    machine.onAfterTransition.listen((event) {
-      updatePageCurrentState();
-    });
-    stateIdle = machine.newState(MiniOverlayPageState.kIdle)
-      ..onTimeout(const Duration(seconds: 3), () => stateVoiceCalling.enter())
-      ..onEntry(() {
-        setState(() => fromVideoToVoice = false);
-        print("mini overlay page entry idle state...");
-      });
-    stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
-    stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling);
-    stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite)
-      ..onExit(() {
-        setState(() {
-          inviteInfo = ZegoUserInfo.empty();
-          inviteCallType = ZegoCallType.kZegoCallTypeVoice;
-        });
-      });
-    machine.start();
-    machine.current = stateVoiceCalling; // TODO test
+    initStateMachine();
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    switch (currentState) {
+    return Visibility(
+        visible: overlayVisibility,
+        child: Positioned(
+          left: overlayTopLeftPos.dx,
+          top: overlayTopLeftPos.dy,
+          child: GestureDetector(
+            onPanUpdate: (d) => setState(
+                () => overlayTopLeftPos += Offset(d.delta.dx, d.delta.dy)),
+            child: SizedBox(
+              width: overlaySize.width,
+              height: overlaySize.height,
+              child: overlayItem(),
+            ),
+          ),
+        ));
+  }
+
+  Widget overlayItem() {
+    switch (machine.current!.identifier) {
       case MiniOverlayPageState.kIdle:
         return const Text('');
       case MiniOverlayPageState.kVoiceCalling:
@@ -126,8 +106,8 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
         );
       case MiniOverlayPageState.kVideoCalling:
         return Container(
-            width: 157.w,
-            height: 261.h,
+            width: 200.w,
+            height: 300.h,
             padding: EdgeInsets.all(12.0.w),
             decoration: BoxDecoration(
               color: const Color(0xffF3F4F7),
@@ -143,13 +123,84 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                   stateVoiceCalling.enter();
                 }));
       case MiniOverlayPageState.kBeInvite:
-        return MiniOverlayBeInviteFrame(
-          callerID: inviteInfo.userID,
-          callerName: inviteInfo.displayName,
-          callType: inviteCallType,
-          onDecline: () => stateIdle.enter(),
-          onAccept: () => stateIdle.enter(),
-        );
+        return Container(
+            width: 718.w,
+            height: 160.h,
+            padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
+            decoration: BoxDecoration(
+              color: const Color(0xff333333).withOpacity(0.8),
+              borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
+            ),
+            child: MiniOverlayBeInviteFrame(
+              callerID: inviteInfo.userID,
+              callerName: inviteInfo.displayName,
+              callType: inviteCallType,
+              onDecline: () => stateIdle.enter(),
+              onAccept: () => stateIdle.enter(),
+            ));
     }
+  }
+
+  void updatePageCurrentState() {
+    setState(() => currentState = machine.current!.identifier);
+    updatePage();
+  }
+
+  initStateMachine() {
+    machine.onAfterTransition.listen((event) {
+      updatePageCurrentState();
+    });
+    stateIdle = machine.newState(MiniOverlayPageState.kIdle)
+      ..onTimeout(const Duration(seconds: 3), () => stateVoiceCalling.enter())
+      ..onEntry(() {
+        setState(() => fromVideoToVoice = false);
+        print("mini overlay page entry idle state...");
+      });
+    stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
+    stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling);
+    stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite)
+      ..onExit(() {
+        setState(() {
+          inviteInfo = ZegoUserInfo.empty();
+          inviteCallType = ZegoCallType.kZegoCallTypeVoice;
+        });
+      });
+    machine.start();
+    machine.current = stateIdle;
+
+    // TODO test
+    Future.delayed(const Duration(seconds: 5), () {
+      machine.current = stateVideoCalling;
+      updatePageCurrentState();
+      Future.delayed(const Duration(seconds: 5), () {
+        machine.current = stateIdle;
+        updatePageCurrentState();
+      });
+    });
+  }
+
+  void updatePage() {
+    switch (machine.current!.identifier) {
+      case MiniOverlayPageState.kIdle:
+        updatePageDetails(false, const Point(0, 0), const Size(0, 0));
+        break;
+      case MiniOverlayPageState.kVoiceCalling:
+        updatePageDetails(true, Point(594.w, 950.h), Size(156.w, 156.h));
+        break;
+      case MiniOverlayPageState.kVideoCalling:
+        updatePageDetails(true, Point(593.w, 903.h), Size(157.w, 261.h));
+        break;
+      case MiniOverlayPageState.kBeInvite:
+        updatePageDetails(true, Point(16.w, 60.h), Size(718.w, 160.h));
+        break;
+    }
+  }
+
+  updatePageDetails(bool visibility, Point<double> topLeft, Size size) {
+    setState(() {
+      overlayVisibility = true;
+      overlayTopLeftPos = Offset(topLeft.x, topLeft.y);
+      overlaySize = size;
+    });
   }
 }
