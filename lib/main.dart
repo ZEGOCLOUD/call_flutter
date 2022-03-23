@@ -166,7 +166,13 @@ class _ZegoAppState extends State<ZegoApp> {
                           child: GestureDetector(
                             onPanUpdate: (d) => setState(() =>
                                 _offset += Offset(d.delta.dx, d.delta.dy)),
-                            child: MiniOverlayPage(),
+                            child: MiniOverlayPage(
+                              onPosUpdateRequest: (double x, double y) {
+                                setState(() {
+                                  _offset = Offset(x, y);
+                                });
+                              },
+                            ),
                           ),
                         ),
                       ],
