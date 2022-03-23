@@ -16,7 +16,8 @@ class MiniOverlayPage extends StatefulWidget {
   MiniOverlayPage({Key? key, required this.onPosUpdateRequest})
       : super(key: key);
 
-  Function(bool visibility, Point<double> pos, Size size) onPosUpdateRequest;
+  Function(bool visibility, Point<double> topLeft, Size size)
+  onPosUpdateRequest;
 
   @override
   _MiniOverlayPageState createState() => _MiniOverlayPageState();
