@@ -42,6 +42,9 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
     // Listen on CallService event
     final callService = context.read<ZegoCallService>();
     callService.onReceiveCallInvite = (ZegoUserInfo info, ZegoCallType type) {
+      if (machine.current?.identifier != MiniOverlayPageState.kIdle) {
+        return;
+      }
       setState(() {
         inviteInfo = info;
         inviteCallType = type;

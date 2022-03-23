@@ -20,9 +20,18 @@ enum ZegoCallTimeoutType {
   kZegoCallTimeoutTypeInvitee
 }
 
+class ZegoCallInfo {
+  String callID = '';
+  String callerID = '';
+  List<String> callees = [];
+
+  ZegoCallInfo.empty();
+}
+
 class ZegoCallService extends ChangeNotifier {
   late final FirebaseMessaging _messaging;
   late Map<String, ZegoUserInfo> _userDic;
+  ZegoCallInfo callInfo = ZegoCallInfo.empty();
 
   ZegoCallService() {
     _registerNotification();
@@ -76,12 +85,11 @@ class ZegoCallService extends ChangeNotifier {
     return 0;
   }
 
-  Future<int> cancelCall(String userID) async {
+  Future<int> cancelCall() async {
     return 0;
   }
 
-  Future<int> respondCall(
-      String callerUserID, String token, ZegoResponseType type) async {
+  Future<int> respondCall(String token, ZegoResponseType type) async {
     return 0;
   }
 

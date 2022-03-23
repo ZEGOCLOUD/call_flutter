@@ -61,7 +61,7 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame> {
         const Expanded(child: Text("")),
         GestureDetector(
           onTap: () {
-            context.read<ZegoCallService>().respondCall(widget.callerID,
+            context.read<ZegoCallService>().respondCall(
                 'token', ZegoResponseType.kZegoResponseTypeDecline);
             widget.onDecline();
           },
@@ -75,8 +75,9 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame> {
         ),
         GestureDetector(
           onTap: () {
-            context.read<ZegoCallService>().respondCall(widget.callerID,
-                'token', ZegoResponseType.kZegoResponseTypeAccept);
+            context
+                .read<ZegoCallService>()
+                .respondCall('token', ZegoResponseType.kZegoResponseTypeAccept);
             widget.onAccept();
           },
           child: SizedBox(
