@@ -6,6 +6,7 @@ import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_be_invite_frame
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_state.dart';
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_video_calling_frame.dart';
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_voice_calling_frame.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../model/zego_user_info.dart';
 import '../../service/zego_call_service.dart';
@@ -90,12 +91,23 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
         case MiniOverlayPageState.kIdle:
           return const SizedBox();
         case MiniOverlayPageState.kVoiceCalling:
-          return MiniOverlayVoiceCallingFrame(
-            waitingDuration: 10,
-            onIdleStateEntry: () => stateIdle.enter(),
-            defaultState: fromVideoToVoice
-                ? MiniOverlayPageVoiceCallingState.kOnline
-                : MiniOverlayPageVoiceCallingState.kWaiting,
+          return Container(
+            width: 156.w,
+            height: 156.h,
+            padding: EdgeInsets.all(12.0.w),
+            decoration: BoxDecoration(
+              color: const Color(0xffF3F4F7),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(100.0.w),
+                  bottomLeft: Radius.circular(100.0.w)),
+            ),
+            child: MiniOverlayVoiceCallingFrame(
+              waitingDuration: 10,
+              onIdleStateEntry: () => stateIdle.enter(),
+              defaultState: fromVideoToVoice
+                  ? MiniOverlayPageVoiceCallingState.kOnline
+                  : MiniOverlayPageVoiceCallingState.kWaiting,
+            ),
           );
         case MiniOverlayPageState.kVideoCalling:
           return MiniOverlayVideoCallingFrame(
@@ -115,16 +127,5 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           );
       }
     }
-
-    return Container(
-      width: 100,
-      height: 100,
-      color: Colors.grey,
-      child: SizedBox(
-        width: 100,
-        height: 200,
-        child: getContentByCurrentState(),
-      ),
-    );
   }
 }

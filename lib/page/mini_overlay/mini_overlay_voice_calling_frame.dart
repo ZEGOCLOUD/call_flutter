@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../common/style/styles.dart';
 import '../../model/zego_user_info.dart';
 import '../../service/zego_call_service.dart';
 import 'mini_overlay_state.dart';
@@ -87,50 +89,35 @@ class _MiniOverlayVoiceCallingFrameState
 
   @override
   Widget build(BuildContext context) {
-    getContentByCurrentState() {
-      switch (currentState) {
-        case MiniOverlayPageVoiceCallingState.kIdle:
-          return const SizedBox();
-        case MiniOverlayPageVoiceCallingState.kWaiting:
-          return Center(
-              child: Container(
-            color: Colors.cyan,
-            width: 100,
-            height: 50,
-            child: const Text(
-              'Waiting...',
-              style: TextStyle(color: Colors.white, fontSize: 12),
+    return Container(
+        width: 132.w,
+        height: 132.h,
+        decoration: const BoxDecoration(
+          color: Color(0xff0055FF),
+          shape: BoxShape.circle,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(
+              image: const AssetImage(StyleIconUrls.roomOverlayVoiceCalling),
+              width: 56.w,
             ),
-          ));
-        case MiniOverlayPageVoiceCallingState.kOnline:
-          return const Text(
-            '00:01',
-            style: TextStyle(color: Colors.white, fontSize: 12),
-          );
-        case MiniOverlayPageVoiceCallingState.kDeclined:
-          return const Text(
-            'Declined',
-            style: TextStyle(color: Colors.white, fontSize: 12),
-          );
-        case MiniOverlayPageVoiceCallingState.kMissed:
-          return Center(
-              child: Container(
-            color: Colors.cyan,
-            width: 100,
-            height: 50,
-            child: const Text(
-              'Missed',
-              style: TextStyle(color: Colors.white, fontSize: 12),
-            ),
-          ));
-        case MiniOverlayPageVoiceCallingState.kEnded:
-          return const Text(
-            'Ended',
-            style: TextStyle(color: Colors.white, fontSize: 12),
-          );
-      }
-    }
+            Text(getStateText(currentState), style: StyleConstant.voiceCallingText),
+          ],
+        ));
+  }
 
-    return getContentByCurrentState();
+  String getStateText(MiniOverlayPageVoiceCallingState state) {
+    var stateTextMap = {
+      MiniOverlayPageVoiceCallingState.kIdle: "",
+      MiniOverlayPageVoiceCallingState.kWaiting: "Waiting...",
+      MiniOverlayPageVoiceCallingState.kOnline: "00:01 todo",
+      MiniOverlayPageVoiceCallingState.kDeclined: "Declined",
+      MiniOverlayPageVoiceCallingState.kMissed: "Missed",
+      MiniOverlayPageVoiceCallingState.kEnded: "Ended",
+    };
+
+    return stateTextMap[state]!;
   }
 }
