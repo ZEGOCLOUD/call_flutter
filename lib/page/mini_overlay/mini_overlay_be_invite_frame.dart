@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
 
+import '../../common/user_avatar.dart';
 import '../../service/zego_call_service.dart';
 
 class MiniOverlayBeInviteFrame extends StatefulWidget {
@@ -27,40 +30,79 @@ class MiniOverlayBeInviteFrame extends StatefulWidget {
 class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 500,
-      height: 100,
-      child: Row(
-        children: [
-          Container(
-            color: Colors.red,
-            width: 150,
-            height: 50,
-            child: Column(
-              children: [
-                Text('${widget.callerName}'),
-                Text('${widget.callType}'),
-              ],
+    var avatarIndex = getUserAvatarIndex(widget.callerName);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CircleAvatar(
+          maxRadius: 84.w,
+          backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+        ),
+        SizedBox(
+          width: 26.w,
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.callerName,
+              style: StyleConstant.inviteUserName,
+              textAlign: TextAlign.left,
             ),
+            SizedBox(
+              height: 7.h,
+            ),
+            Text(callTypeString(widget.callType),
+                style: StyleConstant.inviteCallType),
+          ],
+        ),
+        const Expanded(child: Text("")),
+        GestureDetector(
+          onTap: () {
+            context.read<ZegoCallService>().respondCall(widget.callerID,
+                'token', ZegoResponseType.kZegoResponseTypeDecline);
+            widget.onDecline();
+          },
+          child: SizedBox(
+            width: 74.w,
+            child: Image.asset(StyleIconUrls.inviteReject),
           ),
-          const Expanded(child: SizedBox()),
-          // TODO get token
-          TextButton(
-              onPressed: () {
-                context.read<ZegoCallService>().respondCall(widget.callerID,
-                    'token', ZegoResponseType.kZegoResponseTypeDecline);
-                widget.onDecline();
-              },
-              child: const Text('Cancel')),
-          TextButton(
-              onPressed: () {
-                context.read<ZegoCallService>().respondCall(widget.callerID,
-                    'token', ZegoResponseType.kZegoResponseTypeAccept);
-                widget.onAccept();
-              },
-              child: const Text('Cancel')),
-        ],
-      ),
+        ),
+        SizedBox(
+          width: 40.w,
+        ),
+        GestureDetector(
+          onTap: () {
+            context.read<ZegoCallService>().respondCall(widget.callerID,
+                'token', ZegoResponseType.kZegoResponseTypeAccept);
+            widget.onAccept();
+          },
+          child: SizedBox(
+            width: 74.w,
+            child: Image.asset(imageURLByCallType(widget.callType)),
+          ),
+        ),
+      ],
     );
+  }
+
+  String imageURLByCallType(ZegoCallType callType) {
+    switch (callType) {
+      case ZegoCallType.kZegoCallTypeVoice:
+        return StyleIconUrls.inviteVoice;
+      case ZegoCallType.kZegoCallTypeVideo:
+        return StyleIconUrls.inviteVideo;
+    }
+  }
+
+  String callTypeString(ZegoCallType callType) {
+    switch (callType) {
+      case ZegoCallType.kZegoCallTypeVoice:
+        return "Zego Voice Call";
+      case ZegoCallType.kZegoCallTypeVideo:
+        return "Zego Video Call";
+    }
   }
 }

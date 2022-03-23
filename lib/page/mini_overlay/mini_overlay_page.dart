@@ -40,11 +40,19 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   }
 
   void updatePagePosition() {
-    // TODO @adam get pos by screen data
-    if (machine.current!.identifier != MiniOverlayPageState.kBeInvite) {
-      widget.onPosUpdateRequest(300, 500);
-    } else {
-      widget.onPosUpdateRequest(20, 20);
+    switch (machine.current!.identifier) {
+      case MiniOverlayPageState.kIdle:
+        // TODO: Handle this case.
+        break;
+      case MiniOverlayPageState.kVoiceCalling:
+        widget.onPosUpdateRequest(594.w, 1058.h - 44.h);
+        break;
+      case MiniOverlayPageState.kVideoCalling:
+        widget.onPosUpdateRequest(593.w, 953.h - 44.h);
+        break;
+      case MiniOverlayPageState.kBeInvite:
+        widget.onPosUpdateRequest(16.w, 60.h - 44.h);
+        break;
     }
   }
 
@@ -86,46 +94,62 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    getContentByCurrentState() {
-      switch (currentState) {
-        case MiniOverlayPageState.kIdle:
-          return const SizedBox();
-        case MiniOverlayPageState.kVoiceCalling:
-          return Container(
-            width: 156.w,
-            height: 156.h,
+    switch (currentState) {
+      case MiniOverlayPageState.kIdle:
+        return const Text('');
+      case MiniOverlayPageState.kVoiceCalling:
+        return Column(
+          children: [
+            Container(
+              width: 156.w,
+              height: 156.h,
+              padding: EdgeInsets.all(12.0.w),
+              decoration: BoxDecoration(
+                color: const Color(0xffF3F4F7),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(100.0.w),
+                    bottomLeft: Radius.circular(100.0.w)),
+              ),
+              child: MiniOverlayVoiceCallingFrame(
+                waitingDuration: 10,
+                onIdleStateEntry: () => stateIdle.enter(),
+                defaultState: fromVideoToVoice
+                    ? MiniOverlayPageVoiceCallingState.kOnline
+                    : MiniOverlayPageVoiceCallingState.kWaiting,
+              ),
+            ),
+            SizedBox(
+              height: 105.h,
+              // 105 is voice & video position y diff to overlay page
+            )
+          ],
+        );
+      case MiniOverlayPageState.kVideoCalling:
+        return Container(
+            width: 157.w,
+            height: 261.h,
             padding: EdgeInsets.all(12.0.w),
             decoration: BoxDecoration(
               color: const Color(0xffF3F4F7),
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(100.0.w),
-                  bottomLeft: Radius.circular(100.0.w)),
+                  topLeft: Radius.circular(20.0.w),
+                  bottomLeft: Radius.circular(20.0.w)),
             ),
-            child: MiniOverlayVoiceCallingFrame(
-              waitingDuration: 10,
-              onIdleStateEntry: () => stateIdle.enter(),
-              defaultState: fromVideoToVoice
-                  ? MiniOverlayPageVoiceCallingState.kOnline
-                  : MiniOverlayPageVoiceCallingState.kWaiting,
-            ),
-          );
-        case MiniOverlayPageState.kVideoCalling:
-          return MiniOverlayVideoCallingFrame(
-              waitingDuration: 10,
-              onIdleStateEntry: () => stateIdle.enter(),
-              onBothWithoutVideoEntry: () {
-                setState(() => fromVideoToVoice = true);
-                stateVoiceCalling.enter();
-              });
-        case MiniOverlayPageState.kBeInvite:
-          return MiniOverlayBeInviteFrame(
-            callerID: inviteInfo.userID,
-            callerName: inviteInfo.displayName,
-            callType: inviteCallType,
-            onDecline: () => stateIdle.enter(),
-            onAccept: () => stateIdle.enter(),
-          );
-      }
+            child: MiniOverlayVideoCallingFrame(
+                waitingDuration: 10,
+                onIdleStateEntry: () => stateIdle.enter(),
+                onBothWithoutVideoEntry: () {
+                  setState(() => fromVideoToVoice = true);
+                  stateVoiceCalling.enter();
+                }));
+      case MiniOverlayPageState.kBeInvite:
+        return MiniOverlayBeInviteFrame(
+          callerID: inviteInfo.userID,
+          callerName: inviteInfo.displayName,
+          callType: inviteCallType,
+          onDecline: () => stateIdle.enter(),
+          onAccept: () => stateIdle.enter(),
+        );
     }
   }
 }
