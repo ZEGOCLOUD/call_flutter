@@ -36,6 +36,9 @@ class StyleIconUrls {
   static const String welcomeCardBg = 'images/welcome_card_bg.png';
   static const String welcomeContactUs = 'images/welcome_contact_us.png';
   static const String welcomeGetMore = 'images/welcome_get_more.png';
+
+  static const String roomOverlayVoiceCalling = 'images/room_overlay_voice_'
+      'calling.png';
 }
 
 /// constant style
@@ -87,6 +90,10 @@ class StyleConstant {
     color: Color(0xff2A2A2A),
     fontSize: 28.0,
   );
+
+  static const voiceCallingText = TextStyle(
+      color: Colors.white, fontSize: 9.0, decoration: TextDecoration.none);
+
   static const loadingText = TextStyle(
       color: Colors.white, fontSize: 10.0, decoration: TextDecoration.none);
 }

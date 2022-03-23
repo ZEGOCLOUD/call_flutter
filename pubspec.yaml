@@ -132,6 +132,7 @@ flutter:
     - images/welcome_card_bg.png
     - images/welcome_contact_us.png
     - images/welcome_get_more.png
+    - images/room_overlay_voice_calling.png
 
     - images/2.0x/auth_logo.png
     - images/2.0x/auth_icon_google.png
@@ -151,6 +152,7 @@ flutter:
     - images/2.0x/welcome_card_bg.png
     - images/2.0x/welcome_contact_us.png
     - images/2.0x/welcome_get_more.png
+    - images/2.0x/room_overlay_voice_calling.png
 
     - images/3.0x/auth_logo.png
     - images/3.0x/auth_icon_google.png
@@ -170,3 +172,4 @@ flutter:
     - images/3.0x/welcome_card_bg.png
     - images/3.0x/welcome_contact_us.png
     - images/3.0x/welcome_get_more.png
+    - images/3.0x/room_overlay_voice_calling.png
