@@ -161,8 +161,8 @@ class _ZegoAppState extends State<ZegoApp> {
                       children: [
                         child!,
                         Positioned(
-                          bottom: 120.h,
-                          right: 0,
+                          left: _offset.dx,
+                          top: _offset.dy,
                           child: GestureDetector(
                             onPanUpdate: (d) => setState(() =>
                                 _offset += Offset(d.delta.dx, d.delta.dy)),

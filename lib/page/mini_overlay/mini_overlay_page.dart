@@ -40,11 +40,19 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   }
 
   void updatePagePosition() {
-    // TODO @adam get pos by screen data
-    if (machine.current!.identifier != MiniOverlayPageState.kBeInvite) {
-      widget.onPosUpdateRequest(300, 500);
-    } else {
-      widget.onPosUpdateRequest(20, 20);
+    switch (machine.current!.identifier) {
+      case MiniOverlayPageState.kIdle:
+        // TODO: Handle this case.
+        break;
+      case MiniOverlayPageState.kVoiceCalling:
+        widget.onPosUpdateRequest(594.w, 1058.h - 44.h);
+        break;
+      case MiniOverlayPageState.kVideoCalling:
+        widget.onPosUpdateRequest(593.w, 953.h - 44.h);
+        break;
+      case MiniOverlayPageState.kBeInvite:
+        widget.onPosUpdateRequest(16.w, 60.h - 44.h);
+        break;
     }
   }
 
@@ -128,21 +136,20 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                   bottomLeft: Radius.circular(20.0.w)),
             ),
             child: MiniOverlayVideoCallingFrame(
-              waitingDuration: 10,
-              onIdleStateEntry: () => stateIdle.enter(),
-              onBothWithoutVideoEntry: () {
-                setState(() => fromVideoToVoice = true);
-                stateVoiceCalling.enter();
-              }));
-        case MiniOverlayPageState.kBeInvite:
-          return MiniOverlayBeInviteFrame(
-            callerID: inviteInfo.userID,
-            callerName: inviteInfo.displayName,
-            callType: inviteCallType,
-            onDecline: () => stateIdle.enter(),
-            onAccept: () => stateIdle.enter(),
-          );
-      }
+                waitingDuration: 10,
+                onIdleStateEntry: () => stateIdle.enter(),
+                onBothWithoutVideoEntry: () {
+                  setState(() => fromVideoToVoice = true);
+                  stateVoiceCalling.enter();
+                }));
+      case MiniOverlayPageState.kBeInvite:
+        return MiniOverlayBeInviteFrame(
+          callerID: inviteInfo.userID,
+          callerName: inviteInfo.displayName,
+          callType: inviteCallType,
+          onDecline: () => stateIdle.enter(),
+          onAccept: () => stateIdle.enter(),
+        );
     }
   }
 }

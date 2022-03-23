@@ -28,6 +28,13 @@ class StyleIconUrls {
   static const String authLogo = 'images/auth_logo.png';
   static const String authIconGoogle = 'images/auth_icon_google.png';
 
+  static const String inviteVoice = 'images/invite_voice.png';
+  static const String inviteVoicePressed = 'images/invite_voice_pressed.png';
+  static const String inviteRejectPressed = 'images/invite_reject_pressed.png';
+  static const String inviteReject = 'images/invite_reject.png';
+  static const String inviteVideoPressed = 'images/invite_video_pressed.png';
+  static const String inviteVideo = 'images/invite_video.png';
+
   static const String userListDefault = 'images/user_list_default.png';
   static const String userLIstVideoCall = 'images/user_list_video_call.png';
   static const String userListAudioCall = 'images/user_list_audio_call.png';
@@ -67,6 +74,17 @@ class StyleConstant {
   static const browserTitle = TextStyle(
     color: StyleColors.dark,
     fontSize: settingsFontSize,
+  );
+
+  static const inviteUserName = TextStyle(
+    color: Colors.white,
+    fontSize: 18.0,
+    decoration: TextDecoration.none,
+  );
+  static const inviteCallType = TextStyle(
+    color: Colors.white,
+    fontSize: 12.0,
+    decoration: TextDecoration.none,
   );
 
   static const userListNameText = TextStyle(
