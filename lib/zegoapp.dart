@@ -36,10 +36,6 @@ class ZegoApp extends StatefulWidget {
 }
 
 class _ZegoAppState extends State<ZegoApp> {
-  Size overlaySize = const Size(0, 0);
-  Offset overlayTopLeftPos = const Offset(0, 0);
-  bool overlayVisibility = true;
-
   @override
   Widget build(BuildContext context) {
     Wakelock.enable(); //  always bright
@@ -92,7 +88,7 @@ class _ZegoAppState extends State<ZegoApp> {
                     return Stack(
                       children: [
                         child!,
-                        overlayPage(),
+                        MiniOverlayPage(),
                       ],
                     );
                   },
@@ -120,32 +116,6 @@ class _ZegoAppState extends State<ZegoApp> {
         },
       ),
     ];
-  }
-
-  Widget overlayPage() {
-    return Visibility(
-        visible: overlayVisibility,
-        child: Positioned(
-          left: overlayTopLeftPos.dx,
-          top: overlayTopLeftPos.dy,
-          child: GestureDetector(
-            onPanUpdate: (d) => setState(
-                () => overlayTopLeftPos += Offset(d.delta.dx, d.delta.dy)),
-            child: SizedBox(
-              width: overlaySize.width,
-              height: overlaySize.height,
-              child: MiniOverlayPage(
-                onPosUpdateRequest:
-                    (bool visibility, Point<double> topLeft, Size size) {
-                  setState(() {
-                    overlayTopLeftPos = Offset(topLeft.x, topLeft.y);
-                    overlaySize = size;
-                  });
-                },
-              ),
-            ),
-          ),
-        ));
   }
 
   roomMainLoadingPage() {
