@@ -23,7 +23,13 @@ class VideoPlayerView extends StatefulWidget {
 
 class VideoPlayerViewState extends State<VideoPlayerView> {
   int playingViewID = 0;
-  ValueNotifier<bool> isStreamReady = ValueNotifier<bool>(false);
+  bool isStreamReady = false;
+
+  void onStreamReadyStateChanged(bool isReady) {
+    setState(() {
+      isStreamReady = isReady;
+    });
+  }
 
   @override
   void initState() {
@@ -31,7 +37,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       var streamService = context.read<ZegoStreamService>();
-      streamService.addStreamStateNotifier(widget.userID, isStreamReady);
+      streamService.addStreamStateNotifier(widget.userID, onStreamReadyStateChanged);
     });
   }
 
@@ -45,9 +51,14 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
 
   @override
   Widget build(BuildContext context) {
-    return isStreamReady.value
-        ? Center(child: createPlayingView(context))
-        : AvatarBackgroundView(userName: widget.userName);
+    return Stack(
+      children: [
+        Center(child: createPlayingView(context)),
+        Visibility(
+            visible: !isStreamReady,
+            child: AvatarBackgroundView(userName: widget.userName))
+      ],
+    );
   }
 
   Widget? createPlayingView(BuildContext context) {

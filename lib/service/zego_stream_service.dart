@@ -18,13 +18,13 @@ class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
     ZegoExpressEngine.onPlayerStateUpdate = _onPlayerStateUpdate;
   }
 
-  Map<String, ValueNotifier<bool>> userStreamReadyNotifiers = {};
+  Map<String, ValueChanged<bool>> userStreamReadyNotifiers = {};
 
   onRoomLeave() {}
 
   onRoomEnter() {}
 
-  addStreamStateNotifier(String userID, ValueNotifier<bool> notifier) {
+  addStreamStateNotifier(String userID, ValueChanged<bool> notifier) {
     var streamID = _generateStreamID(userID);
 
     if (userStreamReadyNotifiers.containsKey(streamID)) {
@@ -103,7 +103,7 @@ class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
       int errorCode, Map<String, dynamic> extendedData) {
     if (userStreamReadyNotifiers.containsKey(streamID)) {
       final isReady = ZegoPublisherState.Publishing == state;
-      userStreamReadyNotifiers[streamID]!.value = isReady;
+      userStreamReadyNotifiers[streamID]!(isReady);
     }
   }
 
@@ -111,7 +111,7 @@ class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
       int errorCode, Map<String, dynamic> extendedData) {
     if (userStreamReadyNotifiers.containsKey(streamID)) {
       final isReady = ZegoPlayerState.Playing == state;
-      userStreamReadyNotifiers[streamID]!.value = isReady;
+      userStreamReadyNotifiers[streamID]!(isReady);
     }
   }
 }
