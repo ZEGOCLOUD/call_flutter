@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_be_invite_frame.dart';
@@ -43,6 +44,21 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
     registerCallService();
 
     super.initState();
+
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      machine.current = stateIdle;
+      machine.start();
+
+      // TODO test
+      Future.delayed(const Duration(seconds: 5), () {
+        machine.current = stateVideoCalling;
+        updatePageCurrentState();
+        Future.delayed(const Duration(seconds: 5), () {
+          machine.current = stateIdle;
+          updatePageCurrentState();
+        });
+      });
+    });
   }
 
   @override
@@ -65,6 +81,10 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   }
 
   Widget overlayItem() {
+    if (null == machine.current) {
+      return const Text('');
+    }
+
     switch (machine.current!.identifier) {
       case MiniOverlayPageState.kIdle:
         return const Text('');
@@ -172,22 +192,14 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           inviteCallType = ZegoCallType.kZegoCallTypeVoice;
         });
       });
-
-    machine.current = stateIdle;
-    machine.start();
-
-    // TODO test
-    Future.delayed(const Duration(seconds: 5), () {
-      machine.current = stateVideoCalling;
-      updatePageCurrentState();
-      Future.delayed(const Duration(seconds: 5), () {
-        machine.current = stateIdle;
-        updatePageCurrentState();
-      });
-    });
   }
 
   void updatePage() {
+    if (null == machine.current) {
+      updatePageDetails(false, const Point(0, 0), const Size(0, 0));
+      return;
+    }
+
     switch (machine.current!.identifier) {
       case MiniOverlayPageState.kIdle:
         updatePageDetails(false, const Point(0, 0), const Size(0, 0));

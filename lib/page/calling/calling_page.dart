@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
@@ -43,6 +44,11 @@ class _CallingPageState extends State<CallingPage> {
     registerCallService();
 
     super.initState();
+
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      machine.current = stateIdle;
+      machine.start();
+    });
   }
 
   void initStateMachine() {
@@ -60,9 +66,6 @@ class _CallingPageState extends State<CallingPage> {
     stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo);
     stateOnlineVoice = machine.newState(CallingState.kOnlineVoice);
     stateOnlineVideo = machine.newState(CallingState.kOnlineVideo);
-
-    machine.current = stateIdle;
-    machine.start();
   }
 
   void registerCallService() {
