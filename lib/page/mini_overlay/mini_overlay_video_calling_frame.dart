@@ -69,8 +69,7 @@ class _MiniOverlayVoiceCallingFrameState
     // Update current for drive UI rebuild
     machine.onAfterTransition.listen((event) {
       print('[state machine] mini overlay video : from ${event.source} to '
-          '${event
-          .target}');
+          '${event.target}');
 
       updatePageCurrentState();
     });

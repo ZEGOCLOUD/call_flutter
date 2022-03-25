@@ -164,13 +164,13 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   initStateMachine() {
     machine.onAfterTransition.listen((event) {
-      print('[state machine] mini overlay page : from ${event.source} to ${event
-          .target}');
+      print(
+          '[state machine] mini overlay page : from ${event.source} to ${event.target}');
 
       updatePageCurrentState();
     });
 
-    stateIdle = machine.newState(MiniOverlayPageState.kIdle) //  default state;
+    stateIdle = machine.newState(MiniOverlayPageState.kIdle); //  default state;
     stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
     stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling);
     stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite)
