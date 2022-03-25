@@ -42,6 +42,13 @@ class _MiniOverlayVoiceCallingFrameState
 
   @override
   void initState() {
+    initStateMachine();
+    registerCallService();
+
+    super.initState();
+  }
+
+  registerCallService() {
     // Listen on CallService event
     final callService = context.read<ZegoCallService>();
     callService.onReceiveCallEnded = () => stateEnded.enter();
@@ -51,13 +58,17 @@ class _MiniOverlayVoiceCallingFrameState
         (ZegoUserInfo info, ZegoCallType type) => stateOnline.enter();
     callService.onReceiveCallTimeout =
         (ZegoCallTimeoutType type) => stateMissed.enter();
+  }
 
+  initStateMachine() {
     // Update current for drive UI rebuild
     machine.onAfterTransition.listen((event) {
       updatePageCurrentState();
     });
+
     // Config state
-    stateIdle = machine.newState(MiniOverlayPageVoiceCallingState.kIdle)
+    stateIdle = machine.newState(MiniOverlayPageVoiceCallingState.kIdle) //
+      // default state
       ..onEntry(widget.onIdleStateEntry);
     stateWaiting = machine.newState(MiniOverlayPageVoiceCallingState.kWaiting)
       ..onTimeout(
@@ -75,8 +86,6 @@ class _MiniOverlayVoiceCallingFrameState
 
     machine.start();
     machine.current = widget.defaultState;
-
-    super.initState();
   }
 
   void updatePageCurrentState() {
@@ -103,7 +112,8 @@ class _MiniOverlayVoiceCallingFrameState
               image: const AssetImage(StyleIconUrls.roomOverlayVoiceCalling),
               width: 56.w,
             ),
-            Text(getStateText(currentState), style: StyleConstant.voiceCallingText),
+            Text(getStateText(currentState),
+                style: StyleConstant.voiceCallingText),
           ],
         ));
   }

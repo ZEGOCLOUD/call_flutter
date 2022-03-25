@@ -6,19 +6,18 @@ import 'package:statemachine/statemachine.dart' as sm;
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/page/calling/calling_state.dart';
-import 'package:zego_call_flutter/page/calling/calling_video_frame.dart';
-import 'package:zego_call_flutter/page/calling/online_video_frame.dart';
-import 'package:zego_call_flutter/page/calling/online_voice_frame.dart';
+import 'package:zego_call_flutter/page/calling/calling_caller_view.dart';
+import 'package:zego_call_flutter/page/calling/online_video_view.dart';
+import 'package:zego_call_flutter/page/calling/online_voice_view.dart';
 
 import '../../model/zego_user_info.dart';
 import '../../service/zego_call_service.dart';
-import 'calling_voice_frame.dart';
+import '../../service/zego_user_service.dart';
+import 'calling_callee_view.dart';
 
 class CallingPage extends StatefulWidget {
   // ignore: public_member_api_docs
-  CallingPage({Key? key, required this.currentState}) : super(key: key);
-
-  CallingState currentState;
+  const CallingPage({Key? key}) : super(key: key);
 
   @override
   _CallingPageState createState() => _CallingPageState();
@@ -40,6 +39,32 @@ class _CallingPageState extends State<CallingPage> {
 
   @override
   void initState() {
+    initStateMachine();
+    registerCallService();
+
+    super.initState();
+  }
+
+  void initStateMachine() {
+    machine.onAfterTransition.listen((event) {
+      updatePageCurrentState();
+    });
+
+    stateIdle = machine.newState(CallingState.kIdle) // default state
+      ..onTimeout(
+          const Duration(seconds: 3), () => stateCallingWithVideo.enter())
+      ..onEntry(() {
+        print("Calling page entry idle state...");
+      });
+    stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice);
+    stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo);
+    stateOnlineVoice = machine.newState(CallingState.kOnlineVoice);
+    stateOnlineVideo = machine.newState(CallingState.kOnlineVideo);
+
+    machine.start();
+  }
+
+  void registerCallService() {
     // Listen on CallService event
     final callService = context.read<ZegoCallService>();
     callService.onReceiveCallEnded = () => stateIdle.enter();
@@ -55,53 +80,51 @@ class _CallingPageState extends State<CallingPage> {
     };
     callService.onReceiveCallTimeout =
         (ZegoCallTimeoutType type) => stateIdle.enter();
-
-    machine.onAfterTransition.listen((event) {
-      updatePageCurrentState();
-    });
-    stateIdle = machine.newState(CallingState.kIdle)
-      ..onTimeout(
-          const Duration(seconds: 3), () => stateCallingWithVideo.enter())
-      ..onEntry(() {
-        print("Calling page entry idle state...");
-      });
-    stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice);
-    stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo);
-    stateOnlineVoice = machine.newState(CallingState.kOnlineVoice);
-    stateOnlineVideo = machine.newState(CallingState.kOnlineVideo);
-
-    machine.start();
-    machine.current = widget.currentState;
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final notificationPayload =
+    final pageParams =
         ModalRoute.of(context)!.settings.arguments as Map<String, String>;
-    print(notificationPayload);
-    var callerName = notificationPayload['caller_name']!;
 
-    getContentByCurrentState() {
-      switch (currentState) {
-        case CallingState.kIdle:
-          return const SizedBox();
-        case CallingState.kCallingWithVoice:
-          return CallingVoiceFrame(
-              calleeName: 'calleeName', calleePhotoUrl: 'calleePhotoUrl');
-        case CallingState.kCallingWithVideo:
-          return CallingVideoFrame(
-              calleeName: 'calleeName', calleePhotoUrl: 'calleePhotoUrl');
-        case CallingState.kOnlineVoice:
-          return OnlineVoiceFrame(
-              calleeName: 'calleeName', calleePhotoUrl: 'calleePhotoUrl');
-        case CallingState.kOnlineVideo:
-          return OnlineVideoFrame(
-              calleeName: 'calleeName', calleePhotoUrl: 'calleePhotoUrl');
-      }
+    //  test
+    print(pageParams);
+
+    ZegoUserInfo caller = ZegoUserInfo('001', 'name 1', 0);
+    ZegoUserInfo callee = ZegoUserInfo('002', 'name 2', 0);
+
+    final localUserID = context.read<ZegoUserService>().localUserInfo.userID;
+    var localUserIsCaller = localUserID == caller.userID;
+    var callType = currentState == CallingState.kCallingWithVideo
+        ? ZegoCallType.kZegoCallTypeVideo
+        : ZegoCallType.kZegoCallTypeVoice;
+
+    switch (currentState) {
+      case CallingState.kIdle:
+        return const SizedBox();
+      case CallingState.kCallingWithVoice:
+      case CallingState.kCallingWithVideo:
+        return localUserIsCaller
+            ? CallingCallerView(
+                caller: caller,
+                callee: callee,
+                callType: callType,
+              )
+            : CallingCalleeView(
+                caller: caller,
+                callee: callee,
+                callType: callType,
+              );
+      case CallingState.kOnlineVoice:
+        return OnlineVoiceView(
+          caller: caller,
+          callee: callee,
+        );
+      case CallingState.kOnlineVideo:
+        return OnlineVideoView(
+          caller: caller,
+          callee: callee,
+        );
     }
-
-    return getContentByCurrentState();
   }
 }

@@ -39,20 +39,8 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   @override
   void initState() {
-    // Listen on CallService event
-    final callService = context.read<ZegoCallService>();
-    callService.onReceiveCallInvite = (ZegoUserInfo info, ZegoCallType type) {
-      if (machine.current?.identifier != MiniOverlayPageState.kIdle) {
-        return;
-      }
-      setState(() {
-        inviteInfo = info;
-        inviteCallType = type;
-      });
-      stateBeInvite.enter();
-    };
-
     initStateMachine();
+    registerCallService();
 
     super.initState();
   }
@@ -149,11 +137,27 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
     updatePage();
   }
 
+  registerCallService() {
+    // Listen on CallService event
+    final callService = context.read<ZegoCallService>();
+    callService.onReceiveCallInvite = (ZegoUserInfo info, ZegoCallType type) {
+      if (machine.current?.identifier != MiniOverlayPageState.kIdle) {
+        return;
+      }
+      setState(() {
+        inviteInfo = info;
+        inviteCallType = type;
+      });
+      stateBeInvite.enter();
+    };
+  }
+
   initStateMachine() {
     machine.onAfterTransition.listen((event) {
       updatePageCurrentState();
     });
-    stateIdle = machine.newState(MiniOverlayPageState.kIdle)
+
+    stateIdle = machine.newState(MiniOverlayPageState.kIdle) //  default state
       ..onTimeout(const Duration(seconds: 3), () => stateVoiceCalling.enter())
       ..onEntry(() {
         setState(() => fromVideoToVoice = false);
@@ -168,8 +172,8 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           inviteCallType = ZegoCallType.kZegoCallTypeVoice;
         });
       });
+
     machine.start();
-    machine.current = stateIdle;
 
     // TODO test
     Future.delayed(const Duration(seconds: 5), () {

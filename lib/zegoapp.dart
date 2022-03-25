@@ -26,7 +26,6 @@ import 'package:zego_call_flutter/service/zego_user_service.dart';
 import 'package:zego_call_flutter/service/zego_loading_service.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
-import 'package:zego_call_flutter/page/room/room_main_page.dart';
 
 class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);
@@ -82,7 +81,6 @@ class _ZegoAppState extends State<ZegoApp> {
                     PageRouteNames.calling: (context) => const CallingPage(),
                     PageRouteNames.onlineList: (context) =>
                         const OnlineListPage(),
-                    PageRouteNames.roomMain: (context) => roomMainLoadingPage(),
                   },
                   builder: (context, child) {
                     return Stack(
@@ -116,43 +114,6 @@ class _ZegoAppState extends State<ZegoApp> {
         },
       ),
     ];
-  }
-
-  roomMainLoadingPage() {
-    return Consumer<ZegoLoadingService>(
-      builder: (context, loadingService, child) => LoaderOverlay(
-        child: RoomMainPage(),
-        useDefaultLoading: false,
-        overlayColor: Colors.grey,
-        overlayOpacity: 0.8,
-        overlayWidget: SizedBox(
-          width: 750.w,
-          height: 1334.h,
-          child: Center(
-            child: Column(
-              children: [
-                const Expanded(child: Text('')),
-                const CupertinoActivityIndicator(
-                  radius: 14,
-                ),
-                SizedBox(height: 5.h),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(6.0),
-                    color: Colors.grey,
-                  ),
-                  child: Text(loadingService.loadingText(),
-                      style: StyleConstant.loadingText),
-                ),
-                const Expanded(child: Text(''))
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 
   void hideKeyboard(BuildContext context) {

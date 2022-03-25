@@ -9,15 +9,14 @@ import "package:firebase_messaging/firebase_messaging.dart";
 
 import '../model/zego_user_info.dart';
 
-enum ZegoResponseType {
-  kZegoResponseTypeAccept,
-  kZegoResponseTypeDecline,
-  kZegoResponseTypeBusy
-}
 enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
 enum ZegoCallTimeoutType {
-  kZegoCallTimeoutTypeInviter,
-  kZegoCallTimeoutTypeInvitee
+  kZegoCallTimeoutTypeCaller,
+  kZegoCallTimeoutTypeCallee
+}
+enum ZegoDeclineType {
+  kZegoDeclineTypeDecline, //  Actively refuse
+  kZegoDeclineTypeBusy //  The call was busy, Passive refused
 }
 
 class ZegoCallInfo {
@@ -89,7 +88,11 @@ class ZegoCallService extends ChangeNotifier {
     return 0;
   }
 
-  Future<int> respondCall(String token, ZegoResponseType type) async {
+  Future<int> acceptCall() async {
+    return 0;
+  }
+
+  Future<int> declineCall(String token, ZegoDeclineType type) async {
     return 0;
   }
 
