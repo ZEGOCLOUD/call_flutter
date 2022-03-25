@@ -46,22 +46,19 @@ class _CallingPageState extends State<CallingPage> {
     super.initState();
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      machine.current = stateIdle;
       machine.start();
     });
   }
 
   void initStateMachine() {
     machine.onAfterTransition.listen((event) {
+      print('[state machine] calling page: from ${event.source} to ${event
+          .target}');
+
       updatePageCurrentState();
     });
 
-    stateIdle = machine.newState(CallingState.kIdle) // default state
-      ..onTimeout(
-          const Duration(seconds: 3), () => stateCallingWithVideo.enter())
-      ..onEntry(() {
-        print("Calling page entry idle state...");
-      });
+    stateIdle = machine.newState(CallingState.kIdle) // default state;
     stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice);
     stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo);
     stateOnlineVoice = machine.newState(CallingState.kOnlineVoice);
@@ -91,7 +88,9 @@ class _CallingPageState extends State<CallingPage> {
     // final pageParams =
     //     ModalRoute.of(context)!.settings.arguments as Map<String, String>;
 
-    var localUserInfo = context.read<ZegoUserService>().localUserInfo;
+    var localUserInfo = context
+        .read<ZegoUserService>()
+        .localUserInfo;
     //  test
     ZegoUserInfo caller = localUserInfo;
     ZegoUserInfo callee = ZegoUserInfo('002', 'name 2', 0);
@@ -108,15 +107,15 @@ class _CallingPageState extends State<CallingPage> {
             : ZegoCallType.kZegoCallTypeVoice;
         return localUserIsCaller
             ? CallingCallerView(
-                caller: caller,
-                callee: callee,
-                callType: callType,
-              )
+          caller: caller,
+          callee: callee,
+          callType: callType,
+        )
             : CallingCalleeView(
-                caller: caller,
-                callee: callee,
-                callType: callType,
-              );
+          caller: caller,
+          callee: callee,
+          callType: callType,
+        );
       case CallingState.kOnlineVoice:
         return OnlineVoiceView(
           caller: caller,

@@ -46,18 +46,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
     super.initState();
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      machine.current = stateIdle;
       machine.start();
-
-      // TODO test
-      Future.delayed(const Duration(seconds: 5), () {
-        machine.current = stateVideoCalling;
-        updatePageCurrentState();
-        Future.delayed(const Duration(seconds: 5), () {
-          machine.current = stateIdle;
-          updatePageCurrentState();
-        });
-      });
     });
   }
 
@@ -69,8 +58,9 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           left: overlayTopLeftPos.dx,
           top: overlayTopLeftPos.dy,
           child: GestureDetector(
-            onPanUpdate: (d) => setState(
-                () => overlayTopLeftPos += Offset(d.delta.dx, d.delta.dy)),
+            //  disable move
+            // onPanUpdate: (d) => setState(
+            //     () => overlayTopLeftPos += Offset(d.delta.dx, d.delta.dy)),
             child: SizedBox(
               width: overlaySize.width,
               height: overlaySize.height,
@@ -174,15 +164,13 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
 
   initStateMachine() {
     machine.onAfterTransition.listen((event) {
+      print('[state machine] mini overlay page : from ${event.source} to ${event
+          .target}');
+
       updatePageCurrentState();
     });
 
-    stateIdle = machine.newState(MiniOverlayPageState.kIdle) //  default state
-      ..onTimeout(const Duration(seconds: 3), () => stateVoiceCalling.enter())
-      ..onEntry(() {
-        setState(() => fromVideoToVoice = false);
-        print("mini overlay page entry idle state...");
-      });
+    stateIdle = machine.newState(MiniOverlayPageState.kIdle) //  default state;
     stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
     stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling);
     stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite)

@@ -31,7 +31,7 @@ class MiniOverlayVoiceCallingFrame extends StatefulWidget {
 class _MiniOverlayVoiceCallingFrameState
     extends State<MiniOverlayVoiceCallingFrame> {
   MiniOverlayPageVoiceCallingState currentState =
-      MiniOverlayPageVoiceCallingState.kWaiting;
+      MiniOverlayPageVoiceCallingState.kIdle;
 
   final machine = sm.Machine<MiniOverlayPageVoiceCallingState>();
   late sm.State<MiniOverlayPageVoiceCallingState> stateIdle;
@@ -49,7 +49,6 @@ class _MiniOverlayVoiceCallingFrameState
     super.initState();
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      machine.current = stateIdle;
       machine.start();
     });
   }
@@ -69,6 +68,9 @@ class _MiniOverlayVoiceCallingFrameState
   initStateMachine() {
     // Update current for drive UI rebuild
     machine.onAfterTransition.listen((event) {
+      print('[state machine] mini overlay voice : from ${event.source} to '
+          '${event.target}');
+
       updatePageCurrentState();
     });
 
@@ -83,10 +85,7 @@ class _MiniOverlayVoiceCallingFrameState
     stateDeclined = machine.newState(MiniOverlayPageVoiceCallingState.kDeclined)
       ..onTimeout(const Duration(seconds: 2), () => stateIdle.enter());
     stateMissed = machine.newState(MiniOverlayPageVoiceCallingState.kMissed)
-      ..onTimeout(const Duration(seconds: 2), () => stateIdle.enter())
-      ..onEntry(() {
-        print('Missed state is entry >>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      });
+      ..onTimeout(const Duration(seconds: 2), () => stateIdle.enter());
     stateEnded = machine.newState(MiniOverlayPageVoiceCallingState.kEnded)
       ..onTimeout(const Duration(seconds: 2), () => stateIdle.enter());
 
