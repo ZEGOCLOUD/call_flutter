@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
 
-import '../../constants/zego_page_constant.dart';
-import '../browser.dart';
+import 'package:zego_call_flutter/constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/page/browser.dart';
 
 class WelcomeToolBarButton extends StatelessWidget {
   final String iconAssetName;

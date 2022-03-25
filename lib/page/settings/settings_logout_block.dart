@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../common/style/styles.dart';
-import '../../constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
+import 'package:zego_call_flutter/constants/zego_page_constant.dart';
 
 class SettingsLogoutBlock extends StatelessWidget {
   const SettingsLogoutBlock({Key? key}) : super(key: key);

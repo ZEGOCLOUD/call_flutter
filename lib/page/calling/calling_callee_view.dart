@@ -1,14 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:zego_call_flutter/page/calling/avatar_background.dart';
-import 'package:zego_call_flutter/page/calling/calling_toolbar.dart';
+import 'package:zego_call_flutter/page/calling/widgets/avatar_background.dart';
+import 'package:zego_call_flutter/page/calling/widgets/calling_toolbar.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../common/style/styles.dart';
-import '../../common/user_avatar.dart';
-import '../../model/zego_user_info.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
+import 'package:zego_call_flutter/common/user_avatar.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
 
 class CallingCalleeView extends StatelessWidget {
   const CallingCalleeView(

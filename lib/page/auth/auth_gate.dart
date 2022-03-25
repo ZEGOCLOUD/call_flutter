@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../common/style/styles.dart';
 import 'auth_protocol_item.dart';
@@ -165,6 +166,7 @@ class _AuthGateState extends State<AuthGate> {
 
   void onLogInGooglePressed() {
     if (isPolicyCheck) {
+      checkPermission();
       _signInWithGoogle();
     } else {
       Fluttertoast.showToast(
@@ -172,6 +174,11 @@ class _AuthGateState extends State<AuthGate> {
               'Please tick to agree to the "Terms of Service" and "Privacy Policy"',
           backgroundColor: Colors.grey);
     }
+  }
+
+  void checkPermission() async {
+    await Permission.camera.request();
+    await Permission.microphone.request();
   }
 
   Future<void> _signInWithGoogle() async {

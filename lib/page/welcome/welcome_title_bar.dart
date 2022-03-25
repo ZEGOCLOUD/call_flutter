@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';
-import '../../common/user_avatar.dart';
+import 'package:zego_call_flutter/common/user_avatar.dart';
 
 class WelcomeTitleBar extends StatefulWidget {
   const WelcomeTitleBar({Key? key}) : super(key: key);

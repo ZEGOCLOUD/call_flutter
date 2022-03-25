@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../common/style/styles.dart';
-import '../../service/zego_call_service.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
+import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'calling_bottom_toolbar_button.dart';

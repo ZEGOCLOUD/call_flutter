@@ -9,7 +9,7 @@ import 'package:zego_call_flutter/common/room_info_content.dart';
 import 'package:zego_call_flutter/constants/zego_room_constant.dart';
 import 'package:zego_call_flutter/model/zego_room_info.dart';
 
-import '../model/zego_user_info.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
 
 typedef RoomCallback = Function(int);
 typedef RoomLeaveCallback = VoidCallback;
@@ -35,8 +35,7 @@ class ZegoRoomService extends ChangeNotifier {
 
   bool roomDisconnectSuccess = false;
 
-  ZegoRoomService() {
-  }
+  ZegoRoomService() {}
 
   String get _localUserID {
     return ZegoRoomManager.shared.userService.localUserInfo.userID;
@@ -82,5 +81,4 @@ class ZegoRoomService extends ChangeNotifier {
 
     return 0;
   }
-
 }

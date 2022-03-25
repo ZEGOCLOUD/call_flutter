@@ -5,10 +5,10 @@ import 'package:provider/provider.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../common/style/styles.dart';
-import '../../model/zego_user_info.dart';
-import '../../service/zego_user_service.dart';
-import '../navigation_back_bar.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
+import 'package:zego_call_flutter/service/zego_user_service.dart';
+import 'package:zego_call_flutter/page/navigation_back_bar.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 import 'package:zego_call_flutter/constants/zego_page_constant.dart';

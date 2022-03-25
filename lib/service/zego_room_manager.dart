@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
+import 'package:zego_call_flutter/service/zego_device_service.dart';
+import 'package:zego_call_flutter/service/zego_stream_service.dart';
 import 'dart:async';
 
 import 'package:zego_express_engine/zego_express_engine.dart';
@@ -20,18 +22,24 @@ class ZegoRoomManager extends ChangeNotifier {
   ZegoLoadingService loadingService = ZegoLoadingService();
   ZegoUserService userService = ZegoUserService();
   ZegoCallService callService = ZegoCallService();
+  ZegoStreamService streamService = ZegoStreamService();
+  ZegoDeviceService deviceService = ZegoDeviceService();
 
   _onRoomLeave() {
     // Reset all service data
     loadingService.onRoomLeave();
     roomService.onRoomLeave();
     userService.onRoomLeave();
+    callService.onRoomLeave();
+    streamService.onRoomLeave();
   }
 
   _onRoomEnter() {
     loadingService.onRoomEnter();
     roomService.onRoomEnter();
     userService.onRoomEnter();
+    callService.onRoomEnter();
+    streamService.onRoomEnter();
   }
 
   Future<void> initWithAPPID(int appID, String serverSecret,
@@ -40,6 +48,7 @@ class ZegoRoomManager extends ChangeNotifier {
         ZegoEngineProfile(appID, ZegoScenario.General);
     profile.enablePlatformView = true;  //  for play stream with platformView
     ZegoExpressEngine.createEngineWithProfile(profile).then((value) {
+
     });
 
     // setup service

@@ -11,9 +11,9 @@ import 'package:zego_call_flutter/page/calling/calling_caller_view.dart';
 import 'package:zego_call_flutter/page/calling/online_video_view.dart';
 import 'package:zego_call_flutter/page/calling/online_voice_view.dart';
 
-import '../../model/zego_user_info.dart';
-import '../../service/zego_call_service.dart';
-import '../../service/zego_user_service.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
+import 'package:zego_call_flutter/service/zego_call_service.dart';
+import 'package:zego_call_flutter/service/zego_user_service.dart';
 import 'calling_callee_view.dart';
 
 class CallingPage extends StatefulWidget {
@@ -46,22 +46,19 @@ class _CallingPageState extends State<CallingPage> {
     super.initState();
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      machine.current = stateIdle;
       machine.start();
     });
   }
 
   void initStateMachine() {
     machine.onAfterTransition.listen((event) {
+      print(
+          '[state machine] calling page: from ${event.source} to ${event.target}');
+
       updatePageCurrentState();
     });
 
-    stateIdle = machine.newState(CallingState.kIdle) // default state
-      ..onTimeout(
-          const Duration(seconds: 3), () => stateCallingWithVideo.enter())
-      ..onEntry(() {
-        print("Calling page entry idle state...");
-      });
+    stateIdle = machine.newState(CallingState.kIdle); // default state;
     stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice);
     stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo);
     stateOnlineVoice = machine.newState(CallingState.kOnlineVoice);

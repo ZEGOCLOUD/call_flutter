@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
 
-import '../constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/constants/zego_page_constant.dart';
 import 'navigation_back_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

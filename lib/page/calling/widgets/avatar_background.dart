@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 
-import '../../common/user_avatar.dart';
+import 'package:zego_call_flutter/common/user_avatar.dart';
 
 class AvatarBackgroundView extends StatelessWidget {
   final String userName;

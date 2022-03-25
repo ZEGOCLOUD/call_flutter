@@ -2,14 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:zego_call_flutter/page/calling/calling_toolbar.dart';
-import 'package:zego_call_flutter/page/calling/online_toolbar.dart';
-import 'package:zego_call_flutter/page/calling/video_player.dart';
+import 'package:zego_call_flutter/page/calling/widgets/calling_toolbar.dart';
+import 'package:zego_call_flutter/page/calling/widgets/online_bottom_toolbar.dart';
+import 'package:zego_call_flutter/page/calling/widgets/online_top_toolbar.dart';
+import 'package:zego_call_flutter/page/calling/widgets/video_player.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../model/zego_user_info.dart';
-import '../../service/zego_user_service.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
+import 'package:zego_call_flutter/service/zego_user_service.dart';
 
 class OnlineVideoView extends StatelessWidget {
   const OnlineVideoView({required this.caller, required this.callee, Key? key})
