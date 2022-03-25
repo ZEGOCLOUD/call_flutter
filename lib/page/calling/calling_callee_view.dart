@@ -10,7 +10,6 @@ import '../../common/style/styles.dart';
 import '../../common/user_avatar.dart';
 import '../../model/zego_user_info.dart';
 
-//  呼叫端 被呼叫界面
 class CallingCalleeView extends StatelessWidget {
   const CallingCalleeView(
       {required this.caller,

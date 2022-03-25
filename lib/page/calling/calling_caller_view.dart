@@ -11,8 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../common/user_avatar.dart';
 import '../../model/zego_user_info.dart';
 
-//  呼叫端 呼叫界面
-class CallingCallerView extends StatefulWidget {
+class CallingCallerView extends StatelessWidget {
   const CallingCallerView(
       {required this.caller,
       required this.callee,
@@ -25,13 +24,6 @@ class CallingCallerView extends StatefulWidget {
   final ZegoCallType callType;
 
   @override
-  State<StatefulWidget> createState() {
-    return CallingCallerViewState();
-  }
-}
-
-class CallingCallerViewState extends State<CallingCallerView> {
-  @override
   Widget build(BuildContext context) {
     return Stack(children: [
       backgroundView(),
@@ -40,18 +32,18 @@ class CallingCallerViewState extends State<CallingCallerView> {
   }
 
   Widget backgroundView() {
-    if (ZegoCallType.kZegoCallTypeVideo == widget.callType) {
+    if (ZegoCallType.kZegoCallTypeVideo == callType) {
       return VideoPlayerView(
-        userID: widget.caller.userID,
-        userName: widget.caller.displayName,
+        userID: caller.userID,
+        userName: caller.displayName,
       );
     }
-    return AvatarBackgroundView(userName: widget.callee.displayName);
+    return AvatarBackgroundView(userName: callee.displayName);
   }
 
   Widget surface() {
-    var isVideo = ZegoCallType.kZegoCallTypeVideo == widget.callType;
-    var avatarIndex = getUserAvatarIndex(widget.callee.displayName);
+    var isVideo = ZegoCallType.kZegoCallTypeVideo == callType;
+    var avatarIndex = getUserAvatarIndex(callee.displayName);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -76,7 +68,7 @@ class CallingCallerViewState extends State<CallingCallerView> {
         ),
         SizedBox(
           height: 59.h,
-          child: Text(widget.callee.displayName,
+          child: Text(callee.displayName,
               style: StyleConstant.callingCenterUserName),
         ),
         SizedBox(

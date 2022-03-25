@@ -81,6 +81,7 @@ class _MiniOverlayVoiceCallingFrameState
         .newState(MiniOverlayPageVideoCallingState.kBothWithoutVideo)
       ..onEntry(widget.onBothWithoutVideoEntry);
 
+    machine.current = stateIdle;
     machine.start();
   }
 

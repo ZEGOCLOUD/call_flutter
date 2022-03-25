@@ -1,4 +1,3 @@
-import 'package:zego_call_flutter/model/zego_room_user_role.dart';
 
 /// Class user information.
 /// <p>Description: This class contains the user related information.</>
@@ -8,29 +7,27 @@ class ZegoUserInfo {
 
   /// User name, cannot be null.
   String displayName = "";
-  String photoUrl = "";
-
-  int lastChanged = 0;
-
   bool mic = false;
   bool camera = false;
 
-  ZegoRoomUserRole userRole = ZegoRoomUserRole.roomUserRoleListener;
-
-  ZegoUserInfo.empty();
-
-  ZegoUserInfo(this.userID, this.displayName, this.lastChanged);
+  String photoUrl = "";
+  int lastChanged = 0;
 
   bool isEmpty() {
     return userID.isEmpty || displayName.isEmpty;
   }
+
+  ZegoUserInfo.empty();
+
+  ZegoUserInfo(this.userID, this.displayName, this.lastChanged);
 
   ZegoUserInfo clone() => ZegoUserInfo(userID, displayName, lastChanged);
 
   ZegoUserInfo.fromJson(Map<String, dynamic> json)
       : userID = json['user_id'] ?? "",
         displayName = json['display_name'],
-        photoUrl = json['photo_url'] ?? "https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png",
+        photoUrl = json['photo_url'] ??
+            "https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png",
         lastChanged = json['last_changed'];
 
   Map<String, dynamic> toJson() => {

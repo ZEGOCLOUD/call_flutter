@@ -173,6 +173,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
         });
       });
 
+    machine.current = stateIdle;
     machine.start();
 
     // TODO test

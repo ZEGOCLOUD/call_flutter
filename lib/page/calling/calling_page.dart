@@ -61,6 +61,7 @@ class _CallingPageState extends State<CallingPage> {
     stateOnlineVoice = machine.newState(CallingState.kOnlineVoice);
     stateOnlineVideo = machine.newState(CallingState.kOnlineVideo);
 
+    machine.current = stateIdle;
     machine.start();
   }
 
@@ -84,26 +85,24 @@ class _CallingPageState extends State<CallingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final pageParams =
-        ModalRoute.of(context)!.settings.arguments as Map<String, String>;
+    // final pageParams =
+    //     ModalRoute.of(context)!.settings.arguments as Map<String, String>;
 
+    var localUserInfo = context.read<ZegoUserService>().localUserInfo;
     //  test
-    print(pageParams);
-
-    ZegoUserInfo caller = ZegoUserInfo('001', 'name 1', 0);
+    ZegoUserInfo caller = localUserInfo;
     ZegoUserInfo callee = ZegoUserInfo('002', 'name 2', 0);
-
-    final localUserID = context.read<ZegoUserService>().localUserInfo.userID;
-    var localUserIsCaller = localUserID == caller.userID;
-    var callType = currentState == CallingState.kCallingWithVideo
-        ? ZegoCallType.kZegoCallTypeVideo
-        : ZegoCallType.kZegoCallTypeVoice;
+    currentState = CallingState.kOnlineVideo;
 
     switch (currentState) {
       case CallingState.kIdle:
         return const SizedBox();
       case CallingState.kCallingWithVoice:
       case CallingState.kCallingWithVideo:
+        var localUserIsCaller = localUserInfo.userID == caller.userID;
+        var callType = currentState == CallingState.kCallingWithVideo
+            ? ZegoCallType.kZegoCallTypeVideo
+            : ZegoCallType.kZegoCallTypeVoice;
         return localUserIsCaller
             ? CallingCallerView(
                 caller: caller,
