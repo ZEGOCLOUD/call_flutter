@@ -46,6 +46,30 @@ class StyleIconUrls {
 
   static const String roomOverlayVoiceCalling = 'images/room_overlay_voice_'
       'calling.png';
+
+  static const String toolbarBottomCameraClosed = 'images/toolbar_bottom_cam'
+      'era_closed.png';
+  static const String toolbarBottomCameraOpen = 'images/toolbar_bottom_camer'
+      'a_open.png';
+  static const String toolbarBottomCancel = 'images/toolbar_bottom_cancel.png';
+  static const String toolbarBottomEnd = 'images/toolbar_bottom_cancel.png';
+  static const String toolbarBottomClosed = 'images/toolbar_bottom_closed.png';
+  static const String toolbarBottomDecline = 'images/toolbar_bottom_decline'
+      '.png';
+  static const String toolbarBottomMicClosed = 'images/toolbar_bottom_mic_cl'
+      'osed.png';
+  static const String toolbarBottomMicOpen = 'images/toolbar_bottom_mic_open'
+      '.png';
+  static const String toolbarBottomSpeakerOpen =
+      'images/toolbar_bottom_speaker_open.png';
+  static const String toolbarBottomSpeakerClosed = 'images/toolbar_bottom_speak'
+      'er_closed.png';
+  static const String toolbarBottomSwitchCamera = 'images/toolbar_bottom_swi'
+      'tch_camera.png';
+  static const String toolbarBottomVideo = 'images/toolbar_bottom_video.png';
+  static const String toolbarBottomVoice = 'images/toolbar_bottom_voice.png';
+  static const String toolbarTopMini = 'images/toolbar_top_mini.png';
+  static const String toolbarTopSettings = 'images/toolbar_top_settings.png';
 }
 
 /// constant style
@@ -108,6 +132,26 @@ class StyleConstant {
     color: Color(0xff2A2A2A),
     fontSize: 28.0,
   );
+
+  static const callingCenterUserName = TextStyle(
+      color: Colors.white,
+      fontSize: 21.0,
+      decoration: TextDecoration.none,
+      fontWeight: FontWeight.bold);
+  static const callingCenterStatus = TextStyle(
+      color: Colors.white,
+      fontSize: 16.0,
+      decoration: TextDecoration.none,
+      fontWeight: FontWeight.w100);
+  static const callingButtonIconText = TextStyle(
+      color: Colors.white,
+      fontSize: 13.0,
+      decoration: TextDecoration.none);
+
+  static const onlineCountDown = TextStyle(
+      color: Colors.white,
+      fontSize: 16.0,
+      decoration: TextDecoration.none);
 
   static const voiceCallingText = TextStyle(
       color: Colors.white, fontSize: 9.0, decoration: TextDecoration.none);

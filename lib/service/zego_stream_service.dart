@@ -12,7 +12,6 @@ abstract class IZegoStreamService {
 }
 
 class ZegoStreamService extends IZegoStreamService {
-
   ZegoStreamService() {
     ZegoExpressEngine.onRoomStreamUpdate = _onRoomStreamUpdate;
     ZegoExpressEngine.onApiCalledResult = _onApiCalledResult;
@@ -20,13 +19,13 @@ class ZegoStreamService extends IZegoStreamService {
     ZegoExpressEngine.onRemoteMicStateUpdate = _onRemoteMicStateUpdate;
   }
 
-
   @override
   void startPlaying(String userID, int playingViewID) {
     var streamID = _generateStreamID(userID);
 
     ZegoCanvas canvas = ZegoCanvas.view(playingViewID);
 
+    //  bind stream to view, by stream id and view id
     if (ZegoRoomManager.shared.userService.localUserInfo.userID == userID) {
       ZegoExpressEngine.instance
           .startPreview(canvas: canvas, channel: ZegoPublishChannel.Main);
@@ -35,14 +34,9 @@ class ZegoStreamService extends IZegoStreamService {
     }
   }
 
-  void muteMic(bool mute) {
+  void muteMic(bool mute) {}
 
-  }
-
-  void enableCamera(bool enable) {
-
-  }
-
+  void enableCamera(bool enable) {}
 
   String _generateStreamID(String userID) {
     var roomID = ZegoRoomManager.shared.roomService.roomInfo.roomID;
@@ -61,10 +55,12 @@ class ZegoStreamService extends IZegoStreamService {
   }
 
   void _onApiCalledResult(int errorCode, String funcName, String info) {
-    print("_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
+    print(
+        "_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
   }
 
-  void _onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+  void _onRemoteCameraStateUpdate(
+      String streamID, ZegoRemoteDeviceState state) {
     var tempArray = streamID.split('_');
     if (tempArray.length >= 2) {
       var uid = tempArray[1];
@@ -72,7 +68,6 @@ class ZegoStreamService extends IZegoStreamService {
       user?.camera = state == ZegoRemoteDeviceState.Open;
     }
   }
-
 
   void _onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
     var tempArray = streamID.split('_');
@@ -82,6 +77,4 @@ class ZegoStreamService extends IZegoStreamService {
       user?.mic = state == ZegoRemoteDeviceState.Open;
     }
   }
-
-
 }

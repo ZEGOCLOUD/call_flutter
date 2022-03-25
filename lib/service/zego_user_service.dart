@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:zego_call_flutter/model/zego_room_user_role.dart';
 import 'package:zego_call_flutter/model/zego_user_info.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -72,7 +71,6 @@ class ZegoUserService extends ChangeNotifier {
     final snapshot = await ref.child('online_user/').get();
     var _userList = <ZegoUserInfo>[];
     if (snapshot.exists) {
-      print(snapshot.value);
       var map = snapshot.value as Map<dynamic, dynamic>?;
       if (map != null) {
         map.forEach((key, value) async {
@@ -95,18 +93,20 @@ class ZegoUserService extends ChangeNotifier {
     var user = FirebaseAuth.instance.currentUser!;
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("online_user/${user.uid}");
-    var time = DateTime.now().millisecondsSinceEpoch;
-    var name = user.displayName;
-    var uid = user.uid;
+
+    localUserInfo.displayName = user.displayName ?? "";
+    localUserInfo.userID = user.uid;
+    localUserInfo.photoUrl = user.photoURL ?? "";
+
     var platform = "android";
     if (Platform.isIOS) {
       platform = "ios";
     }
     await ref.set({
-      "user_id": uid,
-      "display_name": name,
+      "user_id": user.uid,
+      "display_name": user.displayName,
       "photo_url": user.photoURL,
-      "last_changed": time,
+      "last_changed": DateTime.now().millisecondsSinceEpoch,
     });
 
     // await ref.onDisconnect().remove();

@@ -40,6 +40,13 @@ class _MiniOverlayVoiceCallingFrameState
 
   @override
   void initState() {
+    initStateMachine();
+    registerCallService();
+
+    super.initState();
+  }
+
+  void registerCallService() {
     // Listen on CallService event
     final callService = context.read<ZegoCallService>();
     callService.onReceiveCallEnded = () => stateIdle.enter();
@@ -51,13 +58,17 @@ class _MiniOverlayVoiceCallingFrameState
         (ZegoCallTimeoutType type) => stateIdle.enter();
 
     // TODO check stream is callee has video
+  }
 
+  void initStateMachine() {
     // Update current for drive UI rebuild
     machine.onAfterTransition.listen((event) {
       updatePageCurrentState();
     });
+
     // Config state
-    stateIdle = machine.newState(MiniOverlayPageVideoCallingState.kIdle)
+    stateIdle = machine.newState(MiniOverlayPageVideoCallingState.kIdle) //
+      // default state
       ..onEntry(widget.onIdleStateEntry);
     stateWaiting = machine.newState(MiniOverlayPageVideoCallingState.kWaiting)
       ..onTimeout(
@@ -70,10 +81,8 @@ class _MiniOverlayVoiceCallingFrameState
         .newState(MiniOverlayPageVideoCallingState.kBothWithoutVideo)
       ..onEntry(widget.onBothWithoutVideoEntry);
 
+    machine.current = stateIdle;
     machine.start();
-    machine.current = stateWaiting;
-
-    super.initState();
   }
 
   void updatePageCurrentState() {

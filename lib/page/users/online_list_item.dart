@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
 
 import '../../common/style/styles.dart';
+import '../../constants/zego_page_constant.dart';
 import '../../model/zego_user_info.dart';
 
 import 'package:zego_call_flutter/page/users/online_list_elements.dart';
@@ -15,6 +16,9 @@ class OnlineListItem extends StatelessWidget {
   final ZegoUserInfo userInfo;
 
   void onAudioCallTap(BuildContext context) async {
+    //  test
+    Navigator.pushReplacementNamed(context, PageRouteNames.calling);
+
     context
         .read<ZegoCallService>()
         .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVoice);

@@ -122,6 +122,12 @@ flutter:
     - images/avatar_3.png
     - images/avatar_4.png
     - images/avatar_5.png
+    - images/avatar_0_big.png
+    - images/avatar_1_big.png
+    - images/avatar_2_big.png
+    - images/avatar_3_big.png
+    - images/avatar_4_big.png
+    - images/avatar_5_big.png
     - images/invite_voice.png
     - images/invite_reject_pressed.png
     - images/invite_reject.png
@@ -139,6 +145,20 @@ flutter:
     - images/welcome_contact_us.png
     - images/welcome_get_more.png
     - images/room_overlay_voice_calling.png
+    - images/toolbar_bottom_camera_closed.png
+    - images/toolbar_bottom_camera_open.png
+    - images/toolbar_bottom_cancel.png
+    - images/toolbar_bottom_closed.png
+    - images/toolbar_bottom_decline.png
+    - images/toolbar_bottom_mic_closed.png
+    - images/toolbar_bottom_mic_open.png
+    - images/toolbar_bottom_speaker_open.png
+    - images/toolbar_bottom_speaker_closed.png
+    - images/toolbar_bottom_switch_camera.png
+    - images/toolbar_bottom_video.png
+    - images/toolbar_bottom_voice.png
+    - images/toolbar_top_mini.png
+    - images/toolbar_top_settings.png
 
     - images/2.0x/auth_logo.png
     - images/2.0x/auth_icon_google.png
@@ -148,6 +168,12 @@ flutter:
     - images/2.0x/avatar_3.png
     - images/2.0x/avatar_4.png
     - images/2.0x/avatar_5.png
+    - images/2.0x/avatar_0_big.png
+    - images/2.0x/avatar_1_big.png
+    - images/2.0x/avatar_2_big.png
+    - images/2.0x/avatar_3_big.png
+    - images/2.0x/avatar_4_big.png
+    - images/2.0x/avatar_5_big.png
     - images/2.0x/invite_voice.png
     - images/2.0x/invite_reject_pressed.png
     - images/2.0x/invite_reject.png
@@ -165,6 +191,20 @@ flutter:
     - images/2.0x/welcome_contact_us.png
     - images/2.0x/welcome_get_more.png
     - images/2.0x/room_overlay_voice_calling.png
+    - images/2.0x/toolbar_bottom_camera_closed.png
+    - images/2.0x/toolbar_bottom_camera_open.png
+    - images/2.0x/toolbar_bottom_cancel.png
+    - images/2.0x/toolbar_bottom_closed.png
+    - images/2.0x/toolbar_bottom_decline.png
+    - images/2.0x/toolbar_bottom_mic_closed.png
+    - images/2.0x/toolbar_bottom_mic_open.png
+    - images/2.0x/toolbar_bottom_speaker_open.png
+    - images/2.0x/toolbar_bottom_speaker_closed.png
+    - images/2.0x/toolbar_bottom_switch_camera.png
+    - images/2.0x/toolbar_bottom_video.png
+    - images/2.0x/toolbar_bottom_voice.png
+    - images/2.0x/toolbar_top_mini.png
+    - images/2.0x/toolbar_top_settings.png
 
     - images/3.0x/auth_logo.png
     - images/3.0x/auth_icon_google.png
@@ -174,6 +214,12 @@ flutter:
     - images/3.0x/avatar_3.png
     - images/3.0x/avatar_4.png
     - images/3.0x/avatar_5.png
+    - images/3.0x/avatar_0_big.png
+    - images/3.0x/avatar_1_big.png
+    - images/3.0x/avatar_2_big.png
+    - images/3.0x/avatar_3_big.png
+    - images/3.0x/avatar_4_big.png
+    - images/3.0x/avatar_5_big.png
     - images/3.0x/invite_voice.png
     - images/3.0x/invite_reject_pressed.png
     - images/3.0x/invite_reject.png
@@ -191,3 +237,17 @@ flutter:
     - images/3.0x/welcome_contact_us.png
     - images/3.0x/welcome_get_more.png
     - images/3.0x/room_overlay_voice_calling.png
+    - images/3.0x/toolbar_bottom_camera_closed.png
+    - images/3.0x/toolbar_bottom_camera_open.png
+    - images/3.0x/toolbar_bottom_cancel.png
+    - images/3.0x/toolbar_bottom_closed.png
+    - images/3.0x/toolbar_bottom_decline.png
+    - images/3.0x/toolbar_bottom_mic_closed.png
+    - images/3.0x/toolbar_bottom_mic_open.png
+    - images/3.0x/toolbar_bottom_speaker_open.png
+    - images/3.0x/toolbar_bottom_speaker_closed.png
+    - images/3.0x/toolbar_bottom_switch_camera.png
+    - images/3.0x/toolbar_bottom_video.png
+    - images/3.0x/toolbar_bottom_voice.png
+    - images/3.0x/toolbar_top_mini.png
+    - images/3.0x/toolbar_top_settings.png
