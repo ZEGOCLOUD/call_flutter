@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,6 +45,11 @@ class _MiniOverlayVoiceCallingFrameState
     registerCallService();
 
     super.initState();
+
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      machine.current = stateIdle;
+      machine.start();
+    });
   }
 
   void registerCallService() {
@@ -80,9 +86,6 @@ class _MiniOverlayVoiceCallingFrameState
     stateBothWithoutVideo = machine
         .newState(MiniOverlayPageVideoCallingState.kBothWithoutVideo)
       ..onEntry(widget.onBothWithoutVideoEntry);
-
-    machine.current = stateIdle;
-    machine.start();
   }
 
   void updatePageCurrentState() {
