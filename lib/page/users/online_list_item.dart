@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
 
-import '../../common/style/styles.dart';
-import '../../constants/zego_page_constant.dart';
-import '../../model/zego_user_info.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
+import 'package:zego_call_flutter/constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
 
 import 'package:zego_call_flutter/page/users/online_list_elements.dart';
 

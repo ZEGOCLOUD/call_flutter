@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/user_avatar.dart';
 import 'avatar_background.dart';
 
 class VideoPlayerView extends StatefulWidget {
   final String userID;
   final String userName;
 
-  const VideoPlayerView({required this.userID, required this.userName, Key? key})
+  const VideoPlayerView(
+      {required this.userID, required this.userName, Key? key})
       : super(key: key);
 
   @override

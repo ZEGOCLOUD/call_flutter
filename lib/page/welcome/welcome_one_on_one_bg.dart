@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
 
-import '../../constants/zego_page_constant.dart';
-import '../../service/zego_user_service.dart';
+import 'package:zego_call_flutter/constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/service/zego_user_service.dart';
 
 class WelcomeOneOnOneBg extends StatelessWidget {
   const WelcomeOneOnOneBg({Key? key}) : super(key: key);

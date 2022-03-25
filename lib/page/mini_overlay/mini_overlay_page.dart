@@ -10,8 +10,8 @@ import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_video_calling_f
 import 'package:zego_call_flutter/page/mini_overlay/mini_overlay_voice_calling_frame.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../model/zego_user_info.dart';
-import '../../service/zego_call_service.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
+import 'package:zego_call_flutter/service/zego_call_service.dart';
 
 class MiniOverlayPage extends StatefulWidget {
   MiniOverlayPage({Key? key}) : super(key: key);

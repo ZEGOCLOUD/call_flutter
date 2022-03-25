@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../model/zego_user_info.dart';
-import '../../service/zego_call_service.dart';
+import 'package:zego_call_flutter/model/zego_user_info.dart';
+import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'mini_overlay_state.dart';
 
 class MiniOverlayVideoCallingFrame extends StatefulWidget {
