@@ -183,4 +183,8 @@ class ZegoCallService extends ChangeNotifier {
       }
     });
   }
+
+  onRoomLeave() {}
+
+  onRoomEnter() {}
 }

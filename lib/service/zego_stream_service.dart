@@ -5,18 +5,38 @@ import 'package:zego_call_flutter/service/zego_room_manager.dart';
 
 abstract class IZegoStreamService {
   void startPlaying(String userID, int playingViewID);
-
-  Widget? createPlayingView(Function(int playingViewID) onViewCreated) {
-    return ZegoExpressEngine.instance.createPlatformView(onViewCreated);
-  }
 }
 
-class ZegoStreamService extends IZegoStreamService {
+class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
   ZegoStreamService() {
     ZegoExpressEngine.onRoomStreamUpdate = _onRoomStreamUpdate;
     ZegoExpressEngine.onApiCalledResult = _onApiCalledResult;
     ZegoExpressEngine.onRemoteCameraStateUpdate = _onRemoteCameraStateUpdate;
     ZegoExpressEngine.onRemoteMicStateUpdate = _onRemoteMicStateUpdate;
+
+    ZegoExpressEngine.onPublisherStateUpdate = _onPublisherStateUpdate;
+    ZegoExpressEngine.onPlayerStateUpdate = _onPlayerStateUpdate;
+  }
+
+  Map<String, ValueNotifier<bool>> userStreamReadyNotifiers = {};
+
+  onRoomLeave() {}
+
+  onRoomEnter() {}
+
+  addStreamStateNotifier(String userID, ValueNotifier<bool> notifier) {
+    var streamID = _generateStreamID(userID);
+
+    if (userStreamReadyNotifiers.containsKey(streamID)) {
+      return;
+    }
+
+    userStreamReadyNotifiers[streamID] = notifier;
+  }
+
+  removeStreamStateNotifier(String userID) {
+    var streamID = _generateStreamID(userID);
+    userStreamReadyNotifiers.remove(streamID);
   }
 
   @override
@@ -24,6 +44,7 @@ class ZegoStreamService extends IZegoStreamService {
     var streamID = _generateStreamID(userID);
 
     ZegoCanvas canvas = ZegoCanvas.view(playingViewID);
+    canvas.viewMode = ZegoViewMode.AspectFill;
 
     //  bind stream to view, by stream id and view id
     if (ZegoRoomManager.shared.userService.localUserInfo.userID == userID) {
@@ -75,6 +96,22 @@ class ZegoStreamService extends IZegoStreamService {
       var uid = tempArray[1];
       var user = ZegoRoomManager.shared.userService.userDic[uid];
       user?.mic = state == ZegoRemoteDeviceState.Open;
+    }
+  }
+
+  void _onPublisherStateUpdate(String streamID, ZegoPublisherState state,
+      int errorCode, Map<String, dynamic> extendedData) {
+    if (userStreamReadyNotifiers.containsKey(streamID)) {
+      final isReady = ZegoPublisherState.Publishing == state;
+      userStreamReadyNotifiers[streamID]!.value = isReady;
+    }
+  }
+
+  void _onPlayerStateUpdate(String streamID, ZegoPlayerState state,
+      int errorCode, Map<String, dynamic> extendedData) {
+    if (userStreamReadyNotifiers.containsKey(streamID)) {
+      final isReady = ZegoPlayerState.Playing == state;
+      userStreamReadyNotifiers[streamID]!.value = isReady;
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 enum ZegoDeviceType {
@@ -74,7 +75,7 @@ abstract class IZegoDeviceService {
   void enableCallKit(bool enable);
 }
 
-class ZegoDeviceService extends IZegoDeviceService {
+class ZegoDeviceService extends ChangeNotifier with IZegoDeviceService {
   @override
   void enableCamera(bool enable) {
     ZegoExpressEngine.instance.enableCamera(enable);
@@ -85,6 +86,10 @@ class ZegoDeviceService extends IZegoDeviceService {
     ZegoExpressEngine.instance.muteMicrophone(mute);
   }
 
+  Future<bool> isMicMuted() async {
+    return ZegoExpressEngine.instance.isMicrophoneMuted();
+  }
+
   @override
   void useFrontCamera(bool enable, {ZegoPublishChannel? channel}) {
     ZegoExpressEngine.instance.useFrontCamera(enable);
@@ -93,6 +98,10 @@ class ZegoDeviceService extends IZegoDeviceService {
   @override
   void enableSpeaker(bool enable) {
     ZegoExpressEngine.instance.muteSpeaker(!enable);
+  }
+
+  Future<bool> isSpeakerEnabled() async {
+    return !await ZegoExpressEngine.instance.isSpeakerMuted();
   }
 
   @override

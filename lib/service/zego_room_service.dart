@@ -35,8 +35,7 @@ class ZegoRoomService extends ChangeNotifier {
 
   bool roomDisconnectSuccess = false;
 
-  ZegoRoomService() {
-  }
+  ZegoRoomService() {}
 
   String get _localUserID {
     return ZegoRoomManager.shared.userService.localUserInfo.userID;
@@ -82,5 +81,4 @@ class ZegoRoomService extends ChangeNotifier {
 
     return 0;
   }
-
 }
