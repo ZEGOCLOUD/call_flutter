@@ -144,6 +144,9 @@ flutter:
     - images/welcome_card_bg.png
     - images/welcome_contact_us.png
     - images/welcome_get_more.png
+    - images/setting_next.png
+    - images/setting_back.png
+    - images/settings_tick.png
     - images/room_overlay_voice_calling.png
     - images/toolbar_bottom_camera_closed.png
     - images/toolbar_bottom_camera_open.png
@@ -190,6 +193,9 @@ flutter:
     - images/2.0x/welcome_card_bg.png
     - images/2.0x/welcome_contact_us.png
     - images/2.0x/welcome_get_more.png
+    - images/2.0x/setting_next.png
+    - images/2.0x/setting_back.png
+    - images/2.0x/settings_tick.png
     - images/2.0x/room_overlay_voice_calling.png
     - images/2.0x/toolbar_bottom_camera_closed.png
     - images/2.0x/toolbar_bottom_camera_open.png
@@ -236,6 +242,9 @@ flutter:
     - images/3.0x/welcome_card_bg.png
     - images/3.0x/welcome_contact_us.png
     - images/3.0x/welcome_get_more.png
+    - images/3.0x/setting_next.png
+    - images/3.0x/setting_back.png
+    - images/3.0x/settings_tick.png
     - images/3.0x/room_overlay_voice_calling.png
     - images/3.0x/toolbar_bottom_camera_closed.png
     - images/3.0x/toolbar_bottom_camera_open.png

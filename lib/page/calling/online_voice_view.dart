@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
+import 'package:zego_call_flutter/page/calling/settings/calling_settings.dart';
 import 'package:zego_call_flutter/page/calling/widgets/avatar_background.dart';
 import 'package:zego_call_flutter/page/calling/widgets/online_bottom_toolbar.dart';
 import 'package:zego_call_flutter/page/calling/widgets/online_top_toolbar.dart';
@@ -34,7 +35,10 @@ class OnlineVoiceView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const OnlineTopToolBar(),
+        OnlineTopToolBar(
+            settingWidgetHeight: 563.h,
+            settingWidget: const CallingSettingsView(
+                callType: ZegoCallType.kZegoCallTypeVoice)),
         SizedBox(
           height: 140.h,
         ),

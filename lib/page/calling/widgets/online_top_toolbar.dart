@@ -3,8 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../service/zego_call_service.dart';
+import '../settings/calling_settings.dart';
+
 class OnlineTopToolBar extends StatefulWidget {
-  const OnlineTopToolBar({Key? key}) : super(key: key);
+  final Widget settingWidget;
+  final double settingWidgetHeight;
+
+  const OnlineTopToolBar(
+      {required this.settingWidget,
+      required this.settingWidgetHeight,
+      Key? key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -63,7 +73,19 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
           SizedBox(width: 8.w),
           GestureDetector(
             onTap: () {
-              //  todo
+              showModalBottomSheet(
+                  context: context,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  isDismissible: true,
+                  builder: (BuildContext context) {
+                    return AnimatedPadding(
+                        padding: MediaQuery.of(context).viewInsets,
+                        duration: const Duration(milliseconds: 100),
+                        child: SizedBox(
+                            height: widget.settingWidgetHeight,
+                            child: widget.settingWidget));
+                  }).then((value) => null);
             },
             child: SizedBox(
               width: 44.w,

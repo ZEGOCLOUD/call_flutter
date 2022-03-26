@@ -54,6 +54,8 @@ class ZegoRoomManager extends ChangeNotifier {
     // setup service
     roomService.roomEnterCallback = _onRoomEnter;
     roomService.roomLeaveCallback = _onRoomLeave;
+
+    ZegoExpressEngine.onApiCalledResult = _onApiCalledResult;
     // userService.userOfflineCallback = _onRoomLeave;
     // userService.registerMemberJoinCallback(messageService.onRoomMemberJoined);
     // userService.registerMemberLeaveCallback(messageService.onRoomMemberLeave);
@@ -80,9 +82,11 @@ class ZegoRoomManager extends ChangeNotifier {
   }
 
   void _onApiCalledResult(int errorCode, String funcName, String info) {
-    // if (ZIMErrorCodeExtension.valueMap[zimErrorCode.success] != errorCode) {
-    //   print(
-    //       "_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
-    // }
+    if (0 != errorCode) {
+      print(
+          "_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
+    }
+
+    streamService.onApiCalledResult(errorCode, funcName, info);
   }
 }

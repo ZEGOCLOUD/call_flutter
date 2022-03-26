@@ -15,8 +15,13 @@ class StyleColors {
 
   static const Color settingsVersion = gray;
   static const Color settingsBackgroundColor = Color(0xffF4F5F6);
+  static const Color settingsTitleColor = Color(0xff2A2A2A);
   static const Color settingsTitleBackgroundColor = Colors.white;
   static const Color settingsCellBackgroundColor = Colors.white;
+
+  static const Color switchActiveColor = Colors.white;
+  static const Color switchActiveTrackColor = blue;
+  static const Color switchInactiveTrackColor = Color(0xff787880);
 }
 
 /// icons
@@ -43,6 +48,10 @@ class StyleIconUrls {
   static const String welcomeCardBg = 'images/welcome_card_bg.png';
   static const String welcomeContactUs = 'images/welcome_contact_us.png';
   static const String welcomeGetMore = 'images/welcome_get_more.png';
+
+  static const String settingNext = 'images/setting_next.png';
+  static const String settingBack = 'images/setting_back.png';
+  static const String settingTick = 'images/settings_tick.png';
 
   static const String roomOverlayVoiceCalling = 'images/room_overlay_voice_'
       'calling.png';
@@ -144,18 +153,31 @@ class StyleConstant {
       decoration: TextDecoration.none,
       fontWeight: FontWeight.w100);
   static const callingButtonIconText = TextStyle(
-      color: Colors.white,
-      fontSize: 13.0,
-      decoration: TextDecoration.none);
+      color: Colors.white, fontSize: 13.0, decoration: TextDecoration.none);
 
   static const onlineCountDown = TextStyle(
-      color: Colors.white,
-      fontSize: 16.0,
-      decoration: TextDecoration.none);
+      color: Colors.white, fontSize: 16.0, decoration: TextDecoration.none);
 
   static const voiceCallingText = TextStyle(
       color: Colors.white, fontSize: 9.0, decoration: TextDecoration.none);
 
   static const loadingText = TextStyle(
       color: Colors.white, fontSize: 10.0, decoration: TextDecoration.none);
+
+  static const callingSettingTitleText = TextStyle(
+    color: StyleColors.settingsTitleColor,
+    fontSize: 16.0,
+  );
+  static const callingSettingItemTitleText = TextStyle(
+    color: StyleColors.dark,
+    fontSize: 15.0,
+  );
+  static const callingSettingItemSubTitleText = TextStyle(
+    color: Color(0xffF3F4F7),
+    fontSize: 14.0,
+  );
+  static const callingSettingItemNoCheckedTitleText = TextStyle(
+    color: Color(0xffA4A4A4),
+    fontSize: 15.0,
+  );
 }

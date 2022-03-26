@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:zego_call_flutter/page/calling/settings/calling_settings.dart';
 import 'package:zego_call_flutter/page/calling/widgets/calling_toolbar.dart';
 import 'package:zego_call_flutter/page/calling/widgets/online_bottom_toolbar.dart';
 import 'package:zego_call_flutter/page/calling/widgets/online_top_toolbar.dart';
@@ -49,7 +50,10 @@ class OnlineVideoView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const OnlineTopToolBar(),
+        OnlineTopToolBar(
+            settingWidgetHeight: 763.h,
+            settingWidget: const CallingSettingsView(
+                callType: ZegoCallType.kZegoCallTypeVideo)),
         const Expanded(child: SizedBox()),
         const OnlineVideoBottomToolBar(),
         SizedBox(
