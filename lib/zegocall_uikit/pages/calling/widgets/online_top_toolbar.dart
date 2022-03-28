@@ -1,7 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
-import 'package:zego_call_flutter/utils/styles.dart';
+// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+// Project imports:
+import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/widgets/show_bottom_sheet.dart';
 
 class OnlineTopToolBar extends StatefulWidget {

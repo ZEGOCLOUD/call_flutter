@@ -1,9 +1,12 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Project imports:
 import 'settings_browser_item.dart';
 
 class SettingsBrowserBlock extends HookWidget {

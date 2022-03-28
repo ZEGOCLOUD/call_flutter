@@ -1,7 +1,10 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 
+// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Project imports:
 import 'welcome_one_on_one_bg.dart';
 import 'welcome_title_bar.dart';
 import 'welcome_tool_bar.dart';

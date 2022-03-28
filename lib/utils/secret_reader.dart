@@ -1,5 +1,8 @@
-import 'package:flutter/services.dart' show rootBundle;
+// Dart imports:
 import 'dart:convert';
+
+// Flutter imports:
+import 'package:flutter/services.dart' show rootBundle;
 
 class SecretReader {
   int _appID = 0;

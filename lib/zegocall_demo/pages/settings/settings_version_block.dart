@@ -1,12 +1,14 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
+// Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
-
 import 'package:zego_express_engine/zego_express_engine.dart';
 
+// Project imports:
 import 'settings_sdk_version_item.dart';
 
 class SettingsVersionBlock extends HookWidget {

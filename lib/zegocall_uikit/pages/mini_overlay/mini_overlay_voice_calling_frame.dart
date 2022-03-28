@@ -1,14 +1,17 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+// Package imports:
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-
 import 'mini_overlay_state.dart';
 
 class MiniOverlayVoiceCallingFrame extends StatefulWidget {

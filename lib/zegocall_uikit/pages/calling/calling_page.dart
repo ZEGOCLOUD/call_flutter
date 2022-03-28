@@ -1,17 +1,21 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+// Package imports:
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
+// Project imports:
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
-
 import 'calling_callee_view.dart';
-import 'calling_state.dart';
 import 'calling_caller_view.dart';
+import 'calling_state.dart';
 import 'online_video_view.dart';
 import 'online_voice_view.dart';
 

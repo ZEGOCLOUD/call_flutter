@@ -1,8 +1,12 @@
+// Dart imports:
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:characters/src/extensions.dart';
+// Flutter imports:
 import 'package:flutter/services.dart';
+
+// Package imports:
+import 'package:characters/src/extensions.dart';
 
 class Utf8LengthLimitingTextInputFormatter extends TextInputFormatter {
   Utf8LengthLimitingTextInputFormatter(this.maxByteLength)

@@ -1,11 +1,16 @@
+// Dart imports:
 import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
+// Flutter imports:
 import 'package:flutter/foundation.dart';
+
+// Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+// Project imports:
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 
 /// Class user information management.

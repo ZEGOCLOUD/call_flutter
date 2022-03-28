@@ -1,7 +1,10 @@
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+// Project imports:
 import 'package:zego_call_flutter/utils/user_avatar.dart';
 
 class AvatarBackgroundView extends StatelessWidget {

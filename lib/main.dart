@@ -1,10 +1,14 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_bugly/flutter_bugly.dart';
+// Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_bugly/flutter_bugly.dart';
+
+// Project imports:
 import 'package:zego_call_flutter/zegocall_demo/zegocall_demo_app.dart';
 
 Future<void> main() async {

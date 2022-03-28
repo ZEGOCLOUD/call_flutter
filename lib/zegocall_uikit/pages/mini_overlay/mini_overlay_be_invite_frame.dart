@@ -1,9 +1,13 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/utils/styles.dart';
 
+// Package imports:
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
+import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/user_avatar.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
 

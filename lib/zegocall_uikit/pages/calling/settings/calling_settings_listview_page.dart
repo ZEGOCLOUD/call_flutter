@@ -1,14 +1,17 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import 'package:zego_call_flutter/zegocall/core/service/zego_device_service'
-    '.dart';
-
+// Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
-
 import 'calling_settings_defines.dart';
 import 'calling_settings_item.dart';
+
+import 'package:zego_call_flutter/zegocall/core/service/zego_device_service'
+    '.dart';
 
 class CallingSettingsListViewPage<T> extends StatelessWidget {
   final String title;

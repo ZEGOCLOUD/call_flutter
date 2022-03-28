@@ -1,7 +1,11 @@
-import 'package:flutter/foundation.dart';
+// Dart imports:
 import 'dart:io';
+
+// Flutter imports:
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+// Package imports:
 import 'package:device_info_plus/device_info_plus.dart';
 
 class DeviceInfo {

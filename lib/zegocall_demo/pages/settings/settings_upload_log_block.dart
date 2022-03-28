@@ -1,7 +1,11 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
+// Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+// Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 
 class SettingsUploadLogBlock extends StatelessWidget {

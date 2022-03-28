@@ -1,8 +1,10 @@
+// Flutter imports:
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+// Project imports:
 import 'package:zego_call_flutter/utils/widgets/browser.dart';
+import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
 
 class AuthProtocolItem extends StatefulWidget {
   final ValueChanged<bool> updatePolicyCheckState;

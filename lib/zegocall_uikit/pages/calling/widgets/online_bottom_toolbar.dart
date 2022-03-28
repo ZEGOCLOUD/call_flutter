@@ -1,13 +1,15 @@
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// Package imports:
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+
+// Project imports:
+import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
-
-import 'package:zego_call_flutter/utils/styles.dart';
-
 import 'calling_bottom_toolbar_button.dart';
 
 class OnlineVoiceBottomToolBar extends HookWidget {

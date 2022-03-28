@@ -1,12 +1,15 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+// Project imports:
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
-
 import 'settings/calling_settings.dart';
 import 'widgets/online_bottom_toolbar.dart';
 import 'widgets/online_top_toolbar.dart';

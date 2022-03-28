@@ -1,14 +1,17 @@
+// Dart imports:
 import 'dart:ui';
 
+// Flutter imports:
 import 'package:flutter/material.dart';
-import 'package:zego_call_flutter/utils/styles.dart';
+
+// Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-
+// Project imports:
+import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/user_avatar.dart';
-
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
 import 'widgets/avatar_background.dart';
 import 'widgets/calling_toolbar.dart';
 import 'widgets/video_player.dart';

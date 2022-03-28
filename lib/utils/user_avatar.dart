@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:convert';
 
+// Package imports:
 import 'package:crypto/crypto.dart';
 
 int getUserAvatarIndex(String userName) {
