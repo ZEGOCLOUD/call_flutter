@@ -1,17 +1,15 @@
-import 'dart:math';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:zego_call_flutter/service/zego_call_service.dart';
-import 'package:zego_call_flutter/service/zego_device_service.dart';
-import 'package:zego_call_flutter/service/zego_stream_service.dart';
 import 'dart:async';
 
 import 'package:zego_express_engine/zego_express_engine.dart';
 
-import 'package:zego_call_flutter/service/zego_loading_service.dart';
-import 'package:zego_call_flutter/service/zego_room_service.dart';
-import 'package:zego_call_flutter/service/zego_user_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_stream_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_loading_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_room_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
 
 typedef ZegoRoomCallback = Function(int);
 
@@ -42,14 +40,12 @@ class ZegoRoomManager extends ChangeNotifier {
     streamService.onRoomEnter();
   }
 
-  Future<void> initWithAPPID(int appID, String serverSecret,
-      ZegoRoomCallback callback) async {
-    ZegoEngineProfile profile =
-        ZegoEngineProfile(appID, ZegoScenario.General);
-    profile.enablePlatformView = true;  //  for play stream with platformView
-    ZegoExpressEngine.createEngineWithProfile(profile).then((value) {
-
-    });
+  //  call test
+  Future<void> initWithAPPID(
+      int appID, String serverSecret, ZegoRoomCallback callback) async {
+    ZegoEngineProfile profile = ZegoEngineProfile(appID, ZegoScenario.General);
+    profile.enablePlatformView = true; //  for play stream with platformView
+    ZegoExpressEngine.createEngineWithProfile(profile).then((value) {});
 
     // setup service
     roomService.roomEnterCallback = _onRoomEnter;

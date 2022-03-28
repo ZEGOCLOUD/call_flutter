@@ -2,14 +2,14 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_room_manager.dart';
+
 import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/model/zego_user_info.dart';
-import 'package:zego_call_flutter/service/zego_user_service.dart';
 import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
-import 'package:zego_call_flutter/service/zego_room_manager.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';

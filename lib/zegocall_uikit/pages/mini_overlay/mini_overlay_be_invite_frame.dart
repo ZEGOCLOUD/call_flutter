@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/utils/styles.dart';
 
 import 'package:zego_call_flutter/utils/user_avatar.dart';
-import 'package:zego_call_flutter/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
 
 class MiniOverlayBeInviteFrame extends StatefulWidget {
   MiniOverlayBeInviteFrame(

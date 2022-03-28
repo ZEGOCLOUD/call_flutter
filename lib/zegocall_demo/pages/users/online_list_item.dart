@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/service/zego_call_service.dart';
 
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
-import 'package:zego_call_flutter/model/zego_user_info.dart';
+
+import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 
 import 'package:zego_call_flutter/zegocall_demo/pages/users'
     '/online_list_elements.dart';

@@ -11,19 +11,20 @@ import 'package:flutter_background/flutter_background.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
-import 'package:zego_call_flutter/service/zego_call_service.dart';
-import 'package:zego_call_flutter/service/zego_room_manager.dart';
-import 'package:zego_call_flutter/service/zego_user_service.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_room_manager.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
 
+import 'package:zego_call_flutter/zegocall_uikit/pages/calling/calling_page'
+    '.dart';
+import 'package:zego_call_flutter/zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
+
+import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/auth/auth_gate.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/settings/settings_page.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/users/online_list_page'
     '.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/welcome/welcome_page.dart';
-
-import 'package:zego_call_flutter/uikit/pages/calling/calling_page.dart';
-import 'package:zego_call_flutter/uikit/pages/mini_overlay/mini_overlay_page.dart';
 
 class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);

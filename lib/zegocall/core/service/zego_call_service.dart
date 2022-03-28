@@ -7,7 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import "package:firebase_messaging/firebase_messaging.dart";
 
-import 'package:zego_call_flutter/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 
 enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
 enum ZegoCallTimeoutType {

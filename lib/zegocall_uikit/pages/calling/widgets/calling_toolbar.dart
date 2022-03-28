@@ -3,11 +3,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
+
 import 'package:zego_call_flutter/utils/widgets/show_bottom_sheet.dart';
-import 'package:zego_call_flutter/service/zego_device_service.dart';
 import '../settings/calling_settings.dart';
 import 'calling_bottom_toolbar_button.dart';
 

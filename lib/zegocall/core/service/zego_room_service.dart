@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:zego_express_engine/zego_express_engine.dart';
-import 'package:zego_call_flutter/service/zego_room_manager.dart';
-import 'package:zego_call_flutter/model/zego_room_info.dart';
+import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 
-import 'package:zego_call_flutter/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_room_manager.dart';
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 
 typedef RoomCallback = Function(int);
 typedef RoomLeaveCallback = VoidCallback;
@@ -58,7 +58,9 @@ class ZegoRoomService extends ChangeNotifier {
   ///                 https://doc-en.zego.im/article/11648
   Future<int> joinRoom(String roomID, String token) async {
     roomDisconnectSuccess = false;
-
+    //  call test
+    token = "04AAAAAGI+14sAEEA3w3mYVYquqWbKCtSJwt4AgJsEEWk8/l64adBsuW+jxEM"
+        "/PGdcPPbgkO+iqhy0JXo7sJDPGP2Mxiw+gdRNmwbywyOuFeEW5bOLgeV78dji/MlH0IS3q2f/Lmj1/gQn42JsykFo8aiupDRsS4VWz/Eu6ABKzqeu6W7Kv89qoo8dqzzoPs3urU2dGP7gkH+kkzvp";
     var config = ZegoRoomConfig.defaultConfig();
     config.token = token;
     config.maxMemberCount = 0;

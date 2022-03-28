@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
-import 'package:zego_call_flutter/service/zego_room_manager.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_room_manager.dart';
 
 abstract class IZegoStreamService {
   void startPlaying(String userID, int playingViewID);

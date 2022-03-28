@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:zego_call_flutter/service/zego_stream_service.dart';
-import 'package:zego_call_flutter/service/zego_user_service.dart';
+
+import 'package:zego_call_flutter/zegocall/core/service/zego_stream_service'
+    '.dart';
+import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 import 'avatar_background.dart';

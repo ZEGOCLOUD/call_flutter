@@ -4,8 +4,9 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:zego_call_flutter/model/zego_user_info.dart';
 import 'package:firebase_database/firebase_database.dart';
+
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 
 /// Class user information management.
 /// <p>Description: This class contains the user information management logics, such as the logic of log in, log out,
