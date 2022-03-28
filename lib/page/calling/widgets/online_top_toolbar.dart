@@ -2,9 +2,17 @@ import 'package:flutter/material.dart';
 
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_call_flutter/common/bottomSheet.dart';
 
 class OnlineTopToolBar extends StatefulWidget {
-  const OnlineTopToolBar({Key? key}) : super(key: key);
+  final Widget settingWidget;
+  final double settingWidgetHeight;
+
+  const OnlineTopToolBar(
+      {required this.settingWidget,
+      required this.settingWidgetHeight,
+      Key? key})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -63,7 +71,8 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
           SizedBox(width: 8.w),
           GestureDetector(
             onTap: () {
-              //  todo
+              showModalBottomSheetWithStyle(
+                  context, widget.settingWidgetHeight, widget.settingWidget);
             },
             child: SizedBox(
               width: 44.w,

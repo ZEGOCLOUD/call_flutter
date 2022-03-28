@@ -10,14 +10,16 @@ abstract class IZegoStreamService {
 class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
   ZegoStreamService() {
     ZegoExpressEngine.onRoomStreamUpdate = _onRoomStreamUpdate;
-    ZegoExpressEngine.onApiCalledResult = _onApiCalledResult;
     ZegoExpressEngine.onRemoteCameraStateUpdate = _onRemoteCameraStateUpdate;
     ZegoExpressEngine.onRemoteMicStateUpdate = _onRemoteMicStateUpdate;
 
-    ZegoExpressEngine.onPublisherStateUpdate = _onPublisherStateUpdate;
+    ZegoExpressEngine.onPublisherCapturedVideoFirstFrame =
+        _onPublisherCapturedVideoFirstFrame;
+    // ZegoExpressEngine.onPublisherStateUpdate = _onPublisherStateUpdate;
     ZegoExpressEngine.onPlayerStateUpdate = _onPlayerStateUpdate;
   }
 
+  bool isCameraPublishing = false;
   Map<String, ValueChanged<bool>> userStreamReadyNotifiers = {};
 
   onRoomLeave() {}
@@ -41,8 +43,6 @@ class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
 
   @override
   void startPlaying(String userID, int playingViewID) {
-    var streamID = _generateStreamID(userID);
-
     ZegoCanvas canvas = ZegoCanvas.view(playingViewID);
     canvas.viewMode = ZegoViewMode.AspectFill;
 
@@ -51,13 +51,10 @@ class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
       ZegoExpressEngine.instance
           .startPreview(canvas: canvas, channel: ZegoPublishChannel.Main);
     } else {
+      var streamID = _generateStreamID(userID);
       ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
     }
   }
-
-  void muteMic(bool mute) {}
-
-  void enableCamera(bool enable) {}
 
   String _generateStreamID(String userID) {
     var roomID = ZegoRoomManager.shared.roomService.roomInfo.roomID;
@@ -73,11 +70,6 @@ class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
         ZegoExpressEngine.instance.stopPlayingStream(stream.streamID);
       }
     }
-  }
-
-  void _onApiCalledResult(int errorCode, String funcName, String info) {
-    print(
-        "_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
   }
 
   void _onRemoteCameraStateUpdate(
@@ -99,19 +91,42 @@ class ZegoStreamService extends ChangeNotifier with IZegoStreamService {
     }
   }
 
-  void _onPublisherStateUpdate(String streamID, ZegoPublisherState state,
-      int errorCode, Map<String, dynamic> extendedData) {
+  void _onPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel) {
+    var streamID = _generateStreamID(
+        ZegoRoomManager.shared.userService.localUserInfo.userID);
+    isCameraPublishing = true;
+
     if (userStreamReadyNotifiers.containsKey(streamID)) {
-      final isReady = ZegoPublisherState.Publishing == state;
-      userStreamReadyNotifiers[streamID]!(isReady);
+      userStreamReadyNotifiers[streamID]!(true);
     }
   }
+
+  // void _onPublisherStateUpdate(String streamID, ZegoPublisherState state,
+  //     int errorCode, Map<String, dynamic> extendedData) {
+  //   if (userStreamReadyNotifiers.containsKey(streamID)) {
+  //     final isReady = ZegoPublisherState.Publishing == state;
+  //     userStreamReadyNotifiers[streamID]!(isReady);
+  //   }
+  // }
 
   void _onPlayerStateUpdate(String streamID, ZegoPlayerState state,
       int errorCode, Map<String, dynamic> extendedData) {
     if (userStreamReadyNotifiers.containsKey(streamID)) {
       final isReady = ZegoPlayerState.Playing == state;
       userStreamReadyNotifiers[streamID]!(isReady);
+    }
+  }
+
+  void onApiCalledResult(int errorCode, String funcName, String info) {
+    if ("enableCamera" == funcName && isCameraPublishing) {
+      // close local camera
+      var streamID = _generateStreamID(
+          ZegoRoomManager.shared.userService.localUserInfo.userID);
+      isCameraPublishing = false;
+
+      if (userStreamReadyNotifiers.containsKey(streamID)) {
+        userStreamReadyNotifiers[streamID]!(false);
+      }
     }
   }
 }

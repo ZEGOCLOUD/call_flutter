@@ -5,7 +5,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/page/calling/calling_state.dart';
 import 'package:zego_call_flutter/page/calling/calling_caller_view.dart';
 import 'package:zego_call_flutter/page/calling/online_video_view.dart';

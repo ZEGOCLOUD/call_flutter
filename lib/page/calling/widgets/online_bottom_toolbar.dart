@@ -77,9 +77,9 @@ class OnlineVideoBottomToolBar extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var isCameraEnabled = useState(true);
-    var isFrontCameraUsed = useState(true);
 
     var deviceService = context.read<ZegoDeviceService>();
+    var isFrontCameraUsed = useState(deviceService.isFrontCamera);
     var isMicMuted = useState(false);
     deviceService.isMicMuted().then((value) => {isMicMuted.value = value});
     var isSpeakerEnabled = useState(false);
