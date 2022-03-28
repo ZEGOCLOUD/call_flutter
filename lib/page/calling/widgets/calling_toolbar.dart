@@ -1,11 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:zego_call_flutter/common/bottomSheet.dart';
+import 'package:zego_call_flutter/service/zego_device_service.dart';
+import 'package:zego_call_flutter/page/calling/settings/calling_settings.dart';
 import 'calling_bottom_toolbar_button.dart';
 
 class CallingCallerVideoTopToolBarButton extends StatelessWidget {
@@ -28,32 +32,49 @@ class CallingCallerVideoTopToolBarButton extends StatelessWidget {
   }
 }
 
-class CallingCallerVideoTopToolBar extends StatelessWidget {
+class CallingCallerVideoTopToolBar extends HookWidget {
   const CallingCallerVideoTopToolBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    var deviceService = context.read<ZegoDeviceService>();
+    var isFrontCameraUsed = useState(deviceService.isFrontCamera);
+
+    return SafeArea(
+        child: Container(
+      //test
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.05),
+      ),
+      padding: EdgeInsets.only(left: 36.w, right: 36.w),
       height: 88.h,
-      child: Column(
+      width: double.infinity,
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           CallingCallerVideoTopToolBarButton(
-            iconURL: StyleIconUrls.toolbarBottomSwitchCamera,
+            iconURL: StyleIconUrls.toolbarTopSwitchCamera,
             onTap: () {
-              //  todo
+              var deviceDevice = context.read<ZegoDeviceService>();
+              deviceDevice.useFrontCamera(!isFrontCameraUsed.value);
+
+              isFrontCameraUsed.value = !isFrontCameraUsed.value;
             },
           ),
           SizedBox(width: 64.w),
           CallingCallerVideoTopToolBarButton(
             iconURL: StyleIconUrls.toolbarTopSettings,
             onTap: () {
-              //  todo
+              showModalBottomSheetWithStyle(
+                  context,
+                  763.h,
+                  const CallingSettingsView(
+                      callType: ZegoCallType.kZegoCallTypeVideo));
             },
           ),
         ],
       ),
-    );
+    ));
   }
 }
 

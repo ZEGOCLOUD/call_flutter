@@ -79,6 +79,7 @@ class StyleIconUrls {
   static const String toolbarBottomVoice = 'images/toolbar_bottom_voice.png';
   static const String toolbarTopMini = 'images/toolbar_top_mini.png';
   static const String toolbarTopSettings = 'images/toolbar_top_settings.png';
+  static const String toolbarTopSwitchCamera = 'images/toolbar_top_switch_camera.png';
 }
 
 /// constant style

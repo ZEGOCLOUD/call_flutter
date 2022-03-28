@@ -34,6 +34,7 @@ abstract class IZegoDeviceService {
   bool echoCancellation = true; // sdk default value
   bool volumeAdjustment = true; // sdk default value
   bool isMirroring = false;
+  bool isFrontCamera = true;
   late ZegoDeviceServiceDelegate delegate;
 
   String getResolutionString(ZegoVideoResolution resolution) {
@@ -112,6 +113,8 @@ abstract class IZegoDeviceService {
 
   bool get getIsMirroring => isMirroring;
 
+  bool get getIsFrontCamera => isFrontCamera;
+
   void setVolumeAdjustment(bool volumeAdjustment) =>
       this.volumeAdjustment = volumeAdjustment;
 
@@ -155,6 +158,8 @@ class ZegoDeviceService extends ChangeNotifier with IZegoDeviceService {
 
   @override
   void useFrontCamera(bool enable, {ZegoPublishChannel? channel}) {
+    super.isFrontCamera = enable;
+
     ZegoExpressEngine.instance.useFrontCamera(enable);
   }
 
