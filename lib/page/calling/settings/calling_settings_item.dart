@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/style/styles.dart';
+import 'package:zego_call_flutter/common/style/styles.dart';
 
 class CallingSettingsSwitchItem extends StatelessWidget {
   final String title;
@@ -53,18 +52,19 @@ class CallingSettingsPageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
         height: 100.h,
-        child: Row(children: [
-          Text(title, style: StyleConstant.callingSettingItemTitleText),
-          const Expanded(child: Text('')),
-          Text(subTitle, style: StyleConstant.callingSettingItemSubTitleText),
-          SizedBox(width: 4.w),
-          GestureDetector(
-              onTap: onTap,
-              child: SizedBox(
+        child: GestureDetector(
+            onTap: onTap,
+            child: Row(children: [
+              Text(title, style: StyleConstant.callingSettingItemTitleText),
+              const Expanded(child: Text('')),
+              Text(subTitle,
+                  style: StyleConstant.callingSettingItemSubTitleText),
+              SizedBox(width: 4.w),
+              SizedBox(
                 width: 56.w,
                 child: Image.asset(StyleIconUrls.settingNext),
-              ))
-        ]));
+              )
+            ])));
   }
 }
 
@@ -85,33 +85,31 @@ class CallingSettingsListItem<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100.h,
-      child: GestureDetector(
-        onTap: () {
-          onSelected(value);
-        },
-        child: Container(
-            //  make gesture work if click empty space
-            decoration: const BoxDecoration(color: Colors.transparent),
-            child: Row(
-              children: [
-                Text(
-                  title,
-                  style: isChecked
-                      ? StyleConstant.callingSettingItemTitleText
-                      : StyleConstant.callingSettingItemNoCheckedTitleText,
-                ),
-                const Expanded(child: SizedBox()),
-                SizedBox(
-                  width: 56.w,
-                  child: isChecked
-                      ? Image.asset(StyleIconUrls.settingTick)
-                      : const SizedBox(),
-                ),
-              ],
-            )),
-      ),
+    return GestureDetector(
+      onTap: () {
+        onSelected(value);
+      },
+      child: Container(
+          height: 100.h,
+          //  transparent decoration's target is make gesture work if click empty space
+          decoration: const BoxDecoration(color: Colors.transparent),
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: isChecked
+                    ? StyleConstant.callingSettingItemTitleText
+                    : StyleConstant.callingSettingItemNoCheckedTitleText,
+              ),
+              const Expanded(child: SizedBox()),
+              SizedBox(
+                width: 56.w,
+                child: isChecked
+                    ? Image.asset(StyleIconUrls.settingTick)
+                    : const SizedBox(),
+              ),
+            ],
+          )),
     );
   }
 }

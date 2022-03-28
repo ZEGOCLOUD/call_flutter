@@ -9,7 +9,6 @@ import 'package:zego_call_flutter/page/calling/settings/calling_settings_item.da
 import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'package:zego_call_flutter/service/zego_device_service.dart';
 import 'calling_settings_defines.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CallingSettingsPage extends HookWidget {
   final ZegoCallType callType;

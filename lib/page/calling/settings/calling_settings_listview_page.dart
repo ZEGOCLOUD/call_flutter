@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:zego_call_flutter/common/style/styles.dart';
 import 'package:zego_call_flutter/page/calling/settings/calling_settings_item.dart';
-import 'package:zego_call_flutter/service/zego_call_service.dart';
 import 'package:zego_call_flutter/service/zego_device_service.dart';
 import 'calling_settings_defines.dart';
 
@@ -16,7 +15,6 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
   final Map<T, String> model;
 
   final ValueChanged<int> pageIndexChanged;
-  final ValueChanged<String> valueChanged;
   final void Function(T) onSelected;
 
   const CallingSettingsListViewPage(
@@ -24,7 +22,6 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
       required this.selectedValue,
       required this.model,
       required this.pageIndexChanged,
-      required this.valueChanged,
       required this.onSelected,
       Key? key})
       : super(key: key);
@@ -35,7 +32,11 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(32.0.w, 23.0.h, 32.0.w, 40.0.h),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         GestureDetector(
-            child: SizedBox(height: 85.h, child: header()),
+            child: Container(
+                //  transparent decoration's target is make gesture work if click empty space
+                decoration: const BoxDecoration(color: Colors.transparent),
+                height: 85.h,
+                child: header()),
             onTap: () {
               pageIndexChanged(CallingSettingPageIndexExtension
                   .valueMap[CallingSettingPageIndex.mainPageIndex]!);
@@ -80,6 +81,9 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
           isChecked: selectedValue == value,
           onSelected: (T selectedValue) {
             onSelected(selectedValue);
+
+            pageIndexChanged(CallingSettingPageIndexExtension
+                .valueMap[CallingSettingPageIndex.mainPageIndex]!);
           },
         );
       },
@@ -106,10 +110,11 @@ class CallingVideoResolutionSettingsPage extends StatelessWidget {
         selectedValue: selectedValue,
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,
-        valueChanged: valueChanged,
         onSelected: (ZegoVideoResolution selectedValue) {
           var deviceService = context.read<ZegoDeviceService>();
           deviceService.setVideoResolution(selectedValue);
+
+          valueChanged(deviceService.getResolutionString(selectedValue));
         });
   }
 
@@ -153,10 +158,11 @@ class CallingAudioBitrateSettingsPage extends StatelessWidget {
         selectedValue: selectedValue,
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,
-        valueChanged: valueChanged,
         onSelected: (ZegoAudioBitrate selectedValue) {
           var deviceService = context.read<ZegoDeviceService>();
           deviceService.setAudioBitrate(selectedValue);
+
+          valueChanged(deviceService.getBitrateString(selectedValue));
         });
   }
 

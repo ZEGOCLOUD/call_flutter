@@ -173,7 +173,7 @@ class StyleConstant {
     fontSize: 15.0,
   );
   static const callingSettingItemSubTitleText = TextStyle(
-    color: Color(0xffF3F4F7),
+    color: Color(0xffA4A4A4),
     fontSize: 14.0,
   );
   static const callingSettingItemNoCheckedTitleText = TextStyle(
