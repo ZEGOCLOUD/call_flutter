@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:zego_call_flutter/zegoapp.dart';
+import 'package:zego_call_flutter/zegocall_demo/zegoapp.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
