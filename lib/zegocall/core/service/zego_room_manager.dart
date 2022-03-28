@@ -11,7 +11,6 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_loading_service.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_room_service.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_stream_service.dart';
 import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
@@ -22,7 +21,6 @@ class ZegoRoomManager extends ChangeNotifier {
   static var shared = ZegoRoomManager();
 
   ZegoRoomService roomService = ZegoRoomService();
-  ZegoLoadingService loadingService = ZegoLoadingService();
   ZegoUserService userService = ZegoUserService();
   ZegoCallService callService = ZegoCallService();
   ZegoStreamService streamService = ZegoStreamService();
@@ -30,7 +28,6 @@ class ZegoRoomManager extends ChangeNotifier {
 
   _onRoomLeave() {
     // Reset all service data
-    loadingService.onRoomLeave();
     roomService.onRoomLeave();
     userService.onRoomLeave();
     callService.onRoomLeave();
@@ -38,7 +35,6 @@ class ZegoRoomManager extends ChangeNotifier {
   }
 
   _onRoomEnter() {
-    loadingService.onRoomEnter();
     roomService.onRoomEnter();
     userService.onRoomEnter();
     callService.onRoomEnter();

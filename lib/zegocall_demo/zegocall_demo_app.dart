@@ -106,8 +106,6 @@ class _ZegoAppState extends State<ZegoApp> {
       ChangeNotifierProvider(
           create: (context) => ZegoRoomManager.shared.userService),
       ChangeNotifierProvider(
-          create: (context) => ZegoRoomManager.shared.loadingService),
-      ChangeNotifierProvider(
           create: (context) => ZegoRoomManager.shared.callService),
       ChangeNotifierProvider(
           create: (context) => ZegoRoomManager.shared.streamService),
