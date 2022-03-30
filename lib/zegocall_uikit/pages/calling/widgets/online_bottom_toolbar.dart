@@ -8,8 +8,10 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_call_service_impl.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_device_service_impl.dart';
+import '../../../../zegocall/core/interface/zego_call_service.dart';
+import '../../../../zegocall/core/interface/zego_device_service.dart';
 import 'calling_bottom_toolbar_button.dart';
 
 class OnlineVoiceBottomToolBar extends HookWidget {
@@ -17,7 +19,7 @@ class OnlineVoiceBottomToolBar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var deviceService = context.read<ZegoDeviceService>();
+    var deviceService = context.read<IZegoDeviceService>();
     var isMicMuted = useState(false);
     deviceService.isMicMuted().then((value) => {isMicMuted.value = value});
     var isSpeakerEnabled = useState(false);
@@ -40,7 +42,7 @@ class OnlineVoiceBottomToolBar extends HookWidget {
                   ? StyleIconUrls.toolbarBottomMicClosed
                   : StyleIconUrls.toolbarBottomMicOpen,
               onTap: () async {
-                var deviceDevice = context.read<ZegoDeviceService>();
+                var deviceDevice = context.read<IZegoDeviceService>();
                 deviceDevice.muteMic(!isMicMuted.value);
 
                 isMicMuted.value = !isMicMuted.value;
@@ -51,7 +53,7 @@ class OnlineVoiceBottomToolBar extends HookWidget {
               iconHeight: 120.h,
               iconURL: StyleIconUrls.toolbarBottomEnd,
               onTap: () {
-                context.read<ZegoCallService>().endCall();
+                context.read<IZegoCallService>().endCall();
               },
             ),
             CallingCalleeBottomToolBarButton(
@@ -61,7 +63,7 @@ class OnlineVoiceBottomToolBar extends HookWidget {
                   ? StyleIconUrls.toolbarBottomSpeakerOpen
                   : StyleIconUrls.toolbarBottomSpeakerClosed,
               onTap: () async {
-                var deviceDevice = context.read<ZegoDeviceService>();
+                var deviceDevice = context.read<IZegoDeviceService>();
                 deviceDevice.enableSpeaker(!isSpeakerEnabled.value);
 
                 isSpeakerEnabled.value = !isSpeakerEnabled.value;
@@ -81,7 +83,7 @@ class OnlineVideoBottomToolBar extends HookWidget {
   Widget build(BuildContext context) {
     var isCameraEnabled = useState(true);
 
-    var deviceService = context.read<ZegoDeviceService>();
+    var deviceService = context.read<IZegoDeviceService>();
     var isFrontCameraUsed = useState(deviceService.isFrontCamera);
     var isMicMuted = useState(false);
     deviceService.isMicMuted().then((value) => {isMicMuted.value = value});
@@ -105,7 +107,7 @@ class OnlineVideoBottomToolBar extends HookWidget {
                   ? StyleIconUrls.toolbarBottomCameraOpen
                   : StyleIconUrls.toolbarBottomCameraClosed,
               onTap: () {
-                var deviceDevice = context.read<ZegoDeviceService>();
+                var deviceDevice = context.read<IZegoDeviceService>();
                 deviceDevice.enableCamera(!isCameraEnabled.value);
 
                 isCameraEnabled.value = !isCameraEnabled.value;
@@ -118,7 +120,7 @@ class OnlineVideoBottomToolBar extends HookWidget {
                   ? StyleIconUrls.toolbarBottomMicClosed
                   : StyleIconUrls.toolbarBottomMicOpen,
               onTap: () async {
-                var deviceDevice = context.read<ZegoDeviceService>();
+                var deviceDevice = context.read<IZegoDeviceService>();
                 deviceDevice.muteMic(!isMicMuted.value);
 
                 isMicMuted.value = !isMicMuted.value;
@@ -138,7 +140,7 @@ class OnlineVideoBottomToolBar extends HookWidget {
               iconHeight: 120.h,
               iconURL: StyleIconUrls.toolbarBottomSwitchCamera,
               onTap: () {
-                var deviceDevice = context.read<ZegoDeviceService>();
+                var deviceDevice = context.read<IZegoDeviceService>();
                 deviceDevice.useFrontCamera(!isFrontCameraUsed.value);
 
                 isFrontCameraUsed.value = !isFrontCameraUsed.value;
@@ -151,7 +153,7 @@ class OnlineVideoBottomToolBar extends HookWidget {
                   ? StyleIconUrls.toolbarBottomSpeakerOpen
                   : StyleIconUrls.toolbarBottomSpeakerClosed,
               onTap: () async {
-                var deviceDevice = context.read<ZegoDeviceService>();
+                var deviceDevice = context.read<IZegoDeviceService>();
                 deviceDevice.enableSpeaker(!isSpeakerEnabled.value);
 
                 isSpeakerEnabled.value = !isSpeakerEnabled.value;

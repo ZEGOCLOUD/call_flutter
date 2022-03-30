@@ -5,27 +5,30 @@ import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
+import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import 'mini_overlay_page_delegate_notifier.dart';
 import 'mini_overlay_state.dart';
 
 class MiniOverlayVoiceCallingFrame extends StatefulWidget {
-  MiniOverlayVoiceCallingFrame(
+  const MiniOverlayVoiceCallingFrame(
       {required this.onIdleStateEntry,
       this.waitingDuration = 60,
       this.defaultState = MiniOverlayPageVoiceCallingState.kIdle,
+      required this.delegateNotifier,
       Key? key})
       : super(key: key);
 
   // The duration may change on full screen calling page
-  int waitingDuration;
-  MiniOverlayPageVoiceCallingState defaultState;
-  VoidCallback onIdleStateEntry;
+  final int waitingDuration;
+  final MiniOverlayPageVoiceCallingState defaultState;
+  final VoidCallback onIdleStateEntry;
+  final ZegoOverlayPageDelegatePageNotifier delegateNotifier;
 
   @override
   _MiniOverlayVoiceCallingFrameState createState() =>
@@ -33,7 +36,7 @@ class MiniOverlayVoiceCallingFrame extends StatefulWidget {
 }
 
 class _MiniOverlayVoiceCallingFrameState
-    extends State<MiniOverlayVoiceCallingFrame> {
+    extends State<MiniOverlayVoiceCallingFrame> with ZegoCallServiceDelegate {
   MiniOverlayPageVoiceCallingState currentState =
       MiniOverlayPageVoiceCallingState.kIdle;
 
@@ -47,29 +50,74 @@ class _MiniOverlayVoiceCallingFrameState
 
   @override
   void initState() {
-    initStateMachine();
-    registerCallService();
-
     super.initState();
 
+    initDelegateNotifier();
+
+    initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
     });
   }
 
-  registerCallService() {
-    // Listen on CallService event
-    final callService = context.read<ZegoCallService>();
-    callService.onReceiveCallEnded = () => stateEnded.enter();
-    callService.onReceiveCallCancel =
-        (ZegoUserInfo info) => stateDeclined.enter();
-    callService.onReceiveCallResponse =
-        (ZegoUserInfo info, ZegoCallType type) => stateOnline.enter();
-    callService.onReceiveCallTimeout =
-        (ZegoCallTimeoutType type) => stateMissed.enter();
+  @override
+  void onReceiveCallAccept(ZegoUserInfo info) {
+    stateOnline.enter();
   }
 
-  initStateMachine() {
+  @override
+  void onReceiveCallCanceled(ZegoUserInfo info) {
+    stateDeclined.enter();
+  }
+
+  @override
+  void onReceiveCallDecline(ZegoUserInfo info, ZegoDeclineType type) {}
+
+  @override
+  void onReceiveCallEnded() {
+    stateEnded.enter();
+  }
+
+  @override
+  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type) {}
+
+  @override
+  void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {
+    stateMissed.enter();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: 132.w,
+        height: 132.h,
+        decoration: const BoxDecoration(
+          color: Color(0xff0055FF),
+          shape: BoxShape.circle,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(
+              image: const AssetImage(StyleIconUrls.roomOverlayVoiceCalling),
+              width: 56.w,
+            ),
+            Text(getStateText(currentState),
+                style: StyleConstant.voiceCallingText),
+          ],
+        ));
+  }
+
+  void initDelegateNotifier() {
+    widget.delegateNotifier.onPageReceiveCallInvite = onReceiveCallInvite;
+    widget.delegateNotifier.onPageReceiveCallCanceled = onReceiveCallCanceled;
+    widget.delegateNotifier.onPageReceiveCallAccept = onReceiveCallAccept;
+    widget.delegateNotifier.onPageReceiveCallDecline = onReceiveCallDecline;
+    widget.delegateNotifier.onPageReceiveCallEnded = onReceiveCallEnded;
+    widget.delegateNotifier.onPageReceiveCallTimeout = onReceiveCallTimeout;
+  }
+
+  void initStateMachine() {
     // Update current for drive UI rebuild
     machine.onAfterTransition.listen((event) {
       print('[state machine] mini overlay voice : from ${event.source} to '
@@ -102,28 +150,6 @@ class _MiniOverlayVoiceCallingFrameState
     } catch (e) {
       print(e);
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        width: 132.w,
-        height: 132.h,
-        decoration: const BoxDecoration(
-          color: Color(0xff0055FF),
-          shape: BoxShape.circle,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image(
-              image: const AssetImage(StyleIconUrls.roomOverlayVoiceCalling),
-              width: 56.w,
-            ),
-            Text(getStateText(currentState),
-                style: StyleConstant.voiceCallingText),
-          ],
-        ));
   }
 
   String getStateText(MiniOverlayPageVoiceCallingState state) {

@@ -16,20 +16,25 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_room_manager.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/auth/auth_gate.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/settings/settings_page.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/welcome/welcome_page.dart';
 import 'package:zego_call_flutter/zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
+import '../zegocall/core/interface/zego_call_service.dart';
+
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_call_service_impl.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_user_service_impl.dart';
 
 import 'package:zego_call_flutter/zegocall_uikit/pages/calling/calling_page'
     '.dart';
 
 import 'package:zego_call_flutter/zegocall_demo/pages/users/online_list_page'
     '.dart';
+
 
 class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);
@@ -102,25 +107,15 @@ class _ZegoAppState extends State<ZegoApp> {
   providers() {
     return [
       ChangeNotifierProvider(
-          create: (context) => ZegoRoomManager.shared.roomService),
+          create: (context) => ZegoServiceManager.shared.roomService),
       ChangeNotifierProvider(
-          create: (context) => ZegoRoomManager.shared.userService),
+          create: (context) => ZegoServiceManager.shared.userService),
       ChangeNotifierProvider(
-          create: (context) => ZegoRoomManager.shared.loadingService),
+          create: (context) => ZegoServiceManager.shared.callService),
       ChangeNotifierProvider(
-          create: (context) => ZegoRoomManager.shared.callService),
+          create: (context) => ZegoServiceManager.shared.streamService),
       ChangeNotifierProvider(
-          create: (context) => ZegoRoomManager.shared.streamService),
-      ChangeNotifierProvider(
-          create: (context) => ZegoRoomManager.shared.deviceService),
-      ChangeNotifierProxyProvider<ZegoUserService, ZegoCallService>(
-        create: (context) => context.read<ZegoCallService>(),
-        update: (_, userService, callService) {
-          if (callService == null) throw ArgumentError.notNull('call');
-          callService.updateUserDic(userService.userDic);
-          return callService;
-        },
-      ),
+          create: (context) => ZegoServiceManager.shared.deviceService),
     ];
   }
 

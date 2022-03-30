@@ -7,11 +7,13 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../../zegocall/core/interface/zego_device_service.dart';
 import 'calling_settings_defines.dart';
 import 'calling_settings_item.dart';
 
-import 'package:zego_call_flutter/zegocall/core/service/zego_device_service'
-    '.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_device_service'
+    '_impl.dart';
 
 class CallingSettingsListViewPage<T> extends StatelessWidget {
   final String title;
@@ -116,29 +118,27 @@ class CallingVideoResolutionSettingsPage extends StatelessWidget {
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,
         onSelected: (ZegoVideoResolution selectedValue) {
-          var deviceService = context.read<ZegoDeviceService>();
+          var deviceService = context.read<IZegoDeviceService>();
           deviceService.setVideoResolution(selectedValue);
 
-          valueChanged(deviceService.getResolutionString(selectedValue));
+          valueChanged(getResolutionString(selectedValue));
         });
   }
 
   Map<ZegoVideoResolution, String> listModel(BuildContext context) {
-    var deviceService = context.read<ZegoDeviceService>();
-
     Map<ZegoVideoResolution, String> model = {};
     model[ZegoVideoResolution.v180P] =
-        deviceService.getResolutionString(ZegoVideoResolution.v180P);
+        getResolutionString(ZegoVideoResolution.v180P);
     model[ZegoVideoResolution.v270P] =
-        deviceService.getResolutionString(ZegoVideoResolution.v270P);
+        getResolutionString(ZegoVideoResolution.v270P);
     model[ZegoVideoResolution.v360P] =
-        deviceService.getResolutionString(ZegoVideoResolution.v360P);
+        getResolutionString(ZegoVideoResolution.v360P);
     model[ZegoVideoResolution.v540P] =
-        deviceService.getResolutionString(ZegoVideoResolution.v540P);
+        getResolutionString(ZegoVideoResolution.v540P);
     model[ZegoVideoResolution.v720P] =
-        deviceService.getResolutionString(ZegoVideoResolution.v720P);
+        getResolutionString(ZegoVideoResolution.v720P);
     model[ZegoVideoResolution.v1080P] =
-        deviceService.getResolutionString(ZegoVideoResolution.v1080P);
+        getResolutionString(ZegoVideoResolution.v1080P);
 
     return model;
   }
@@ -164,27 +164,20 @@ class CallingAudioBitrateSettingsPage extends StatelessWidget {
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,
         onSelected: (ZegoAudioBitrate selectedValue) {
-          var deviceService = context.read<ZegoDeviceService>();
+          var deviceService = context.read<IZegoDeviceService>();
           deviceService.setAudioBitrate(selectedValue);
 
-          valueChanged(deviceService.getBitrateString(selectedValue));
+          valueChanged(getBitrateString(selectedValue));
         });
   }
 
   Map<ZegoAudioBitrate, String> listModel(BuildContext context) {
-    var deviceService = context.read<ZegoDeviceService>();
-
     Map<ZegoAudioBitrate, String> model = {};
-    model[ZegoAudioBitrate.b16] =
-        deviceService.getBitrateString(ZegoAudioBitrate.b16);
-    model[ZegoAudioBitrate.b48] =
-        deviceService.getBitrateString(ZegoAudioBitrate.b48);
-    model[ZegoAudioBitrate.b56] =
-        deviceService.getBitrateString(ZegoAudioBitrate.b56);
-    model[ZegoAudioBitrate.b96] =
-        deviceService.getBitrateString(ZegoAudioBitrate.b96);
-    model[ZegoAudioBitrate.b128] =
-        deviceService.getBitrateString(ZegoAudioBitrate.b128);
+    model[ZegoAudioBitrate.b16] = getBitrateString(ZegoAudioBitrate.b16);
+    model[ZegoAudioBitrate.b48] = getBitrateString(ZegoAudioBitrate.b48);
+    model[ZegoAudioBitrate.b56] = getBitrateString(ZegoAudioBitrate.b56);
+    model[ZegoAudioBitrate.b96] = getBitrateString(ZegoAudioBitrate.b96);
+    model[ZegoAudioBitrate.b128] = getBitrateString(ZegoAudioBitrate.b128);
 
     return model;
   }

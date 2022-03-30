@@ -4,26 +4,29 @@ import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
+import 'mini_overlay_page_delegate_notifier.dart';
 import 'mini_overlay_state.dart';
 
 class MiniOverlayVideoCallingFrame extends StatefulWidget {
-  MiniOverlayVideoCallingFrame(
-      {Key? key,
-      required this.waitingDuration,
-      required this.onIdleStateEntry,
-      required this.onBothWithoutVideoEntry})
-      : super(key: key);
+  const MiniOverlayVideoCallingFrame({
+    this.waitingDuration = 60,
+    required this.onIdleStateEntry,
+    required this.onBothWithoutVideoEntry,
+    required this.delegateNotifier,
+    Key? key,
+  }) : super(key: key);
 
   // The duration may change on full screen calling page
-  var waitingDuration = 60;
-  VoidCallback onIdleStateEntry;
-  VoidCallback onBothWithoutVideoEntry;
+  final int waitingDuration;
+  final VoidCallback onIdleStateEntry;
+  final VoidCallback onBothWithoutVideoEntry;
+  final ZegoOverlayPageDelegatePageNotifier delegateNotifier;
 
   @override
   _MiniOverlayVoiceCallingFrameState createState() =>
@@ -31,7 +34,7 @@ class MiniOverlayVideoCallingFrame extends StatefulWidget {
 }
 
 class _MiniOverlayVoiceCallingFrameState
-    extends State<MiniOverlayVideoCallingFrame> {
+    extends State<MiniOverlayVideoCallingFrame> with ZegoCallServiceDelegate {
   MiniOverlayPageVideoCallingState currentState =
       MiniOverlayPageVideoCallingState.kIdle;
 
@@ -44,28 +47,74 @@ class _MiniOverlayVoiceCallingFrameState
 
   @override
   void initState() {
-    initStateMachine();
-    registerCallService();
-
     super.initState();
 
+    initDelegateNotifier();
+
+    initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
     });
   }
 
-  void registerCallService() {
-    // Listen on CallService event
-    final callService = context.read<ZegoCallService>();
-    callService.onReceiveCallEnded = () => stateIdle.enter();
-    callService.onReceiveCallCancel = (ZegoUserInfo info) => stateIdle.enter();
-    callService.onReceiveCallResponse =
-        (ZegoUserInfo info, ZegoCallType type) =>
-            stateOnlyCallerWithVideo.enter();
-    callService.onReceiveCallTimeout =
-        (ZegoCallTimeoutType type) => stateIdle.enter();
+  @override
+  void onReceiveCallAccept(ZegoUserInfo info) {
+    stateOnlyCallerWithVideo.enter();
+  }
 
-    // TODO check stream is callee has video
+  @override
+  void onReceiveCallCanceled(ZegoUserInfo info) {
+    stateIdle.enter();
+  }
+
+  @override
+  void onReceiveCallDecline(ZegoUserInfo info, ZegoDeclineType type) {
+    // TODO: implement onReceiveCallDecline
+  }
+
+  @override
+  void onReceiveCallEnded() {
+    stateIdle.enter();
+  }
+
+  @override
+  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type) {
+    // TODO: implement onReceiveCallInvite
+  }
+
+  @override
+  void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {
+    stateIdle.enter();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    switch (currentState) {
+      case MiniOverlayPageVideoCallingState.kIdle:
+      case MiniOverlayPageVideoCallingState.kWaiting:
+        return const SizedBox();
+      case MiniOverlayPageVideoCallingState.kBothWithoutVideo:
+        return const SizedBox();
+      case MiniOverlayPageVideoCallingState.kCalleeWithVideo:
+        return createVideoView(const Text(
+          'Show callee video here',
+          style: TextStyle(color: Colors.white, fontSize: 12),
+        ));
+      case MiniOverlayPageVideoCallingState.kOnlyCallerWithVideo:
+        return createVideoView(const Text(
+          'Show caller video here',
+          style: TextStyle(color: Colors.white, fontSize: 12),
+        ));
+    }
+  }
+
+  void initDelegateNotifier() {
+    widget.delegateNotifier.onPageReceiveCallInvite = onReceiveCallInvite;
+    widget.delegateNotifier.onPageReceiveCallCanceled = onReceiveCallCanceled;
+    widget.delegateNotifier.onPageReceiveCallAccept = onReceiveCallAccept;
+    widget.delegateNotifier.onPageReceiveCallDecline = onReceiveCallDecline;
+    widget.delegateNotifier.onPageReceiveCallEnded = onReceiveCallEnded;
+    widget.delegateNotifier.onPageReceiveCallTimeout = onReceiveCallTimeout;
   }
 
   void initStateMachine() {
@@ -98,27 +147,6 @@ class _MiniOverlayVoiceCallingFrameState
       setState(() => currentState = machine.current!.identifier);
     } catch (e) {
       print(e);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    switch (currentState) {
-      case MiniOverlayPageVideoCallingState.kIdle:
-      case MiniOverlayPageVideoCallingState.kWaiting:
-        return const SizedBox();
-      case MiniOverlayPageVideoCallingState.kBothWithoutVideo:
-        return const SizedBox();
-      case MiniOverlayPageVideoCallingState.kCalleeWithVideo:
-        return createVideoView(const Text(
-          'Show callee video here',
-          style: TextStyle(color: Colors.white, fontSize: 12),
-        ));
-      case MiniOverlayPageVideoCallingState.kOnlyCallerWithVideo:
-        return createVideoView(const Text(
-          'Show caller video here',
-          style: TextStyle(color: Colors.white, fontSize: 12),
-        ));
     }
   }
 

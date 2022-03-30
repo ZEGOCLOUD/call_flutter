@@ -7,146 +7,12 @@ import 'package:flutter/cupertino.dart';
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
-enum ZegoDeviceType {
-  zegoNoiseSuppression,
-  zegoEchoCancellation,
-  zegoVolumeAdjustment,
-}
+// Project imports:
+import 'package:zego_call_flutter/zegocall/core/delegate/zego_device_service_delegate.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../interface/zego_device_service.dart';
 
-enum ZegoVideoResolution {
-  v1080P,
-  v720P,
-  v540P,
-  v360P,
-  v270P,
-  v180P,
-}
-
-enum ZegoAudioBitrate {
-  b16,
-  b48,
-  b56,
-  b96,
-  b128,
-}
-
-mixin ZegoDeviceServiceDelegate {
-  void onAudioRouteChange(ZegoAudioRoute audioRoute);
-}
-
-abstract class IZegoDeviceService {
-  bool noiseSlimming = true; // sdk default value
-  bool echoCancellation = true; // sdk default value
-  bool volumeAdjustment = true; // sdk default value
-  bool isMirroring = false;
-  bool isFrontCamera = true;
-  late ZegoDeviceServiceDelegate delegate;
-
-  String getResolutionString(ZegoVideoResolution resolution) {
-    switch (resolution) {
-      case ZegoVideoResolution.v1080P:
-        return "1920x1080";
-      case ZegoVideoResolution.v720P:
-        return "1080x720";
-      case ZegoVideoResolution.v540P:
-        return "960x540";
-      case ZegoVideoResolution.v360P:
-        return "640x360";
-      case ZegoVideoResolution.v270P:
-        return "480x270";
-      case ZegoVideoResolution.v180P:
-        return "320x180";
-    }
-  }
-
-  String getBitrateString(ZegoAudioBitrate bitrate) {
-    String bitrateString = "";
-    switch (bitrate) {
-      case ZegoAudioBitrate.b16:
-        bitrateString = "16";
-        break;
-      case ZegoAudioBitrate.b48:
-        bitrateString = "48";
-        break;
-      case ZegoAudioBitrate.b56:
-        bitrateString = "56";
-        break;
-      case ZegoAudioBitrate.b96:
-        bitrateString = "96";
-        break;
-      case ZegoAudioBitrate.b128:
-        bitrateString = "128";
-        break;
-      default:
-        bitrateString = "48";
-        break;
-    }
-
-    return bitrateString + "kbps";
-  }
-
-  int getAudioBitrateValue(ZegoAudioBitrate bitrate) {
-    switch (bitrate) {
-      case ZegoAudioBitrate.b16:
-        return 16;
-      case ZegoAudioBitrate.b48:
-        return 48;
-      case ZegoAudioBitrate.b56:
-        return 56;
-      case ZegoAudioBitrate.b96:
-        return 96;
-      case ZegoAudioBitrate.b128:
-        return 128;
-      default:
-        return 48;
-    }
-  }
-
-  bool get getNoiseSlimming => noiseSlimming;
-
-  void setNoiseSlimming(bool noiseSlimming) =>
-      this.noiseSlimming = noiseSlimming;
-
-  bool get getEchoCancellation => echoCancellation;
-
-  void setEchoCancellation(bool echoCancellation) =>
-      this.echoCancellation = echoCancellation;
-
-  bool get getVolumeAdjustment => volumeAdjustment;
-
-  void setIsMirroring(bool isMirroring) => this.isMirroring = isMirroring;
-
-  bool get getIsMirroring => isMirroring;
-
-  bool get getIsFrontCamera => isFrontCamera;
-
-  void setVolumeAdjustment(bool volumeAdjustment) =>
-      this.volumeAdjustment = volumeAdjustment;
-
-  ZegoDeviceServiceDelegate get getDelegate => delegate;
-
-  set setDelegate(ZegoDeviceServiceDelegate delegate) => delegate = delegate;
-
-  Future<ZegoVideoResolution> getVideoResolution();
-
-  void setVideoResolution(ZegoVideoResolution videoResolution);
-
-  Future<ZegoAudioBitrate> getAudioBitrate();
-
-  void setAudioBitrate(ZegoAudioBitrate bitrate);
-
-  void enableCamera(bool enable);
-
-  void muteMic(bool mute);
-
-  void useFrontCamera(bool enable, {ZegoPublishChannel? channel});
-
-  void enableSpeaker(bool enable);
-
-  void enableCallKit(bool enable);
-}
-
-class ZegoDeviceService extends ChangeNotifier with IZegoDeviceService {
+class ZegoDeviceServiceImpl extends IZegoDeviceService {
   @override
   void enableCamera(bool enable) {
     ZegoExpressEngine.instance.enableCamera(enable);
@@ -157,6 +23,7 @@ class ZegoDeviceService extends ChangeNotifier with IZegoDeviceService {
     ZegoExpressEngine.instance.muteMicrophone(mute);
   }
 
+  @override
   Future<bool> isMicMuted() async {
     return ZegoExpressEngine.instance.isMicrophoneMuted();
   }
@@ -173,6 +40,7 @@ class ZegoDeviceService extends ChangeNotifier with IZegoDeviceService {
     ZegoExpressEngine.instance.muteSpeaker(!enable);
   }
 
+  @override
   Future<bool> isSpeakerEnabled() async {
     return !await ZegoExpressEngine.instance.isSpeakerMuted();
   }
@@ -302,5 +170,65 @@ class ZegoDeviceService extends ChangeNotifier with IZegoDeviceService {
     ZegoExpressEngine.instance.setVideoMirrorMode(isMirroring
         ? ZegoVideoMirrorMode.BothMirror
         : ZegoVideoMirrorMode.NoMirror);
+  }
+}
+
+String getResolutionString(ZegoVideoResolution resolution) {
+  switch (resolution) {
+    case ZegoVideoResolution.v1080P:
+      return "1920x1080";
+    case ZegoVideoResolution.v720P:
+      return "1080x720";
+    case ZegoVideoResolution.v540P:
+      return "960x540";
+    case ZegoVideoResolution.v360P:
+      return "640x360";
+    case ZegoVideoResolution.v270P:
+      return "480x270";
+    case ZegoVideoResolution.v180P:
+      return "320x180";
+  }
+}
+
+String getBitrateString(ZegoAudioBitrate bitrate) {
+  String bitrateString = "";
+  switch (bitrate) {
+    case ZegoAudioBitrate.b16:
+      bitrateString = "16";
+      break;
+    case ZegoAudioBitrate.b48:
+      bitrateString = "48";
+      break;
+    case ZegoAudioBitrate.b56:
+      bitrateString = "56";
+      break;
+    case ZegoAudioBitrate.b96:
+      bitrateString = "96";
+      break;
+    case ZegoAudioBitrate.b128:
+      bitrateString = "128";
+      break;
+    default:
+      bitrateString = "48";
+      break;
+  }
+
+  return bitrateString + "kbps";
+}
+
+int getAudioBitrateValue(ZegoAudioBitrate bitrate) {
+  switch (bitrate) {
+    case ZegoAudioBitrate.b16:
+      return 16;
+    case ZegoAudioBitrate.b48:
+      return 48;
+    case ZegoAudioBitrate.b56:
+      return 56;
+    case ZegoAudioBitrate.b96:
+      return 96;
+    case ZegoAudioBitrate.b128:
+      return 128;
+    default:
+      return 48;
   }
 }

@@ -10,10 +10,11 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_room_manager.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
+import '../../../zegocall/core/interface/zego_user_service.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 
@@ -23,7 +24,7 @@ class OnlineListPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      var userService = context.read<ZegoUserService>();
+      var userService = context.read<IZegoUserService>();
       userService.getOnlineUsers();
 
       try {
@@ -39,13 +40,14 @@ class OnlineListPage extends HookWidget {
       }
 
       //  call test
-      ZegoRoomManager.shared.initWithAPPID(
-          841790877,
-          'f12db2b9deddd08ba8'
-          '1608c2023997c7',
-          (p0) => () {
-                ZegoRoomManager.shared.roomService.joinRoom('999', '');
-              });
+      ZegoServiceManager.shared
+          .initWithAPPID(
+              841790877,
+              'f12db2b9deddd08ba8'
+              '1608c2023997c7')
+          .then((value) {
+        ZegoServiceManager.shared.roomService.joinRoom('999', '');
+      });
 
       return null;
     }, const []);
@@ -61,7 +63,7 @@ class OnlineListPage extends HookWidget {
             titleStyle: StyleConstant.backText),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
-        Consumer<ZegoUserService>(
+        Consumer<IZegoUserService>(
             builder: (_, userService, child) => RefreshIndicator(
                 onRefresh: () async {
                   userService.getOnlineUsers();
@@ -92,7 +94,7 @@ class OnlineListPage extends HookWidget {
     );
   }
 
-  Widget userListView(ZegoUserService userService) {
+  Widget userListView(IZegoUserService userService) {
     return ListView.builder(
       itemExtent: 148.h,
       padding: EdgeInsets.only(left: 32.w, right: 32.w),

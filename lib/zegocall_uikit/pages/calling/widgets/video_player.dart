@@ -7,11 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
+import '../../../../zegocall/core/interface/zego_stream_service.dart';
 import 'avatar_background.dart';
 
-import 'package:zego_call_flutter/zegocall/core/service/zego_stream_service'
-    '.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_stream_service_impl.dart';
 
 
 class VideoPlayerView extends StatefulWidget {
@@ -43,8 +44,9 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
     super.initState();
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      var streamService = context.read<ZegoStreamService>();
-      streamService.addStreamStateNotifier(widget.userID, onStreamReadyStateChanged);
+      var streamService = context.read<IZegoStreamService>();
+      streamService.addStreamStateNotifier(
+          widget.userID, onStreamReadyStateChanged);
     });
   }
 
@@ -52,7 +54,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
   void dispose() {
     super.dispose();
 
-    var streamService = context.read<ZegoStreamService>();
+    var streamService = context.read<IZegoStreamService>();
     streamService.removeStreamStateNotifier(widget.userID);
   }
 
@@ -72,7 +74,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
     return ZegoExpressEngine.instance.createPlatformView((int playingViewID) {
       playingViewID = playingViewID;
 
-      var streamService = context.read<ZegoStreamService>();
+      var streamService = context.read<IZegoStreamService>();
       streamService.startPlaying(widget.userID, playingViewID);
     });
   }

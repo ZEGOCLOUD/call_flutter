@@ -6,11 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../../zegocall/core/interface/zego_device_service.dart';
 import 'calling_settings_defines.dart';
 import 'calling_settings_listview_page.dart';
 import 'calling_settings_page.dart';
+
+// Project imports:
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_device_service_impl.dart';
 
 class CallingSettingsView extends StatefulWidget {
   final ZegoCallType callType;
@@ -34,12 +38,12 @@ class CallingSettingsViewState extends State<CallingSettingsView> {
     pageIndex = CallingSettingPageIndexExtension
         .valueMap[CallingSettingPageIndex.mainPageIndex]!;
 
-    var deviceService = context.read<ZegoDeviceService>();
+    var deviceService = context.read<IZegoDeviceService>();
     deviceService.getAudioBitrate().then((value) {
-      updateAudioBitrate(deviceService.getBitrateString(value));
+      updateAudioBitrate(getBitrateString(value));
     });
     deviceService.getVideoResolution().then((value) {
-      updateVideoResolution(deviceService.getResolutionString(value));
+      updateVideoResolution(getResolutionString(value));
     });
 
     super.initState();

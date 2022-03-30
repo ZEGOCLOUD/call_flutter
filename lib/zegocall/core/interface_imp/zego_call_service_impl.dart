@@ -12,50 +12,31 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
+import 'package:zego_call_flutter/zegocall/core/model/zego_call_info.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../interface/zego_call_service.dart';
 
-enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
-enum ZegoCallTimeoutType {
-  kZegoCallTimeoutTypeCaller,
-  kZegoCallTimeoutTypeCallee
-}
-enum ZegoDeclineType {
-  kZegoDeclineTypeDecline, //  Actively refuse
-  kZegoDeclineTypeBusy //  The call was busy, Passive refused
-}
-
-class ZegoCallInfo {
-  String callID = '';
-  String callerID = '';
-  List<String> callees = [];
-
-  ZegoCallInfo.empty();
-}
-
-class ZegoCallService extends ChangeNotifier {
+class ZegoCallServiceImpl extends IZegoCallService {
   late final FirebaseMessaging _messaging;
   late Map<String, ZegoUserInfo> _userDic;
-  ZegoCallInfo callInfo = ZegoCallInfo.empty();
 
-  ZegoCallService() {
+  ZegoCallServiceImpl() : super() {
     _registerNotification();
     _addCallObserve();
     _requireNotificationsPermissions();
   }
 
-  late Function(ZegoUserInfo info, ZegoCallType type) onReceiveCallInvite;
-  late Function(ZegoUserInfo info) onReceiveCallCancel;
-  late Function(ZegoUserInfo info, ZegoCallType type) onReceiveCallResponse;
-  late Function() onReceiveCallEnded;
-  late Function(ZegoCallTimeoutType type) onReceiveCallTimeout;
-
   void updateUserDic(Map<String, ZegoUserInfo> userDic) {
     _userDic = userDic;
   }
 
-  Future<int> callUser(
-      String calleeUserID, String token, ZegoCallType type) async {
-    ZegoUserInfo callee = _userDic[calleeUserID] ?? ZegoUserInfo.empty();
+  @override
+  Future<int> callUser(String userID, String token, ZegoCallType type) async {
+    ZegoUserInfo callee =
+        ZegoServiceManager.shared.userService.getUserInfoByID(userID);
     if (callee.userID.isEmpty) {
       return -1;
     }
@@ -89,18 +70,22 @@ class ZegoCallService extends ChangeNotifier {
     return 0;
   }
 
-  Future<int> cancelCall() async {
+  @override
+  Future<int> cancelCall(String userID) async {
     return 0;
   }
 
-  Future<int> acceptCall() async {
+  @override
+  Future<int> acceptCall(String token) async {
     return 0;
   }
 
-  Future<int> declineCall(String token, ZegoDeclineType type) async {
+  @override
+  Future<int> declineCall(String userID, ZegoDeclineType type) async {
     return 0;
   }
 
+  @override
   Future<int> endCall() async {
     return 0;
   }
@@ -188,8 +173,4 @@ class ZegoCallService extends ChangeNotifier {
       }
     });
   }
-
-  onRoomLeave() {}
-
-  onRoomEnter() {}
 }

@@ -10,14 +10,20 @@ import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_user_service.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/core/interface/zego_call_service.dart';
+import '../../../zegocall/core/interface/zego_user_service.dart';
 import 'calling_callee_view.dart';
 import 'calling_caller_view.dart';
 import 'calling_state.dart';
 import 'online_video_view.dart';
 import 'online_voice_view.dart';
+
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_call_service_impl.dart';
 
 class CallingPage extends StatefulWidget {
   // ignore: public_member_api_docs
@@ -27,7 +33,8 @@ class CallingPage extends StatefulWidget {
   _CallingPageState createState() => _CallingPageState();
 }
 
-class _CallingPageState extends State<CallingPage> {
+class _CallingPageState extends State<CallingPage>
+    with ZegoCallServiceDelegate {
   CallingState currentState = CallingState.kIdle;
 
   final machine = sm.Machine<CallingState>();
@@ -43,11 +50,9 @@ class _CallingPageState extends State<CallingPage> {
 
   @override
   void initState() {
-    initStateMachine();
-    registerCallService();
-
     super.initState();
 
+    initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
 
@@ -70,30 +75,12 @@ class _CallingPageState extends State<CallingPage> {
     stateOnlineVideo = machine.newState(CallingState.kOnlineVideo);
   }
 
-  void registerCallService() {
-    // Listen on CallService event
-    final callService = context.read<ZegoCallService>();
-    callService.onReceiveCallEnded = () => stateIdle.enter();
-    callService.onReceiveCallCancel = (ZegoUserInfo info) => stateIdle.enter();
-    callService.onReceiveCallResponse =
-        (ZegoUserInfo calleeInfo, ZegoCallType type) {
-      // TODO update UI info
-      if (type == ZegoCallType.kZegoCallTypeVideo) {
-        stateOnlineVideo.enter();
-      } else {
-        stateOnlineVoice.enter();
-      }
-    };
-    callService.onReceiveCallTimeout =
-        (ZegoCallTimeoutType type) => stateIdle.enter();
-  }
-
   @override
   Widget build(BuildContext context) {
     // final pageParams =
     //     ModalRoute.of(context)!.settings.arguments as Map<String, String>;
 
-    var localUserInfo = context.read<ZegoUserService>().localUserInfo;
+    var localUserInfo = context.read<IZegoUserService>().localUserInfo;
     //  call test
     ZegoUserInfo caller = localUserInfo;
     ZegoUserInfo callee = ZegoUserInfo('002', 'name 2', 0);
@@ -131,4 +118,37 @@ class _CallingPageState extends State<CallingPage> {
         );
     }
   }
+
+  @override
+  void onReceiveCallAccept(ZegoUserInfo info) {
+    // TODO: implement onReceiveCallAccept
+  }
+
+  @override
+  void onReceiveCallCanceled(ZegoUserInfo info) {
+    stateIdle.enter();
+  }
+
+  @override
+  void onReceiveCallDecline(ZegoUserInfo info, ZegoDeclineType type) {
+    // TODO: implement onReceiveCallDecline
+  }
+
+  @override
+  void onReceiveCallEnded() {
+    stateIdle.enter();
+  }
+
+  @override
+  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type) {
+    // TODO update UI info
+    if (type == ZegoCallType.kZegoCallTypeVideo) {
+      stateOnlineVideo.enter();
+    } else {
+      stateOnlineVoice.enter();
+    }
+  }
+
+  @override
+  void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {}
 }

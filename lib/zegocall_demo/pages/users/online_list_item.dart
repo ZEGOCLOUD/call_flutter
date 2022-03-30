@@ -7,12 +7,15 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_call_service_impl.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import '../../../zegocall/core/interface/zego_call_service.dart';
 
 import 'package:zego_call_flutter/zegocall_demo/pages/users'
     '/online_list_elements.dart';
+
 
 class OnlineListItem extends StatelessWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);
@@ -23,13 +26,13 @@ class OnlineListItem extends StatelessWidget {
     Navigator.pushReplacementNamed(context, PageRouteNames.calling);
 
     context
-        .read<ZegoCallService>()
+        .read<IZegoCallService>()
         .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVoice);
   }
 
   void onVideoCallTap(BuildContext context) async {
     context
-        .read<ZegoCallService>()
+        .read<IZegoCallService>()
         .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVideo);
   }
 

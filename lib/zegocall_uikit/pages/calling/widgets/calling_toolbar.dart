@@ -9,10 +9,15 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/widgets/show_bottom_sheet.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_device_service_impl.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../../zegocall/core/interface/zego_call_service.dart';
+import '../../../../zegocall/core/interface/zego_device_service.dart';
 import '../settings/calling_settings.dart';
 import 'calling_bottom_toolbar_button.dart';
+
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_call_service_impl.dart';
 
 class CallingCallerVideoTopToolBarButton extends StatelessWidget {
   final String iconURL;
@@ -39,7 +44,7 @@ class CallingCallerVideoTopToolBar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var deviceService = context.read<ZegoDeviceService>();
+    var deviceService = context.read<IZegoDeviceService>();
     var isFrontCameraUsed = useState(deviceService.isFrontCamera);
 
     return SafeArea(
@@ -57,7 +62,7 @@ class CallingCallerVideoTopToolBar extends HookWidget {
           CallingCallerVideoTopToolBarButton(
             iconURL: StyleIconUrls.toolbarTopSwitchCamera,
             onTap: () {
-              var deviceDevice = context.read<ZegoDeviceService>();
+              var deviceDevice = context.read<IZegoDeviceService>();
               deviceDevice.useFrontCamera(!isFrontCameraUsed.value);
 
               isFrontCameraUsed.value = !isFrontCameraUsed.value;
@@ -91,7 +96,7 @@ class CallingCallerBottomToolBar extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             //  todo
-            context.read<ZegoCallService>().cancelCall();
+            context.read<IZegoCallService>().cancelCall("");
           },
           child: SizedBox(
             width: 120.w,
@@ -124,7 +129,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
                 iconURL: StyleIconUrls.toolbarBottomDecline,
                 onTap: () {
                   //  todo
-                  context.read<ZegoCallService>().declineCall(
+                  context.read<IZegoCallService>().declineCall(
                       'token', ZegoDeclineType.kZegoDeclineTypeDecline);
                 }),
             SizedBox(
@@ -137,7 +142,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
                 iconURL: imageURLByCallType(callType),
                 onTap: () {
                   //  todo
-                  context.read<ZegoCallService>().acceptCall();
+                  context.read<IZegoCallService>().acceptCall("");
                 }),
           ],
         ),
