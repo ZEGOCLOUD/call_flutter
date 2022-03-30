@@ -1,6 +1,6 @@
 /// Class room information.
 /// <p>Description: This class contain the room status related information.</>
-class RoomInfo {
+class ZegoRoomInfo {
   /// Room ID, refers to the the unique identifier of the room, can be used when joining the room.
   String roomID = "";
 
@@ -19,17 +19,17 @@ class RoomInfo {
   /// whether the speaker seat is closed.
   bool isSeatClosed = false;
 
-  RoomInfo(this.roomID, this.roomName, this.hostID);
+  ZegoRoomInfo(this.roomID, this.roomName, this.hostID);
 
-  RoomInfo clone() {
-    var cloneObject = RoomInfo(roomID, roomName, hostID);
+  ZegoRoomInfo clone() {
+    var cloneObject = ZegoRoomInfo(roomID, roomName, hostID);
     cloneObject.seatNum = seatNum;
     cloneObject.isTextMessageDisable = isTextMessageDisable;
     cloneObject.isSeatClosed = isSeatClosed;
     return cloneObject;
   }
 
-  RoomInfo.fromJson(Map<String, dynamic> json)
+  ZegoRoomInfo.fromJson(Map<String, dynamic> json)
       : roomID = json['id'],
         roomName = json['name'],
         hostID = json['host_id'],

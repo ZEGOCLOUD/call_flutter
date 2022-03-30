@@ -9,8 +9,10 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_call_service.dart';
-import 'package:zego_call_flutter/zegocall/core/service/zego_device_service.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_device_service_impl.dart';
+import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../../zegocall/core/interface/zego_device_service.dart';
 import 'calling_settings_defines.dart';
 import 'calling_settings_item.dart';
 
@@ -49,7 +51,7 @@ class CallingSettingsPage extends HookWidget {
   }
 
   Widget body(BuildContext context) {
-    var deviceService = context.read<ZegoDeviceService>();
+    var deviceService = context.read<IZegoDeviceService>();
 
     var noiseSlimming =
         useState(deviceService.noiseSlimming); // sdk default value
@@ -68,7 +70,7 @@ class CallingSettingsPage extends HookWidget {
           title: 'Noise suppression',
           defaultValue: noiseSlimming.value,
           onTap: () {
-            var deviceService = context.read<ZegoDeviceService>();
+            var deviceService = context.read<IZegoDeviceService>();
             deviceService.setNoiseSlimming(!deviceService.noiseSlimming);
 
             noiseSlimming.value = deviceService.noiseSlimming;
@@ -78,7 +80,7 @@ class CallingSettingsPage extends HookWidget {
           title: 'Echo cancellation',
           defaultValue: echoCancellation.value,
           onTap: () {
-            var deviceService = context.read<ZegoDeviceService>();
+            var deviceService = context.read<IZegoDeviceService>();
             deviceService.setEchoCancellation(!deviceService.echoCancellation);
 
             echoCancellation.value = deviceService.echoCancellation;
@@ -88,7 +90,7 @@ class CallingSettingsPage extends HookWidget {
           title: 'Mic Volume auto-adjustment',
           defaultValue: volumeAdjustment.value,
           onTap: () {
-            var deviceService = context.read<ZegoDeviceService>();
+            var deviceService = context.read<IZegoDeviceService>();
             deviceService.setVolumeAdjustment(!deviceService.volumeAdjustment);
 
             volumeAdjustment.value = deviceService.volumeAdjustment;
@@ -99,7 +101,7 @@ class CallingSettingsPage extends HookWidget {
                 title: 'Mirroring',
                 defaultValue: isMirroring.value,
                 onTap: () {
-                  var deviceService = context.read<ZegoDeviceService>();
+                  var deviceService = context.read<IZegoDeviceService>();
                   deviceService.setIsMirroring(!deviceService.isMirroring);
 
                   isMirroring.value = deviceService.isMirroring;
