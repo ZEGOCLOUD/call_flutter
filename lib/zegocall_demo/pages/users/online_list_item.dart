@@ -11,11 +11,11 @@ import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_call_service_
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import '../../../zegocall/core/interface/zego_call_service.dart';
 
 import 'package:zego_call_flutter/zegocall_demo/pages/users'
     '/online_list_elements.dart';
 
-import '../../../zegocall/core/interface/zego_call_service.dart';
 
 class OnlineListItem extends StatelessWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);

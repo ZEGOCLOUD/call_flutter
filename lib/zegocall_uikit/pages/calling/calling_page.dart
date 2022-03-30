@@ -8,13 +8,11 @@ import 'package:flutter/scheduler.dart';
 // Package imports:
 import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/interface_imp'
-    '/zego_call_service_impl.dart';
+import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
 import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/core/interface/zego_call_service.dart';
 import '../../../zegocall/core/interface/zego_user_service.dart';
@@ -23,6 +21,9 @@ import 'calling_caller_view.dart';
 import 'calling_state.dart';
 import 'online_video_view.dart';
 import 'online_voice_view.dart';
+
+import 'package:zego_call_flutter/zegocall/core/interface_imp'
+    '/zego_call_service_impl.dart';
 
 class CallingPage extends StatefulWidget {
   // ignore: public_member_api_docs

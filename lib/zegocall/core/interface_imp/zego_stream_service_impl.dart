@@ -1,11 +1,11 @@
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_stream_service_delegate.dart';
 
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/delegate/zego_stream_service_delegate.dart';
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import '../interface/zego_stream_service.dart';
 

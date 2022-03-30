@@ -11,7 +11,6 @@ import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/user_avatar.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/interface/zego_call_service.dart';
 import 'mini_overlay_page_delegate_notifier.dart';

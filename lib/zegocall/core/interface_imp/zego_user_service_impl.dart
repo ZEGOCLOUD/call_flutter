@@ -9,9 +9,9 @@ import 'package:flutter/foundation.dart';
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_user_service_delegate.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/delegate/zego_user_service_delegate.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import '../interface/zego_user_service.dart';
 
