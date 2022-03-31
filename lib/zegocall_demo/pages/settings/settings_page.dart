@@ -7,9 +7,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/widgets/navigation_back_bar.dart';
+import './../../constants/zego_page_constant.dart';
 import 'settings_browser_block.dart';
 import 'settings_logout_block.dart';
 import 'settings_upload_log_block.dart';

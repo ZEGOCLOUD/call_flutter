@@ -1,18 +1,9 @@
-// Dart imports:
-import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
-
 // Flutter imports:
 import 'package:flutter/foundation.dart';
 
-// Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
-
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_user_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import './../delegate/zego_user_service_delegate.dart';
+import './../model/zego_user_info.dart';
 
 /// Class user information management.
 /// <p>Description: This class contains the user information management logics, such as the logic of log in, log out,
@@ -25,11 +16,9 @@ abstract class IZegoUserService extends ChangeNotifier {
   /// The local logged-in user information.
   ZegoUserInfo localUserInfo = ZegoUserInfo.empty();
 
-  Future<int> login(ZegoUserInfo info, String token);
+  void setLocalUser(String userID, String userName);
 
-  Future<int> logout();
-
-  Future<List<ZegoUserInfo>> getOnlineUsers();
+  Future<String> getToken(String userID);
 
   ZegoUserInfo getUserInfoByID(String userID);
 }

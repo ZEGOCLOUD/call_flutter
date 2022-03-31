@@ -1,9 +1,5 @@
 // Dart imports:
 import 'dart:developer';
-import 'dart:math' as math;
-
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import "package:firebase_messaging/firebase_messaging.dart";
@@ -12,11 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_call_info.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import './../manager/zego_service_manager.dart';
+import './../model/zego_user_info.dart';
+import './../zego_call_defines.dart';
 import '../interface/zego_call_service.dart';
 
 class ZegoCallServiceImpl extends IZegoCallService {
@@ -58,8 +52,7 @@ class ZegoCallServiceImpl extends IZegoCallService {
           "connected_time": 0
         },
         callee.userID: {
-          "display_name": callee.displayName,
-          "photo_url": callee.photoUrl,
+          "display_name": callee.userName,
           "role": 1,
           "heartbeat_time": 0,
           "connected_time": 0

@@ -7,8 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
+import './../styles.dart';
+import 'navigation_back_bar.dart';
 
 class Browser extends HookWidget {
   final String url;

@@ -2,8 +2,8 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_room_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
+import './../delegate/zego_room_service_delegate.dart';
+import './../model/zego_room_info.dart';
 
 /// Class LiveAudioRoom information management.
 /// <p>Description: This class contains the room information management logics, such as the logic of create a room, join
@@ -13,7 +13,6 @@ abstract class IZegoRoomService extends ChangeNotifier {
   /// the room status updates.
   ZegoRoomInfo roomInfo = ZegoRoomInfo('', '', '');
   ZegoRoomServiceDelegate? delegate;
-
 
   /// Join a room.
   /// <p>Description: This method can be used to join a room, the room must be an existing room.</>

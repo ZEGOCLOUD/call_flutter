@@ -83,7 +83,7 @@ class _CallingPageState extends State<CallingPage>
     var localUserInfo = context.read<IZegoUserService>().localUserInfo;
     //  call test
     ZegoUserInfo caller = localUserInfo;
-    ZegoUserInfo callee = ZegoUserInfo('002', 'name 2', 0);
+    ZegoUserInfo callee = ZegoUserInfo('002', 'name 2');
     currentState = CallingState.kCallingWithVideo;
 
     switch (currentState) {

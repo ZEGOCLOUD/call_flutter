@@ -1,10 +1,9 @@
 // Project imports:
-import 'package:zego_call_flutter/zegocall/command/zego_command.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import './../../command/zego_command.dart';
+import './../../core/zego_call_defines.dart';
 
 class ZegoCancelCallCommand extends ZegoCommand {
-  ZegoCancelCallCommand(String path, Map<String, dynamic> parameters)
-      : super(apiCancelCall, parameters) {
+  ZegoCancelCallCommand() : super(apiCancelCall) {
     parameters["call_id"] = "";
     parameters["callee_id"] = "";
   }

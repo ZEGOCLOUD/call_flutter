@@ -40,15 +40,15 @@ class CallingCallerView extends StatelessWidget {
     if (ZegoCallType.kZegoCallTypeVideo == callType) {
       return VideoPlayerView(
         userID: caller.userID,
-        userName: caller.displayName,
+        userName: caller.userName,
       );
     }
-    return AvatarBackgroundView(userName: callee.displayName);
+    return AvatarBackgroundView(userName: callee.userName);
   }
 
   Widget surface() {
     var isVideo = ZegoCallType.kZegoCallTypeVideo == callType;
-    var avatarIndex = getUserAvatarIndex(callee.displayName);
+    var avatarIndex = getUserAvatarIndex(callee.userName);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -73,7 +73,7 @@ class CallingCallerView extends StatelessWidget {
         ),
         SizedBox(
           height: 59.h,
-          child: Text(callee.displayName,
+          child: Text(callee.userName,
               style: StyleConstant.callingCenterUserName),
         ),
         SizedBox(

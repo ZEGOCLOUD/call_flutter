@@ -3,20 +3,20 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/widgets/browser.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import './../../../utils/widgets/browser.dart';
+import './../../constants/zego_page_constant.dart';
 
-class AuthProtocolItem extends StatefulWidget {
+class GoogleLoginProtocolItem extends StatefulWidget {
   final ValueChanged<bool> updatePolicyCheckState;
 
-  const AuthProtocolItem(this.updatePolicyCheckState, {Key? key})
+  const GoogleLoginProtocolItem(this.updatePolicyCheckState, {Key? key})
       : super(key: key);
 
   @override
-  AuthProtocolItemState createState() => AuthProtocolItemState();
+  GoogleLoginProtocolItemState createState() => GoogleLoginProtocolItemState();
 }
 
-class AuthProtocolItemState extends State<AuthProtocolItem> {
+class GoogleLoginProtocolItemState extends State<GoogleLoginProtocolItem> {
   bool isPolicyCheck = false;
 
   @override
@@ -78,7 +78,7 @@ class AuthProtocolItemState extends State<AuthProtocolItem> {
 
   void launchURL(BuildContext context, String targetURL) async {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return Browser(url: targetURL, backURL: PageRouteNames.auth);
+      return Browser(url: targetURL, backURL: PageRouteNames.login);
     }));
   }
 }

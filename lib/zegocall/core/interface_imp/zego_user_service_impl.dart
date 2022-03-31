@@ -1,18 +1,12 @@
 // Dart imports:
-import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
-
-// Flutter imports:
-import 'package:flutter/foundation.dart';
 
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_user_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import './../model/zego_user_info.dart';
 import '../interface/zego_user_service.dart';
 
 class ZegoUserServiceImpl extends IZegoUserService {
@@ -32,42 +26,16 @@ class ZegoUserServiceImpl extends IZegoUserService {
   }
 
   @override
-  Future<int> login(ZegoUserInfo info, String token) async {
-    return 0;
+  void setLocalUser(String userID, String userName) {
+    localUserInfo = ZegoUserInfo(userID, userName);
   }
 
   @override
-  Future<int> logout() async {
-    return 0;
+  Future<String> getToken(String userID) async {
+    //todo
+    return "";
   }
 
-  @override
-  Future<List<ZegoUserInfo>> getOnlineUsers() async {
-    final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child('online_user/').get();
-    var _userList = <ZegoUserInfo>[];
-    if (snapshot.exists) {
-      var map = snapshot.value as Map<dynamic, dynamic>?;
-      if (map != null) {
-        map.forEach((key, value) async {
-          var userMap = Map<String, dynamic>.from(value);
-          var model = ZegoUserInfo.fromJson(userMap);
-          _userList.add(model);
-          userDic[model.userID] = model;
-        });
-      }
-      userList = _userList;
-      notifyListeners();
-    } else {
-      print('No data available.');
-    }
-
-    notifyListeners();
-
-    return userList;
-  }
-
-  @override
   ZegoUserInfo getUserInfoByID(String userID) {
     return userDic[userID] ?? ZegoUserInfo.empty();
   }
@@ -77,9 +45,8 @@ class ZegoUserServiceImpl extends IZegoUserService {
     DatabaseReference ref =
         FirebaseDatabase.instance.ref("online_user/${user.uid}");
 
-    localUserInfo.displayName = user.displayName ?? "";
+    localUserInfo.userName = user.displayName ?? "";
     localUserInfo.userID = user.uid;
-    localUserInfo.photoUrl = user.photoURL ?? "";
 
     var platform = "android";
     if (Platform.isIOS) {
@@ -88,8 +55,6 @@ class ZegoUserServiceImpl extends IZegoUserService {
     await ref.set({
       "user_id": user.uid,
       "display_name": user.displayName,
-      "photo_url": user.photoURL,
-      "last_changed": DateTime.now().millisecondsSinceEpoch,
     });
 
     // await ref.onDisconnect().remove();

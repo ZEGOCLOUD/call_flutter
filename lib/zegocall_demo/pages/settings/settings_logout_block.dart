@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import './../../../utils/styles.dart';
+import './../../constants/zego_page_constant.dart';
+import './../../firebase/zego_login_manager.dart';
 
 class SettingsLogoutBlock extends StatelessWidget {
   const SettingsLogoutBlock({Key? key}) : super(key: key);
@@ -28,14 +28,15 @@ class SettingsLogoutBlock extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: StyleConstant.settingLogout))),
       onTap: () {
-        signOut(context);
+        logout(context);
       },
     );
   }
 
-  Future<void> signOut(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
+  Future<void> logout(BuildContext context) async {
     await GoogleSignIn().signOut();
-    Navigator.pushReplacementNamed(context, PageRouteNames.auth);
+    ZegoLoginManager.shared.logout();
+
+    Navigator.pushReplacementNamed(context, PageRouteNames.login);
   }
 }

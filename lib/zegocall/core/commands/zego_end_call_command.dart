@@ -1,10 +1,9 @@
 // Project imports:
-import 'package:zego_call_flutter/zegocall/command/zego_command.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import './../../command/zego_command.dart';
+import './../../core/zego_call_defines.dart';
 
 class ZegoEndCallCommand extends ZegoCommand {
-  ZegoEndCallCommand(String path, Map<String, dynamic> parameters)
-      : super(apiEndCall, parameters) {
+  ZegoEndCallCommand(String path) : super(apiEndCall) {
     parameters["id"] = "";
     parameters["call_id"] = "";
   }

@@ -1,15 +1,11 @@
 // Dart imports:
 import 'dart:io';
 
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_device_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import './../zego_call_defines.dart';
 import '../interface/zego_device_service.dart';
 
 class ZegoDeviceServiceImpl extends IZegoDeviceService {
@@ -43,18 +39,6 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService {
   @override
   Future<bool> isSpeakerEnabled() async {
     return !await ZegoExpressEngine.instance.isSpeakerMuted();
-  }
-
-  @override
-  void enableCallKit(bool enable) {
-    if (!Platform.isIOS) {
-      return;
-    }
-    //  only for iOS
-    var config = ZegoEngineConfig();
-    var enableStr = enable ? "true" : "false";
-    config.advancedConfig = {"support_apple_callkit": enableStr};
-    ZegoExpressEngine.setEngineConfig(config);
   }
 
   @override
@@ -170,6 +154,26 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService {
     ZegoExpressEngine.instance.setVideoMirrorMode(isMirroring
         ? ZegoVideoMirrorMode.BothMirror
         : ZegoVideoMirrorMode.NoMirror);
+  }
+
+  @override
+  void setBestConfig() {
+    ZegoExpressEngine.instance.enableHardwareEncoder(true);
+    ZegoExpressEngine.instance.enableHardwareDecoder(true);
+    ZegoExpressEngine.instance
+        .setCapturePipelineScaleMode(ZegoCapturePipelineScaleMode.Post);
+    ZegoExpressEngine.instance.setMinVideoBitrateForTrafficControl(
+        120, ZegoTrafficControlMinVideoBitrateMode.UltraLowFPS);
+    ZegoExpressEngine.instance.setTrafficControlFocusOn(
+        ZegoTrafficControlFocusOnMode.ZegoTrafficControlFounsOnRemote);
+    ZegoExpressEngine.instance.enableANS(false);
+
+    if (Platform.isIOS) {
+      //  only for iOS
+      var config = ZegoEngineConfig();
+      config.advancedConfig = {"support_apple_callkit": "true"};
+      ZegoExpressEngine.setEngineConfig(config);
+    }
   }
 }
 

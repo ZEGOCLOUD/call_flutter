@@ -197,7 +197,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
             ),
             child: MiniOverlayBeInviteFrame(
               callerID: inviteInfo.userID,
-              callerName: inviteInfo.displayName,
+              callerName: inviteInfo.userName,
               callType: inviteCallType,
               onDecline: () => stateIdle.enter(),
               onAccept: () => stateIdle.enter(),

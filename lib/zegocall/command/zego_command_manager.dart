@@ -2,9 +2,9 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/command/zego_command.dart';
-import 'package:zego_call_flutter/zegocall/command/zego_request_protocol.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import 'zego_command.dart';
+import 'zego_request_protocol.dart';
+import './../core/zego_call_defines.dart';
 import '../request/zego_firebase_manager.dart';
 
 class ZegoCommandManager extends ChangeNotifier {
@@ -12,7 +12,7 @@ class ZegoCommandManager extends ChangeNotifier {
 
   ZegoRequestProtocol service = ZegoFireBaseManager();
 
-  Future<ZegoError> execute(ZegoCommand command) async {
+  Future<RequestResult> execute(ZegoCommand command) async {
     return service.request(command.path, command.parameters);
   }
 }

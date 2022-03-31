@@ -30,13 +30,13 @@ class CallingCalleeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      AvatarBackgroundView(userName: caller.displayName),
+      AvatarBackgroundView(userName: caller.userName),
       surface(),
     ]);
   }
 
   Widget surface() {
-    var avatarIndex = getUserAvatarIndex(callee.displayName);
+    var avatarIndex = getUserAvatarIndex(callee.userName);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -58,7 +58,7 @@ class CallingCalleeView extends StatelessWidget {
         ),
         SizedBox(
           height: 59.h,
-          child: Text(callee.displayName,
+          child: Text(callee.userName,
               style: StyleConstant.callingCenterUserName),
         ),
         SizedBox(

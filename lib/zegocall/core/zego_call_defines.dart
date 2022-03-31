@@ -1,3 +1,9 @@
+// Package imports:
+import 'package:result_type/result_type.dart';
+
+typedef RequestResult = Result<dynamic, ZegoError>;
+typedef RequestParameterType = Map<String, dynamic>;
+
 enum ZegoUserError {
   kickOut,
 }
@@ -50,10 +56,8 @@ enum LocalUserStatus {
 }
 
 enum ZegoError {
-  success,
   failed,
   paramInvalid,
-
   firebasePathNotExist,
 }
 
@@ -67,8 +71,6 @@ extension ZegoErrorExtension on ZegoError {
 }
 
 //  firebase command key
-const String apiLogin = "/user/login";
-const String apiLogout = "/user/logout";
 const String apiGetToken = "/user/get_token";
 const String apiGetUser = "/user/get";
 const String apiGetUsers = "/user/get_users";

@@ -64,5 +64,5 @@ abstract class IZegoDeviceService extends ChangeNotifier {
 
   Future<bool> isSpeakerEnabled();
 
-  void enableCallKit(bool enable);
+  void setBestConfig();
 }

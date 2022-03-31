@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:zego_call_flutter/zegocall/listener/zego_listener.dart';
+import 'zego_listener.dart';
 
 class ZegoListenerHandler {
   String uid;

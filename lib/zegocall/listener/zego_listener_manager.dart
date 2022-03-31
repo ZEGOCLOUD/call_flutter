@@ -2,9 +2,9 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/listener/zego_listener.dart';
-import 'package:zego_call_flutter/zegocall/listener/zego_listener_handler.dart';
-import 'package:zego_call_flutter/zegocall/listener/zego_listener_updater.dart';
+import 'zego_listener.dart';
+import 'zego_listener_handler.dart';
+import 'zego_listener_updater.dart';
 
 class ZegoListenerManager with ZegoListener, ZegoListenerUpdater {
   static var shared = ZegoListenerManager();
