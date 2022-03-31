@@ -24,7 +24,7 @@ class OnlineListPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      ZegoUserListManager.shared.getOnlineUsers();
+      ZegoUserListManager.shared.init();
 
       try {
         // On calling notification tap

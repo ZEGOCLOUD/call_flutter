@@ -72,8 +72,6 @@ extension ZegoErrorExtension on ZegoError {
 
 //  firebase command key
 const String apiGetToken = "/user/get_token";
-const String apiGetUser = "/user/get";
-const String apiGetUsers = "/user/get_users";
 const String apiCallHeartbeat = "/call/heartbeat";
 const String apiStartCall = "/call/start_call";
 const String apiCancelCall = "/call/cancel_call";

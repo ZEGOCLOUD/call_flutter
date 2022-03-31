@@ -29,8 +29,6 @@ class MiniOverlayPage extends StatefulWidget {
 
 class _MiniOverlayPageState extends State<MiniOverlayPage>
     with ZegoCallServiceDelegate {
-  MiniOverlayPageState currentState = MiniOverlayPageState.kIdle;
-
   Size overlaySize = const Size(0, 0);
   Offset overlayTopLeftPos = const Offset(0, 0);
   bool overlayVisibility = true;
@@ -207,12 +205,9 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
   }
 
   void onMachineStateChanged(event) {
-    final MiniOverlayPageState fromState = event.source;
-    final MiniOverlayPageState targetState = event.target;
     print(
-        '[state machine] mini overlay page : from $fromState to $targetState');
+        '[state machine] mini overlay page : from ${event.source} to ${event.target}');
 
-    setState(() => currentState = targetState);
     updatePage();
   }
 

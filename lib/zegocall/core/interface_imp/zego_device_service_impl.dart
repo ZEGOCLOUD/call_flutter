@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import './../zego_call_defines.dart';
 import '../interface/zego_device_service.dart';
+import './../zego_call_defines.dart';
 
 class ZegoDeviceServiceImpl extends IZegoDeviceService {
   @override

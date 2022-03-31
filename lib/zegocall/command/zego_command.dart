@@ -1,6 +1,6 @@
 // Project imports:
-import 'zego_command_manager.dart';
 import '../core/zego_call_defines.dart';
+import 'zego_command_manager.dart';
 
 class ZegoCommand {
   String path;

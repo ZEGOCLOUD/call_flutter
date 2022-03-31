@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import './../manager/zego_service_manager.dart';
 import '../interface/zego_stream_service.dart';
+import './../manager/zego_service_manager.dart';
 
 class ZegoStreamServiceImpl extends IZegoStreamService {
   ZegoStreamServiceImpl() {

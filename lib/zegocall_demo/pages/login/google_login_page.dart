@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,10 +40,13 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
   @override
   void initState() {
     super.initState();
-    FirebaseAuth.instance.authStateChanges().listen((event) {
-      if (event != null) {
-        Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
-      }
+
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      FirebaseAuth.instance.authStateChanges().listen((event) {
+        if (event != null) {
+          Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
+        }
+      });
     });
   }
 

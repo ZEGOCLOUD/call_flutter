@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/request/zego_firebase_manager.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
 
 class ZegoUserListManager extends ChangeNotifier {
@@ -16,6 +17,7 @@ class ZegoUserListManager extends ChangeNotifier {
   void init() {
     getOnlineUsers();
     addOnlineUsersListener();
+
   }
 
   DemoUserInfo getUserInfoByID(String userID) {
@@ -23,21 +25,22 @@ class ZegoUserListManager extends ChangeNotifier {
   }
 
   void getOnlineUsers() {
-    var usersQuery = FirebaseDatabase.instance
+    FirebaseDatabase.instance
         .ref()
         .child('online_user')
-        .orderByChild('last_changed');
-    usersQuery.get().then((value) {
+        .orderByChild('last_changed')
+        .onValue
+        .listen((event) {
       userList.clear();
       userDic.clear();
 
-      var map = value as Map<dynamic, dynamic>?;
+      var map = event.snapshot.value as Map<dynamic, dynamic>?;
       if (map != null) {
         map.forEach((key, value) async {
           var userMap = Map<String, dynamic>.from(value);
-          var model = DemoUserInfo.fromJson(userMap);
-          userList.add(model);
-          userDic[model.userID] = model;
+          var user = DemoUserInfo.fromJson(userMap);
+          userList.add(user);
+          userDic[user.userID] = user;
         });
       }
       notifyListeners();
@@ -50,11 +53,17 @@ class ZegoUserListManager extends ChangeNotifier {
         .child('online_user')
         .onChildAdded
         .listen((event) {
-      var userMap = event.snapshot.value as Map<String, dynamic>;
-      var model = DemoUserInfo.fromJson(userMap);
-      if (!userDic.containsKey(model.userID)) {
-        userList.add(model);
-        userDic[model.userID] = model;
+      var map = event.snapshot.value as Map<dynamic, dynamic>?;
+      if (map != null) {
+        var userID = map['user_id'] as String? ?? "";
+        var userName = map['display_name'] as String? ?? "";
+        if (userID.isNotEmpty && !userDic.containsKey(userID)) {
+          var userInfo = DemoUserInfo(userID, userName);
+          userList.add(userInfo);
+          userDic[userID] = userInfo;
+        }
+
+        notifyListeners();
       }
     });
 
@@ -67,6 +76,8 @@ class ZegoUserListManager extends ChangeNotifier {
       var model = DemoUserInfo.fromJson(userMap);
       userList.removeWhere((element) => element.userID == model.userID);
       userDic.remove(model.userID);
+
+      notifyListeners();
     });
   }
 }

@@ -30,8 +30,6 @@ class ZegoLoginManager extends ChangeNotifier {
       user.userName = credential.user?.displayName ?? "";
     });
 
-    ZegoUserListManager.shared.getOnlineUsers();
-
     return Success(user);
   }
 

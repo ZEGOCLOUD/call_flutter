@@ -8,10 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
+import '../interface/zego_call_service.dart';
 import './../manager/zego_service_manager.dart';
 import './../model/zego_user_info.dart';
 import './../zego_call_defines.dart';
-import '../interface/zego_call_service.dart';
 
 class ZegoCallServiceImpl extends IZegoCallService {
   late final FirebaseMessaging _messaging;
