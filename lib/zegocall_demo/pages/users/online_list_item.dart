@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
@@ -21,15 +22,17 @@ class OnlineListItem extends StatelessWidget {
     //  call test
     Navigator.pushReplacementNamed(context, PageRouteNames.calling);
 
-    context
-        .read<IZegoCallService>()
-        .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVoice);
+    context.read<IZegoCallService>().callUser(
+        ZegoUserInfo(userInfo.userID, userInfo.userName),
+        'token',
+        ZegoCallType.kZegoCallTypeVoice);
   }
 
   void onVideoCallTap(BuildContext context) async {
-    context
-        .read<IZegoCallService>()
-        .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVideo);
+    context.read<IZegoCallService>().callUser(
+        ZegoUserInfo(userInfo.userID, userInfo.userName),
+        'token',
+        ZegoCallType.kZegoCallTypeVideo);
   }
 
   @override

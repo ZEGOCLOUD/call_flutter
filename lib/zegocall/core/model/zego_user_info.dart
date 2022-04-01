@@ -21,15 +21,19 @@ class ZegoUserInfo {
 
   ZegoUserInfo.fromJson(Map<String, dynamic> json)
       : userID = json['user_id'] ?? "",
-        userName = json['display_name'];
+        userName = json['display_name'],
+        mic = json['mic'],
+        camera = json['camera'];
 
   Map<String, dynamic> toJson() => {
         'user_id': userID,
         'display_name': userName,
+        'mic': mic,
+        'camera': camera,
       };
 
   @override
   String toString() {
-    return "UserInfo [user_id=$userID,display_name=$userName";
+    return "UserInfo [user_id=$userID,display_name=$userName,mic=$mic,camera=$camera";
   }
 }

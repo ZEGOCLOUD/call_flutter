@@ -6,16 +6,55 @@ typedef RequestParameterType = Map<String, dynamic>;
 
 enum ZegoUserError {
   kickOut,
+  tokenExpire,
+}
+
+extension ZegoUserErrorExtension on ZegoUserError {
+  int get id {
+    switch (this) {
+      case ZegoUserError.kickOut:
+        return 1;
+      case ZegoUserError.tokenExpire:
+        return 2;
+    }
+  }
 }
 
 enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
-enum ZegoCallTimeoutType {
-  kZegoCallTimeoutTypeCaller,
-  kZegoCallTimeoutTypeCallee
+
+extension ZegoCallTypeExtension on ZegoCallType {
+  int get id {
+    switch (this) {
+      case ZegoCallType.kZegoCallTypeVoice:
+        return 1;
+      case ZegoCallType.kZegoCallTypeVideo:
+        return 2;
+    }
+  }
 }
+
+enum ZegoCallTimeoutType {
+  /// connecting: the call timed out when try to connecting.
+  connecting,
+
+  /// calling: the call timed out during a call.
+  calling
+}
+
 enum ZegoDeclineType {
   kZegoDeclineTypeDecline, //  Actively refuse
   kZegoDeclineTypeBusy //  The call was busy, Passive refused
+}
+
+extension ZegoDeclineTypeExtension on ZegoDeclineType {
+  int get id {
+    switch (this) {
+      case ZegoDeclineType.kZegoDeclineTypeDecline:
+        return 1;
+      case ZegoDeclineType.kZegoDeclineTypeBusy:
+        return 2;
+    }
+  }
 }
 
 enum ZegoDeviceType {
@@ -25,12 +64,12 @@ enum ZegoDeviceType {
 }
 
 enum ZegoVideoResolution {
-  v1080P,
-  v720P,
-  v540P,
-  v360P,
-  v270P,
-  v180P,
+  p1080,
+  p720,
+  p540,
+  p360,
+  p270,
+  p180,
 }
 
 enum ZegoAudioBitrate {
@@ -62,12 +101,16 @@ enum ZegoError {
 }
 
 extension ZegoErrorExtension on ZegoError {
-  static const valueMap = {
-    ZegoError.failed: 1,
-    ZegoError.paramInvalid: 2001,
-  };
-
-  int get value => valueMap[this] ?? -1;
+  int get id {
+    switch (this) {
+      case ZegoError.failed:
+        return 1;
+      case ZegoError.paramInvalid:
+        return 2;
+      case ZegoError.firebasePathNotExist:
+        return 2001;
+    }
+  }
 }
 
 //  firebase command key

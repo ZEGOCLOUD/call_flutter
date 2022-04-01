@@ -11,7 +11,7 @@ import './../model/zego_room_info.dart';
 abstract class IZegoRoomService extends ChangeNotifier {
   /// Room information, it will be assigned after join the room successfully. And it will be updated synchronously when
   /// the room status updates.
-  ZegoRoomInfo roomInfo = ZegoRoomInfo('', '', '');
+  ZegoRoomInfo roomInfo = ZegoRoomInfo('', '');
   ZegoRoomServiceDelegate? delegate;
 
   /// Join a room.
@@ -27,5 +27,5 @@ abstract class IZegoRoomService extends ChangeNotifier {
   /// <p>Description: This method can be used to leave the room you joined. The room will be ended when the Host
   /// leaves, and all users in the room will be forced to leave the room.</>
   /// <p>Call this method at: After joining a room</>
-  Future<int> leaveRoom();
+  void leaveRoom();
 }

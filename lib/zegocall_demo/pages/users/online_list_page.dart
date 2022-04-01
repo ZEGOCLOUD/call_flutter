@@ -39,12 +39,7 @@ class OnlineListPage extends HookWidget {
       }
 
       //  call test
-      ZegoServiceManager.shared
-          .initWithAPPID(
-              841790877,
-              'f12db2b9deddd08ba8'
-              '1608c2023997c7')
-          .then((value) {
+      ZegoServiceManager.shared.initWithAPPID(841790877).then((value) {
         ZegoServiceManager.shared.roomService.joinRoom('999', '');
       });
 

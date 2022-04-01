@@ -127,18 +127,18 @@ class CallingVideoResolutionSettingsPage extends StatelessWidget {
 
   Map<ZegoVideoResolution, String> listModel(BuildContext context) {
     Map<ZegoVideoResolution, String> model = {};
-    model[ZegoVideoResolution.v180P] =
-        getResolutionString(ZegoVideoResolution.v180P);
-    model[ZegoVideoResolution.v270P] =
-        getResolutionString(ZegoVideoResolution.v270P);
-    model[ZegoVideoResolution.v360P] =
-        getResolutionString(ZegoVideoResolution.v360P);
-    model[ZegoVideoResolution.v540P] =
-        getResolutionString(ZegoVideoResolution.v540P);
-    model[ZegoVideoResolution.v720P] =
-        getResolutionString(ZegoVideoResolution.v720P);
-    model[ZegoVideoResolution.v1080P] =
-        getResolutionString(ZegoVideoResolution.v1080P);
+    model[ZegoVideoResolution.p180] =
+        getResolutionString(ZegoVideoResolution.p180);
+    model[ZegoVideoResolution.p270] =
+        getResolutionString(ZegoVideoResolution.p270);
+    model[ZegoVideoResolution.p360] =
+        getResolutionString(ZegoVideoResolution.p360);
+    model[ZegoVideoResolution.p540] =
+        getResolutionString(ZegoVideoResolution.p540);
+    model[ZegoVideoResolution.p720] =
+        getResolutionString(ZegoVideoResolution.p720);
+    model[ZegoVideoResolution.p1080] =
+        getResolutionString(ZegoVideoResolution.p1080);
 
     return model;
   }
