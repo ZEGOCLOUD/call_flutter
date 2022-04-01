@@ -1,4 +1,3 @@
-
 /// Class user information.
 /// <p>Description: This class contains the user related information.</>
 class ZegoUserInfo {
@@ -6,39 +5,35 @@ class ZegoUserInfo {
   String userID = "";
 
   /// User name, cannot be null.
-  String displayName = "";
+  String userName = "";
   bool mic = false;
   bool camera = false;
 
-  String photoUrl = "";
-  int lastChanged = 0;
-
   bool isEmpty() {
-    return userID.isEmpty || displayName.isEmpty;
+    return userID.isEmpty || userName.isEmpty;
   }
 
   ZegoUserInfo.empty();
 
-  ZegoUserInfo(this.userID, this.displayName, this.lastChanged);
+  ZegoUserInfo(this.userID, this.userName);
 
-  ZegoUserInfo clone() => ZegoUserInfo(userID, displayName, lastChanged);
+  ZegoUserInfo clone() => ZegoUserInfo(userID, userName);
 
   ZegoUserInfo.fromJson(Map<String, dynamic> json)
       : userID = json['user_id'] ?? "",
-        displayName = json['display_name'],
-        photoUrl = json['photo_url'] ??
-            "https://upload.wikimedia.org/wikipedia/commons/c/cd/Portrait_Placeholder_Square.png",
-        lastChanged = json['last_changed'];
+        userName = json['display_name'],
+        mic = json['mic'],
+        camera = json['camera'];
 
   Map<String, dynamic> toJson() => {
         'user_id': userID,
-        'display_name': displayName,
-        'photo_url': photoUrl,
-        'last_changed': lastChanged,
+        'display_name': userName,
+        'mic': mic,
+        'camera': camera,
       };
 
   @override
   String toString() {
-    return "UserInfo [user_id=$userID,display_name=$displayName,last_changed=$lastChanged]";
+    return "UserInfo [user_id=$userID,display_name=$userName,mic=$mic,camera=$camera";
   }
 }

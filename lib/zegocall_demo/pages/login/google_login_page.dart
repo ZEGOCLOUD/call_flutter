@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,21 +10,20 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
-import 'auth_protocol_item.dart';
+import './../../../utils/styles.dart';
+import './../../constants/zego_page_constant.dart';
+import './../../firebase/zego_login_manager.dart';
+import 'google_login_protocol_item.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
-class AuthGate extends StatefulWidget {
+class GoogleLoginPage extends StatefulWidget {
   // ignore: public_member_api_docs
-  const AuthGate({Key? key}) : super(key: key);
+  const GoogleLoginPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AuthGateState();
+  State<StatefulWidget> createState() => _GoogleLoginPageState();
 }
 
-class _AuthGateState extends State<AuthGate> {
+class _GoogleLoginPageState extends State<GoogleLoginPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String error = '';
   String verificationId = '';
@@ -40,10 +40,13 @@ class _AuthGateState extends State<AuthGate> {
   @override
   void initState() {
     super.initState();
-    FirebaseAuth.instance.authStateChanges().listen((event) {
-      if (event != null) {
-        Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
-      }
+
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      FirebaseAuth.instance.authStateChanges().listen((event) {
+        if (event != null) {
+          Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
+        }
+      });
     });
   }
 
@@ -147,7 +150,7 @@ class _AuthGateState extends State<AuthGate> {
                         ),
                       ),
                       SizedBox(height: 48.h),
-                      AuthProtocolItem(updatePolicyCheckState),
+                      GoogleLoginProtocolItem(updatePolicyCheckState),
                       SizedBox(
                         height: 76.h,
                       ),
@@ -195,14 +198,7 @@ class _AuthGateState extends State<AuthGate> {
       final googleAuth = await googleUser?.authentication;
 
       if (googleAuth != null) {
-        // Create a new credential
-        final credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        // Once signed in, return the UserCredential
-        await _auth.signInWithCredential(credential);
+        await ZegoLoginManager.shared.login(googleAuth.idToken ?? "");
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

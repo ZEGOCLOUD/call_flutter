@@ -14,6 +14,7 @@ import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/core/manager/zego_service_manager.dart';
 import 'mini_overlay_be_invite_frame.dart';
 import 'mini_overlay_page_delegate_notifier.dart';
 import 'mini_overlay_state.dart';
@@ -29,8 +30,6 @@ class MiniOverlayPage extends StatefulWidget {
 
 class _MiniOverlayPageState extends State<MiniOverlayPage>
     with ZegoCallServiceDelegate {
-  MiniOverlayPageState currentState = MiniOverlayPageState.kIdle;
-
   Size overlaySize = const Size(0, 0);
   Offset overlayTopLeftPos = const Offset(0, 0);
   bool overlayVisibility = true;
@@ -53,10 +52,19 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
   void initState() {
     super.initState();
 
+    ZegoServiceManager.shared.callService.delegate = this;
+
     initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ZegoServiceManager.shared.callService.delegate = null;
   }
 
   @override
@@ -197,7 +205,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
             ),
             child: MiniOverlayBeInviteFrame(
               callerID: inviteInfo.userID,
-              callerName: inviteInfo.displayName,
+              callerName: inviteInfo.userName,
               callType: inviteCallType,
               onDecline: () => stateIdle.enter(),
               onAccept: () => stateIdle.enter(),
@@ -207,12 +215,9 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
   }
 
   void onMachineStateChanged(event) {
-    final MiniOverlayPageState fromState = event.source;
-    final MiniOverlayPageState targetState = event.target;
     print(
-        '[state machine] mini overlay page : from $fromState to $targetState');
+        '[state machine] mini overlay page : from ${event.source} to ${event.target}');
 
-    setState(() => currentState = targetState);
     updatePage();
   }
 

@@ -18,16 +18,11 @@ import 'package:wakelock/wakelock.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
-import 'package:zego_call_flutter/zegocall_demo/pages/auth/auth_gate.dart';
+import 'package:zego_call_flutter/zegocall_demo/firebase/zego_user_list_manager.dart';
+import 'package:zego_call_flutter/zegocall_demo/pages/login/google_login_page.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/settings/settings_page.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/welcome/welcome_page.dart';
 import 'package:zego_call_flutter/zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
-import '../zegocall/core/interface/zego_call_service.dart';
-
-import 'package:zego_call_flutter/zegocall/core/interface_imp'
-    '/zego_call_service_impl.dart';
-import 'package:zego_call_flutter/zegocall/core/interface_imp'
-    '/zego_user_service_impl.dart';
 
 import 'package:zego_call_flutter/zegocall_uikit/pages/calling/calling_page'
     '.dart';
@@ -35,6 +30,7 @@ import 'package:zego_call_flutter/zegocall_uikit/pages/calling/calling_page'
 import 'package:zego_call_flutter/zegocall_demo/pages/users/online_list_page'
     '.dart';
 
+import '../zegocall/request/zego_firebase_manager.dart';
 
 class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);
@@ -55,6 +51,8 @@ class _ZegoAppState extends State<ZegoApp> {
     if (Platform.isAndroid) {
       supportAndroidRunBackground();
     }
+
+    initManagers();
 
     return MultiProvider(
         providers: providers(),
@@ -82,9 +80,9 @@ class _ZegoAppState extends State<ZegoApp> {
                   ],
                   initialRoute: FirebaseAuth.instance.currentUser != null
                       ? PageRouteNames.welcome
-                      : PageRouteNames.auth,
+                      : PageRouteNames.login,
                   routes: {
-                    PageRouteNames.auth: (context) => const AuthGate(),
+                    PageRouteNames.login: (context) => const GoogleLoginPage(),
                     PageRouteNames.welcome: (context) => const WelcomePage(),
                     PageRouteNames.settings: (context) => const SettingsPage(),
                     PageRouteNames.calling: (context) => const CallingPage(),
@@ -106,6 +104,7 @@ class _ZegoAppState extends State<ZegoApp> {
 
   providers() {
     return [
+      ChangeNotifierProvider(create: (context) => ZegoUserListManager.shared),
       ChangeNotifierProvider(
           create: (context) => ZegoServiceManager.shared.roomService),
       ChangeNotifierProvider(
@@ -142,5 +141,14 @@ class _ZegoAppState extends State<ZegoApp> {
         FlutterBackground.enableBackgroundExecution();
       });
     });
+  }
+
+  void initManagers() {
+    ZegoUserListManager.shared.init();
+
+    ZegoServiceManager.shared.init();
+    ZegoServiceManager.shared.initWithAPPID(841790877);
+
+    ZegoFireBaseManager.shared.init();
   }
 }

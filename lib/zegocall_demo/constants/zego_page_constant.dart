@@ -1,5 +1,5 @@
 class PageRouteNames {
-  static const String auth = "/auth";
+  static const String login = "/login";
   static const String welcome = "/welcome";
   static const String calling = "/calling";
   static const String settings = "/settings";

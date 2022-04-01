@@ -12,6 +12,7 @@ import 'package:statemachine/statemachine.dart' as sm;
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
 import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/core/interface/zego_call_service.dart';
@@ -52,12 +53,21 @@ class _CallingPageState extends State<CallingPage>
   void initState() {
     super.initState();
 
+    ZegoServiceManager.shared.callService.delegate = this;
+
     initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
 
       machine.current = stateOnlineVideo; // call test
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ZegoServiceManager.shared.callService.delegate = null;
   }
 
   void initStateMachine() {
@@ -83,7 +93,7 @@ class _CallingPageState extends State<CallingPage>
     var localUserInfo = context.read<IZegoUserService>().localUserInfo;
     //  call test
     ZegoUserInfo caller = localUserInfo;
-    ZegoUserInfo callee = ZegoUserInfo('002', 'name 2', 0);
+    ZegoUserInfo callee = ZegoUserInfo('002', 'name 2');
     currentState = CallingState.kCallingWithVideo;
 
     switch (currentState) {

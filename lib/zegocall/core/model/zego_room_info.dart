@@ -7,42 +7,14 @@ class ZegoRoomInfo {
   /// Room name, refers to the room title, can be used for display.
   String roomName = "";
 
-  /// Host ID, refers to the ID of the room creator.
-  String hostID = "";
-
-  /// The number of speaker seats.
-  int seatNum = 0;
-
-  /// Whether the text chat is disabled in the room.
-  bool isTextMessageDisable = false;
-
-  /// whether the speaker seat is closed.
-  bool isSeatClosed = false;
-
-  ZegoRoomInfo(this.roomID, this.roomName, this.hostID);
-
-  ZegoRoomInfo clone() {
-    var cloneObject = ZegoRoomInfo(roomID, roomName, hostID);
-    cloneObject.seatNum = seatNum;
-    cloneObject.isTextMessageDisable = isTextMessageDisable;
-    cloneObject.isSeatClosed = isSeatClosed;
-    return cloneObject;
-  }
+  ZegoRoomInfo(this.roomID, this.roomName);
 
   ZegoRoomInfo.fromJson(Map<String, dynamic> json)
       : roomID = json['id'],
-        roomName = json['name'],
-        hostID = json['host_id'],
-        seatNum = json['num'],
-        isTextMessageDisable = json['disable'],
-        isSeatClosed = json['close'];
+        roomName = json['name'];
 
   Map<String, dynamic> toJson() => {
         'id': roomID,
         'name': roomName,
-        'host_id': hostID,
-        'num': seatNum,
-        'disable': isTextMessageDisable,
-        'close': isSeatClosed
       };
 }

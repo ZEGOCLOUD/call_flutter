@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
+import './../../../utils/styles.dart';
 
 class SettingSDKVersionItem extends StatelessWidget {
   final String title;

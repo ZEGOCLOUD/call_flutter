@@ -30,8 +30,8 @@ class OnlineVoiceView extends StatelessWidget {
   getOtherUserName(BuildContext context) {
     final localUserID = context.read<IZegoUserService>().localUserInfo.userID;
     return localUserID == caller.userID
-        ? callee.displayName
-        : caller.displayName;
+        ? callee.userName
+        : caller.userName;
   }
 
   Widget surface(BuildContext context) {

@@ -12,9 +12,9 @@ import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
-import '../../../zegocall/core/interface/zego_user_service.dart';
+import 'package:zego_call_flutter/zegocall_demo/firebase/zego_user_list_manager.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 
@@ -24,9 +24,6 @@ class OnlineListPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      var userService = context.read<IZegoUserService>();
-      userService.getOnlineUsers();
-
       try {
         // On calling notification tap
         AwesomeNotifications()
@@ -38,16 +35,6 @@ class OnlineListPage extends HookWidget {
       } catch (e) {
         print(e);
       }
-
-      //  call test
-      ZegoServiceManager.shared
-          .initWithAPPID(
-              841790877,
-              'f12db2b9deddd08ba8'
-              '1608c2023997c7')
-          .then((value) {
-        ZegoServiceManager.shared.roomService.joinRoom('999', '');
-      });
 
       return null;
     }, const []);
@@ -63,17 +50,17 @@ class OnlineListPage extends HookWidget {
             titleStyle: StyleConstant.backText),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
-        Consumer<IZegoUserService>(
-            builder: (_, userService, child) => RefreshIndicator(
+        Consumer<ZegoUserListManager>(
+            builder: (_, userListManager, child) => RefreshIndicator(
                 onRefresh: () async {
-                  userService.getOnlineUsers();
+                  ZegoUserListManager.shared.getOnlineUsers();
                 },
                 child: SizedBox(
                   width: double.infinity,
                   height: 1080.h,
-                  child: userService.userList.isEmpty
+                  child: userListManager.userList.isEmpty
                       ? emptyTips()
-                      : userListView(userService),
+                      : userListView(userListManager),
                 ))),
       ]),
     )));
@@ -94,13 +81,13 @@ class OnlineListPage extends HookWidget {
     );
   }
 
-  Widget userListView(IZegoUserService userService) {
+  Widget userListView(ZegoUserListManager userListManager) {
     return ListView.builder(
       itemExtent: 148.h,
       padding: EdgeInsets.only(left: 32.w, right: 32.w),
-      itemCount: userService.userList.length,
+      itemCount: userListManager.userList.length,
       itemBuilder: (_, i) {
-        ZegoUserInfo user = userService.userList[i];
+        DemoUserInfo user = userListManager.userList[i];
         return OnlineListItem(userInfo: user);
       },
     );

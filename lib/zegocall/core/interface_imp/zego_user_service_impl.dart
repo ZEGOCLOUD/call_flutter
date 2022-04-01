@@ -1,70 +1,48 @@
-// Dart imports:
-import 'dart:convert';
-import 'dart:ffi';
-import 'dart:io';
-
-// Flutter imports:
-import 'package:flutter/foundation.dart';
-
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:result_type/result_type.dart';
+import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_user_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import 'package:zego_call_flutter/zegocall/core/commands/zego_token_command.dart';
+import 'package:zego_call_flutter/zegocall/core/interface/zego_event_handler.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_stream_service_impl.dart';
+import '../../listener/zego_listener.dart';
+import '../../listener/zego_listener_manager.dart';
 import '../interface/zego_user_service.dart';
+import '../manager/zego_service_manager.dart';
+import '../zego_call_defines.dart';
+import './../model/zego_user_info.dart';
 
-class ZegoUserServiceImpl extends IZegoUserService {
+class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   /// In-room user dictionary,  can be used to update user information.¬
   Map<String, ZegoUserInfo> userDic = <String, ZegoUserInfo>{};
 
-  ZegoUserServiceImpl() : super() {
-    setUserStatus(FirebaseAuth.instance.currentUser != null);
-    FirebaseAuth.instance.authStateChanges().listen((event) {
-      if (event != null) {
-        setUserStatus(true);
-      } else {
-        setUserStatus(false);
-      }
-    });
-    addConnectedObserve();
+  @override
+  void init() {
+    registerListener();
+    ZegoServiceManager.shared.addExpressEventHandler(this);
   }
 
   @override
-  Future<int> login(ZegoUserInfo info, String token) async {
-    return 0;
-  }
+  void setLocalUser(String userID, String userName) {
+    localUserInfo = ZegoUserInfo(userID, userName);
 
-  @override
-  Future<int> logout() async {
-    return 0;
-  }
-
-  @override
-  Future<List<ZegoUserInfo>> getOnlineUsers() async {
-    final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child('online_user/').get();
-    var _userList = <ZegoUserInfo>[];
-    if (snapshot.exists) {
-      var map = snapshot.value as Map<dynamic, dynamic>?;
-      if (map != null) {
-        map.forEach((key, value) async {
-          var userMap = Map<String, dynamic>.from(value);
-          var model = ZegoUserInfo.fromJson(userMap);
-          _userList.add(model);
-          userDic[model.userID] = model;
-        });
-      }
-      userList = _userList;
-      notifyListeners();
-    } else {
-      print('No data available.');
+    if (!userDic.containsKey(userID)) {
+      userList.add(localUserInfo);
+      userDic[userID] = localUserInfo;
     }
+  }
 
-    notifyListeners();
+  @override
+  Future<RequestResult> getToken(String userID) async {
+    var command = ZegoTokenCommand(userID);
 
-    return userList;
+    var result = await command.execute();
+    if (result.isSuccess) {
+      var dict = result as Map<String, dynamic>;
+      return Success(dict['token'] as String);
+    }
+    return Failure(ZegoError.failed);
   }
 
   @override
@@ -72,43 +50,81 @@ class ZegoUserServiceImpl extends IZegoUserService {
     return userDic[userID] ?? ZegoUserInfo.empty();
   }
 
-  Future<void> setUserStatus(bool online) async {
-    var user = FirebaseAuth.instance.currentUser!;
-    DatabaseReference ref =
-        FirebaseDatabase.instance.ref("online_user/${user.uid}");
-
-    localUserInfo.displayName = user.displayName ?? "";
-    localUserInfo.userID = user.uid;
-    localUserInfo.photoUrl = user.photoURL ?? "";
-
-    var platform = "android";
-    if (Platform.isIOS) {
-      platform = "ios";
-    }
-    await ref.set({
-      "user_id": user.uid,
-      "display_name": user.displayName,
-      "photo_url": user.photoURL,
-      "last_changed": DateTime.now().millisecondsSinceEpoch,
-    });
-
-    // await ref.onDisconnect().remove();
+  @override
+  void onNetworkQuality(String userID, ZegoStreamQualityLevel upstreamQuality,
+      ZegoStreamQualityLevel downstreamQuality) {
+    delegate?.onNetworkQuality(userID, upstreamQuality);
   }
 
-  void addConnectedObserve() {
-    final connectedRef = FirebaseDatabase.instance.ref(".info/connected");
-    connectedRef.onValue.listen((event) async {
-      final connected = event.snapshot.value as bool? ?? false;
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref("online_user/${localUserInfo.userID}");
+  @override
+  void onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    final userID = getUserIDFromStreamID(streamID);
+    if (userID.isEmpty) {
+      return;
+    }
+    if (ZegoRemoteDeviceState.Open != state &&
+        ZegoRemoteDeviceState.Disable != state) {
+      return;
+    }
 
-      if (localUserInfo.userID.isNotEmpty) {
-        if (connected) {
-          setUserStatus(true);
-        } else {
-          // await ref.onDisconnect().remove();
+    var remoteUser = getUserInfoByID(userID);
+    if (remoteUser.isEmpty()) {
+      return;
+    }
+    remoteUser.camera = ZegoRemoteDeviceState.Open == state;
+    delegate?.onUserInfoUpdate(remoteUser);
+  }
+
+  @override
+  void onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    final userID = getUserIDFromStreamID(streamID);
+    if (userID.isEmpty) {
+      return;
+    }
+    if (ZegoRemoteDeviceState.Open != state &&
+        ZegoRemoteDeviceState.Mute != state) {
+      return;
+    }
+
+    var remoteUser = getUserInfoByID(userID);
+    if (remoteUser.isEmpty()) {
+      return;
+    }
+    remoteUser.mic = ZegoRemoteDeviceState.Open == state;
+    delegate?.onUserInfoUpdate(remoteUser);
+  }
+
+  @override
+  void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
+      Map<String, dynamic> extendedData) {
+    if (1002033 == errorCode) {
+      delegate?.onReceiveUserError(ZegoUserError.tokenExpire);
+    }
+  }
+
+  @override
+  void onRoomUserUpdate(
+      String roomID, ZegoUpdateType updateType, List<ZegoUser> userList) {
+    for (var user in userList) {
+      if (ZegoUpdateType.Add == updateType) {
+        if (!userDic.containsKey(user.userID)) {
+          var userInfo = ZegoUserInfo(user.userID, user.userName);
+          userDic[user.userID] = userInfo;
+          this.userList.add(userInfo);
         }
+      } else {
+        userDic.remove(user.userID);
+        this.userList.removeWhere((element) => element.userID == user.userID);
       }
-    });
+    }
+  }
+
+  void registerListener() {
+    ZegoListenerManager.shared.addListener(notifyUserError, onUserErrorNotify);
+  }
+
+  void onUserErrorNotify(ZegoNotifyListenerParameter parameter) {
+    var error = ZegoUserError.values[parameter['error'] as int];
+    delegate?.onReceiveUserError(error);
   }
 }

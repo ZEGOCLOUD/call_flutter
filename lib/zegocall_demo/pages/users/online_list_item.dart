@@ -6,41 +6,40 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_call_service_impl.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
 import '../../../zegocall/core/interface/zego_call_service.dart';
-
-import 'package:zego_call_flutter/zegocall_demo/pages/users'
-    '/online_list_elements.dart';
-
+import '../../../zegocall/core/zego_call_defines.dart';
+import './../../../utils/styles.dart';
+import './../../constants/zego_page_constant.dart';
+import 'online_list_elements.dart';
 
 class OnlineListItem extends StatelessWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);
-  final ZegoUserInfo userInfo;
+  final DemoUserInfo userInfo;
 
   void onAudioCallTap(BuildContext context) async {
     //  call test
     Navigator.pushReplacementNamed(context, PageRouteNames.calling);
 
-    context
-        .read<IZegoCallService>()
-        .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVoice);
+    context.read<IZegoCallService>().callUser(
+        ZegoUserInfo(userInfo.userID, userInfo.userName),
+        'token',
+        ZegoCallType.kZegoCallTypeVoice);
   }
 
   void onVideoCallTap(BuildContext context) async {
-    context
-        .read<IZegoCallService>()
-        .callUser(userInfo.userID, 'token', ZegoCallType.kZegoCallTypeVideo);
+    context.read<IZegoCallService>().callUser(
+        ZegoUserInfo(userInfo.userID, userInfo.userName),
+        'token',
+        ZegoCallType.kZegoCallTypeVideo);
   }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        OnlineListAvatar(userName: userInfo.displayName),
+        OnlineListAvatar(userName: userInfo.userName),
         SizedBox(width: 26.w),
         Container(
           decoration: const BoxDecoration(
@@ -52,7 +51,7 @@ class OnlineListItem extends StatelessWidget {
           child: Row(
             children: [
               OnlineListUserInfo(
-                  userName: userInfo.displayName, userID: userInfo.userID),
+                  userName: userInfo.userName, userID: userInfo.userID),
               SizedBox(width: 36.w),
               Row(
                 children: [

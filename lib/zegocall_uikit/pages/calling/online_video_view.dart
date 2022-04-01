@@ -26,8 +26,8 @@ class OnlineVideoView extends StatelessWidget {
   getOtherUserName(BuildContext context) {
     final localUserID = context.read<IZegoUserService>().localUserInfo.userID;
     return localUserID == caller.userID
-        ? callee.displayName
-        : caller.displayName;
+        ? callee.userName
+        : caller.userName;
   }
 
   Widget topRightVideoPlayerView(ZegoUserInfo targetUser) {
@@ -42,7 +42,7 @@ class OnlineVideoView extends StatelessWidget {
                 height: 338.h,
                 child: VideoPlayerView(
                   userID: targetUser.userID,
-                  userName: targetUser.displayName,
+                  userName: targetUser.userName,
                 ))),
       ),
     );
@@ -72,7 +72,7 @@ class OnlineVideoView extends StatelessWidget {
       children: [
         VideoPlayerView(
           userID: caller.userID,
-          userName: caller.displayName,
+          userName: caller.userName,
         ),
         topRightVideoPlayerView(callee),
         surface(context),

@@ -1,18 +1,21 @@
 // Dart imports:
 import 'dart:io';
 
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-
 // Package imports:
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_device_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import '../interface/zego_device_service.dart';
+import '../interface/zego_event_handler.dart';
+import '../manager/zego_service_manager.dart';
+import './../zego_call_defines.dart';
 
-class ZegoDeviceServiceImpl extends IZegoDeviceService {
+class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
+  @override
+  void init() {
+    ZegoServiceManager.shared.addExpressEventHandler(this);
+  }
+
   @override
   void enableCamera(bool enable) {
     ZegoExpressEngine.instance.enableCamera(enable);
@@ -46,18 +49,6 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService {
   }
 
   @override
-  void enableCallKit(bool enable) {
-    if (!Platform.isIOS) {
-      return;
-    }
-    //  only for iOS
-    var config = ZegoEngineConfig();
-    var enableStr = enable ? "true" : "false";
-    config.advancedConfig = {"support_apple_callkit": enableStr};
-    ZegoExpressEngine.setEngineConfig(config);
-  }
-
-  @override
   void setAudioBitrate(ZegoAudioBitrate bitrate) async {
     var config = await ZegoExpressEngine.instance.getAudioConfig();
     config.bitrate = getAudioBitrateValue(bitrate);
@@ -84,37 +75,37 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService {
   void setVideoResolution(ZegoVideoResolution videoResolution) async {
     var config = await ZegoExpressEngine.instance.getVideoConfig();
     switch (videoResolution) {
-      case ZegoVideoResolution.v1080P:
+      case ZegoVideoResolution.p1080:
         config.captureWidth = 1920;
         config.captureHeight = 1080;
         config.encodeWidth = 1920;
         config.encodeHeight = 1080;
         break;
-      case ZegoVideoResolution.v720P:
+      case ZegoVideoResolution.p720:
         config.captureWidth = 1080;
         config.captureHeight = 720;
         config.encodeWidth = 1080;
         config.encodeHeight = 720;
         break;
-      case ZegoVideoResolution.v540P:
+      case ZegoVideoResolution.p540:
         config.captureWidth = 960;
         config.captureHeight = 540;
         config.encodeWidth = 960;
         config.encodeHeight = 540;
         break;
-      case ZegoVideoResolution.v360P:
+      case ZegoVideoResolution.p360:
         config.captureWidth = 640;
         config.captureHeight = 360;
         config.encodeWidth = 640;
         config.encodeHeight = 360;
         break;
-      case ZegoVideoResolution.v270P:
+      case ZegoVideoResolution.p270:
         config.captureWidth = 480;
         config.captureHeight = 270;
         config.encodeWidth = 480;
         config.encodeHeight = 270;
         break;
-      case ZegoVideoResolution.v180P:
+      case ZegoVideoResolution.p180:
         config.captureWidth = 320;
         config.captureHeight = 180;
         config.encodeWidth = 320;
@@ -128,17 +119,17 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService {
   Future<ZegoVideoResolution> getVideoResolution() async {
     var config = await ZegoExpressEngine.instance.getVideoConfig();
     if (config.captureHeight < 270) {
-      return ZegoVideoResolution.v180P;
+      return ZegoVideoResolution.p180;
     } else if (config.captureHeight < 360) {
-      return ZegoVideoResolution.v270P;
+      return ZegoVideoResolution.p270;
     } else if (config.captureHeight < 540) {
-      return ZegoVideoResolution.v360P;
+      return ZegoVideoResolution.p360;
     } else if (config.captureHeight < 720) {
-      return ZegoVideoResolution.v540P;
+      return ZegoVideoResolution.p540;
     } else if (config.captureHeight < 1080) {
-      return ZegoVideoResolution.v720P;
+      return ZegoVideoResolution.p720;
     } else {
-      return ZegoVideoResolution.v1080P;
+      return ZegoVideoResolution.p1080;
     }
   }
 
@@ -171,21 +162,46 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService {
         ? ZegoVideoMirrorMode.BothMirror
         : ZegoVideoMirrorMode.NoMirror);
   }
+
+  @override
+  void setBestConfig() {
+    ZegoExpressEngine.instance.enableHardwareEncoder(true);
+    ZegoExpressEngine.instance.enableHardwareDecoder(true);
+    ZegoExpressEngine.instance
+        .setCapturePipelineScaleMode(ZegoCapturePipelineScaleMode.Post);
+    ZegoExpressEngine.instance.setMinVideoBitrateForTrafficControl(
+        120, ZegoTrafficControlMinVideoBitrateMode.UltraLowFPS);
+    ZegoExpressEngine.instance.setTrafficControlFocusOn(
+        ZegoTrafficControlFocusOnMode.ZegoTrafficControlFounsOnRemote);
+    ZegoExpressEngine.instance.enableANS(false);
+
+    if (Platform.isIOS) {
+      //  only for iOS
+      var config = ZegoEngineConfig();
+      config.advancedConfig = {"support_apple_callkit": "true"};
+      ZegoExpressEngine.setEngineConfig(config);
+    }
+  }
+
+  @override
+  void onAudioRouteChange(ZegoAudioRoute audioRoute) {
+    delegate?.onAudioRouteChange(audioRoute);
+  }
 }
 
 String getResolutionString(ZegoVideoResolution resolution) {
   switch (resolution) {
-    case ZegoVideoResolution.v1080P:
+    case ZegoVideoResolution.p1080:
       return "1920x1080";
-    case ZegoVideoResolution.v720P:
+    case ZegoVideoResolution.p720:
       return "1080x720";
-    case ZegoVideoResolution.v540P:
+    case ZegoVideoResolution.p540:
       return "960x540";
-    case ZegoVideoResolution.v360P:
+    case ZegoVideoResolution.p360:
       return "640x360";
-    case ZegoVideoResolution.v270P:
+    case ZegoVideoResolution.p270:
       return "480x270";
-    case ZegoVideoResolution.v180P:
+    case ZegoVideoResolution.p180:
       return "320x180";
   }
 }

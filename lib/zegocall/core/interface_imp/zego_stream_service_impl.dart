@@ -5,21 +5,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_stream_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
+import 'package:zego_call_flutter/zegocall/core/interface/zego_event_handler.dart';
 import '../interface/zego_stream_service.dart';
+import './../manager/zego_service_manager.dart';
 
-class ZegoStreamServiceImpl extends IZegoStreamService {
-  ZegoStreamServiceImpl() {
-    ZegoExpressEngine.onRoomStreamUpdate = _onRoomStreamUpdate;
-
-    ZegoExpressEngine.onPublisherCapturedVideoFirstFrame =
-        _onPublisherCapturedVideoFirstFrame;
-    ZegoExpressEngine.onPlayerStateUpdate = _onPlayerStateUpdate;
-  }
-
+class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   bool isCameraPublishing = false;
   Map<String, ValueChanged<bool>> userStreamReadyNotifiers = {};
+
+  @override
+  void init() {
+    ZegoServiceManager.shared.addExpressEventHandler(this);
+  }
 
   @override
   void startPlaying(String userID, int playingViewID) {
@@ -31,14 +28,14 @@ class ZegoStreamServiceImpl extends IZegoStreamService {
       ZegoExpressEngine.instance
           .startPreview(canvas: canvas, channel: ZegoPublishChannel.Main);
     } else {
-      var streamID = _generateStreamID(userID);
+      var streamID = generateStreamIDByUserID(userID);
       ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
     }
   }
 
   @override
   void addStreamStateNotifier(String userID, ValueChanged<bool> notifier) {
-    var streamID = _generateStreamID(userID);
+    var streamID = generateStreamIDByUserID(userID);
 
     if (userStreamReadyNotifiers.containsKey(streamID)) {
       return;
@@ -49,28 +46,25 @@ class ZegoStreamServiceImpl extends IZegoStreamService {
 
   @override
   void removeStreamStateNotifier(String userID) {
-    var streamID = _generateStreamID(userID);
+    var streamID = generateStreamIDByUserID(userID);
     userStreamReadyNotifiers.remove(streamID);
   }
 
-  String _generateStreamID(String userID) {
-    var roomID = ZegoServiceManager.shared.roomService.roomInfo.roomID;
-    return roomID + "_" + userID + "_main";
-  }
-
-  void _onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
+  @override
+  void onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
       List<ZegoStream> streamList, Map<String, dynamic> extendedData) {
     for (final stream in streamList) {
       if (updateType == ZegoUpdateType.Add) {
-        ZegoExpressEngine.instance.startPlayingStream(stream.streamID);
+        // ZegoExpressEngine.instance.startPlayingStream(stream.streamID);
       } else {
         ZegoExpressEngine.instance.stopPlayingStream(stream.streamID);
       }
     }
   }
 
-  void _onPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel) {
-    var streamID = _generateStreamID(
+  @override
+  void onPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel) {
+    var streamID = generateStreamIDByUserID(
         ZegoServiceManager.shared.userService.localUserInfo.userID);
     isCameraPublishing = true;
 
@@ -79,7 +73,8 @@ class ZegoStreamServiceImpl extends IZegoStreamService {
     }
   }
 
-  void _onPlayerStateUpdate(String streamID, ZegoPlayerState state,
+  @override
+  void onPlayerStateUpdate(String streamID, ZegoPlayerState state,
       int errorCode, Map<String, dynamic> extendedData) {
     if (userStreamReadyNotifiers.containsKey(streamID)) {
       final isReady = ZegoPlayerState.Playing == state;
@@ -87,10 +82,11 @@ class ZegoStreamServiceImpl extends IZegoStreamService {
     }
   }
 
+  @override
   void onApiCalledResult(int errorCode, String funcName, String info) {
     if ("enableCamera" == funcName && isCameraPublishing) {
       // close local camera
-      var streamID = _generateStreamID(
+      var streamID = generateStreamIDByUserID(
           ZegoServiceManager.shared.userService.localUserInfo.userID);
       isCameraPublishing = false;
 
@@ -99,4 +95,14 @@ class ZegoStreamServiceImpl extends IZegoStreamService {
       }
     }
   }
+}
+
+String generateStreamIDByUserID(String userID) {
+  var roomID = ZegoServiceManager.shared.roomService.roomInfo.roomID;
+  return roomID + "_" + userID + "_main";
+}
+
+String getUserIDFromStreamID(String streamID) {
+  var items = streamID.split('_');
+  return items.length < 2 ? "" : items[1];
 }

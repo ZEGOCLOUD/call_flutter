@@ -10,8 +10,9 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import '../delegate/zego_device_service_delegate.dart';
+import 'zego_service.dart';
 
-abstract class IZegoDeviceService extends ChangeNotifier {
+abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
   bool noiseSlimming = true; // sdk default value
   bool echoCancellation = true; // sdk default value
   bool volumeAdjustment = true; // sdk default value
@@ -64,5 +65,5 @@ abstract class IZegoDeviceService extends ChangeNotifier {
 
   Future<bool> isSpeakerEnabled();
 
-  void enableCallKit(bool enable);
+  void setBestConfig();
 }
