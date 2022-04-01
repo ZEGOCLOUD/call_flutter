@@ -13,7 +13,8 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   bool isCameraPublishing = false;
   Map<String, ValueChanged<bool>> userStreamReadyNotifiers = {};
 
-  ZegoStreamServiceImpl() {
+  @override
+  void init() {
     ZegoServiceManager.shared.addExpressEventHandler(this);
   }
 

@@ -33,7 +33,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   List<ZegoEventHandler> rtcEventDelegates = [];
 
-  ZegoServiceManager() {
+  void init() {
     initServices();
   }
 
@@ -43,6 +43,12 @@ class ZegoServiceManager extends ChangeNotifier {
     callService = ZegoCallServiceImpl();
     streamService = ZegoStreamServiceImpl();
     deviceService = ZegoDeviceServiceImpl();
+
+    roomService.init();
+    userService.init();
+    callService.init();
+    streamService.init();
+    deviceService.init();
   }
 
   void addExpressEventHandler(ZegoEventHandler handler) {

@@ -6,7 +6,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import '../../../zegocall/request/zego_firebase_manager.dart';
 import 'welcome_one_on_one_bg.dart';
 import 'welcome_title_bar.dart';
 import 'welcome_tool_bar.dart';
@@ -17,12 +16,6 @@ class WelcomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      ZegoFireBaseManager.shared.init();
-
-      return null;
-    }, const []);
-
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(

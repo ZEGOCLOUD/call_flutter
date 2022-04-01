@@ -7,6 +7,9 @@ import "package:firebase_messaging/firebase_messaging.dart";
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:zego_express_engine/zego_express_engine.dart';
+
+// Project imports:
 import 'package:zego_call_flutter/zegocall/core/commands/zego_accept_call_command.dart';
 import 'package:zego_call_flutter/zegocall/core/commands/zego_call_command.dart';
 import 'package:zego_call_flutter/zegocall/core/commands/zego_cancel_call_command.dart';
@@ -15,9 +18,6 @@ import 'package:zego_call_flutter/zegocall/core/commands/zego_end_call_command.d
 import 'package:zego_call_flutter/zegocall/core/commands/zego_heartbeat_command.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_call_info.dart';
 import 'package:zego_call_flutter/zegocall/listener/zego_listener_manager.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
-
-// Project imports:
 import '../../listener/zego_listener.dart';
 import '../interface/zego_call_service.dart';
 import '../interface/zego_event_handler.dart';
@@ -33,7 +33,10 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     _registerNotification();
     _addCallObserve();
     _requireNotificationsPermissions();
+  }
 
+  @override
+  void init() {
     registerListener();
 
     ZegoServiceManager.shared.addExpressEventHandler(this);
@@ -49,7 +52,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     status = LocalUserStatus.outgoing;
 
     var callerUserID =
-        ZegoServiceManager.shared.userService.localUserInfo.userID ?? "";
+        ZegoServiceManager.shared.userService.localUserInfo.userID;
     var callID = generateCallID(callerUserID);
 
     var command = ZegoCallCommand(
@@ -80,7 +83,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     cancelCallTimer();
 
     var callerUserID =
-        ZegoServiceManager.shared.userService.localUserInfo.userID ?? "";
+        ZegoServiceManager.shared.userService.localUserInfo.userID;
     var command = ZegoCancelCallCommand(callerUserID, callInfo.callID, userID);
     var result = await command.execute();
     if (result.isSuccess) {
@@ -93,7 +96,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   @override
   Future<int> acceptCall(String token) async {
     var callerUserID =
-        ZegoServiceManager.shared.userService.localUserInfo.userID ?? "";
+        ZegoServiceManager.shared.userService.localUserInfo.userID;
     var command = ZegoAcceptCallCommand(callerUserID, callInfo.callID);
     var result = await command.execute();
     if (result.isSuccess) {
@@ -135,7 +138,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     stopHeartbeatTimer();
 
     var callerUserID =
-        ZegoServiceManager.shared.userService.localUserInfo.userID ?? "";
+        ZegoServiceManager.shared.userService.localUserInfo.userID;
     var command = ZegoEndCallCommand(callerUserID, callInfo.callID);
 
     var result = await command.execute();
@@ -285,164 +288,173 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   }
 
   void registerListener() {
-    ZegoListenerManager.shared.addListener(notifyCallInvited,
-        (ZegoNotifyListenerParameter parameter) {
-      var callID = parameter['call_id'] as String;
-      var callerID = parameter['caller_id'] as String;
-      var callerName = parameter['caller_name'] as String;
-      var callType = ZegoCallType.values[parameter['call_type'] as int];
-      var callees = parameter['callees'] as List<ZegoUserInfo>;
+    ZegoListenerManager.shared
+        .addListener(notifyCallInvited, onCallInvitedNotify);
+    ZegoListenerManager.shared
+        .addListener(notifyCallCanceled, onCallCanceledNotify);
+    ZegoListenerManager.shared
+        .addListener(notifyCallAccept, onCallAcceptNotify);
+    ZegoListenerManager.shared
+        .addListener(notifyCallDecline, onCallDeclineNotify);
+    ZegoListenerManager.shared.addListener(notifyCallEnd, onCallEndNotify);
+    ZegoListenerManager.shared
+        .addListener(notifyCallTimeout, onCallTimeoutNotify);
+    ZegoListenerManager.shared.addListener(notifyUserError, onUserErrorNotify);
+  }
 
-      if (status != LocalUserStatus.free) {
-        return;
-      }
+  void onCallInvitedNotify(ZegoNotifyListenerParameter parameter) {
+    var callID = parameter['call_id'] as String;
+    var callerID = parameter['caller_id'] as String;
+    var callerName = parameter['caller_name'] as String;
+    var callType = ZegoCallType.values[parameter['call_type'] as int];
+    var callees = parameter['callees'] as List<ZegoUserInfo>;
 
-      status = LocalUserStatus.incoming;
-      callInfo.callID = callID;
-      startCallTimer();
+    if (status != LocalUserStatus.free) {
+      return;
+    }
 
-      var caller = ZegoUserInfo(callerID, callerName);
-      callInfo.caller = caller;
-      callInfo.callees = callees;
+    status = LocalUserStatus.incoming;
+    callInfo.callID = callID;
+    startCallTimer();
 
-      delegate?.onReceiveCallInvite(caller, callType);
-    });
-    ZegoListenerManager.shared.addListener(notifyCallCanceled,
-        (ZegoNotifyListenerParameter parameter) {
-      var callID = parameter['call_id'] as String;
-      var callerID = parameter['caller_id'] as String;
+    var caller = ZegoUserInfo(callerID, callerName);
+    callInfo.caller = caller;
+    callInfo.callees = callees;
 
-      if (callInfo.callID != callID) {
-        return;
-      }
-      if (status != LocalUserStatus.incoming) {
-        return;
-      }
-      if (callInfo.caller.userID != callerID) {
-        return;
-      }
+    delegate?.onReceiveCallInvite(caller, callType);
+  }
 
-      var caller = callInfo.caller;
+  void onCallCanceledNotify(ZegoNotifyListenerParameter parameter) {
+    var callID = parameter['call_id'] as String;
+    var callerID = parameter['caller_id'] as String;
 
+    if (callInfo.callID != callID) {
+      return;
+    }
+    if (status != LocalUserStatus.incoming) {
+      return;
+    }
+    if (callInfo.caller.userID != callerID) {
+      return;
+    }
+
+    var caller = callInfo.caller;
+
+    status = LocalUserStatus.free;
+    callInfo = ZegoCallInfo.empty();
+    cancelCallTimer();
+
+    delegate?.onReceiveCallCanceled(caller);
+  }
+
+  void onCallAcceptNotify(ZegoNotifyListenerParameter parameter) {
+    var callID = parameter['call_id'] as String;
+    var calleeID = parameter['callee_id'] as String;
+
+    if (callInfo.callID != callID) {
+      return;
+    }
+    if (status != LocalUserStatus.outgoing) {
+      return;
+    }
+
+    var callee = callInfo.callees.firstWhere((user) => user.userID == calleeID);
+
+    cancelCallTimer();
+    startHeartbeatTimer();
+    status = LocalUserStatus.calling;
+
+    delegate?.onReceiveCallAccept(callee);
+  }
+
+  void onCallDeclineNotify(ZegoNotifyListenerParameter parameter) {
+    var callID = parameter['call_id'] as String;
+    var calleeID = parameter['callee_id'] as String;
+    var declineType = ZegoDeclineType.values[parameter['type'] as int];
+
+    if (callInfo.callID != callID) {
+      return;
+    }
+    if (status != LocalUserStatus.outgoing) {
+      return;
+    }
+    var callee = callInfo.callees.firstWhere((user) => user.userID == calleeID);
+
+    status = LocalUserStatus.free;
+    callInfo = ZegoCallInfo.empty();
+    cancelCallTimer();
+
+    ZegoServiceManager.shared.roomService.leaveRoom();
+
+    delegate?.onReceiveCallDecline(callee, declineType);
+  }
+
+  void onCallEndNotify(ZegoNotifyListenerParameter parameter) {
+    var callID = parameter['call_id'] as String;
+    var userID = parameter['user_id'] as String;
+
+    if (callInfo.callID != callID) {
+      return;
+    }
+    if (status != LocalUserStatus.calling) {
+      return;
+    }
+    if (userID == ZegoServiceManager.shared.userService.localUserInfo.userID) {
+      // can't receive myself ended call
+      return;
+    }
+    if (callInfo.caller.userID != userID &&
+        callInfo.callees
+            .firstWhere((user) => user.userID == userID)
+            .isEmpty()) {
+      // the user ended call is not caller or callees
+      return;
+    }
+
+    status = LocalUserStatus.free;
+    callInfo = ZegoCallInfo.empty();
+    stopHeartbeatTimer();
+
+    ZegoServiceManager.shared.roomService.leaveRoom();
+
+    delegate?.onReceiveCallEnded();
+  }
+
+  void onCallTimeoutNotify(ZegoNotifyListenerParameter parameter) {
+    var callID = parameter['call_id'] as String;
+    var userID = parameter['user_id'] as String;
+
+    if (callInfo.callID != callID) {
+      return;
+    }
+    if (status != LocalUserStatus.calling) {
+      return;
+    }
+    var user = getUser(userID);
+    if (user.isEmpty()) {
+      return;
+    }
+
+    status = LocalUserStatus.free;
+    callInfo = ZegoCallInfo.empty();
+    // cancelCallTimer();
+    stopHeartbeatTimer();
+
+    ZegoServiceManager.shared.roomService.leaveRoom();
+
+    delegate?.onReceiveCallTimeout(user, ZegoCallTimeoutType.calling);
+  }
+
+  void onUserErrorNotify(ZegoNotifyListenerParameter parameter) {
+    var error = ZegoUserError.values[parameter['error'] as int];
+
+    if (ZegoUserError.kickOut == error) {
       status = LocalUserStatus.free;
       callInfo = ZegoCallInfo.empty();
       cancelCallTimer();
-
-      delegate?.onReceiveCallCanceled(caller);
-    });
-    ZegoListenerManager.shared.addListener(notifyCallAccept,
-        (ZegoNotifyListenerParameter parameter) {
-      var callID = parameter['call_id'] as String;
-      var calleeID = parameter['callee_id'] as String;
-
-      if (callInfo.callID != callID) {
-        return;
-      }
-      if (status != LocalUserStatus.outgoing) {
-        return;
-      }
-
-      var callee =
-          callInfo.callees.firstWhere((user) => user.userID == calleeID);
-
-      cancelCallTimer();
-      startHeartbeatTimer();
-      status = LocalUserStatus.calling;
-
-      delegate?.onReceiveCallAccept(callee);
-    });
-    ZegoListenerManager.shared.addListener(notifyCallDecline,
-        (ZegoNotifyListenerParameter parameter) {
-      var callID = parameter['call_id'] as String;
-      var calleeID = parameter['callee_id'] as String;
-      var declineType = ZegoDeclineType.values[parameter['type'] as int];
-
-      if (callInfo.callID != callID) {
-        return;
-      }
-      if (status != LocalUserStatus.outgoing) {
-        return;
-      }
-      var callee =
-          callInfo.callees.firstWhere((user) => user.userID == calleeID);
-
-      status = LocalUserStatus.free;
-      callInfo = ZegoCallInfo.empty();
-      cancelCallTimer();
-
-      ZegoServiceManager.shared.roomService.leaveRoom();
-
-      delegate?.onReceiveCallDecline(callee, declineType);
-    });
-    ZegoListenerManager.shared.addListener(notifyCallEnd,
-        (ZegoNotifyListenerParameter parameter) {
-      var callID = parameter['call_id'] as String;
-      var userID = parameter['user_id'] as String;
-
-      if (callInfo.callID != callID) {
-        return;
-      }
-      if (status != LocalUserStatus.calling) {
-        return;
-      }
-      if (userID ==
-          ZegoServiceManager.shared.userService.localUserInfo.userID) {
-        // can't receive myself ended call
-        return;
-      }
-      if (callInfo.caller.userID != userID &&
-          callInfo.callees
-              .firstWhere((user) => user.userID == userID)
-              .isEmpty()) {
-        // the user ended call is not caller or callees
-        return;
-      }
-
-      status = LocalUserStatus.free;
-      callInfo = ZegoCallInfo.empty();
       stopHeartbeatTimer();
 
       ZegoServiceManager.shared.roomService.leaveRoom();
-
-      delegate?.onReceiveCallEnded();
-    });
-    ZegoListenerManager.shared.addListener(notifyCallTimeout,
-        (ZegoNotifyListenerParameter parameter) {
-      var callID = parameter['call_id'] as String;
-      var userID = parameter['user_id'] as String;
-
-      if (callInfo.callID != callID) {
-        return;
-      }
-      if (status != LocalUserStatus.calling) {
-        return;
-      }
-      var user = getUser(userID);
-      if (user.isEmpty()) {
-        return;
-      }
-
-      status = LocalUserStatus.free;
-      callInfo = ZegoCallInfo.empty();
-      // cancelCallTimer();
-      stopHeartbeatTimer();
-
-      ZegoServiceManager.shared.roomService.leaveRoom();
-
-      delegate?.onReceiveCallTimeout(user, ZegoCallTimeoutType.calling);
-    });
-    ZegoListenerManager.shared.addListener(notifyUserError,
-        (ZegoNotifyListenerParameter parameter) {
-      var error = ZegoUserError.values[parameter['error'] as int];
-
-      if (ZegoUserError.kickOut == error) {
-        status = LocalUserStatus.free;
-        callInfo = ZegoCallInfo.empty();
-        cancelCallTimer();
-        stopHeartbeatTimer();
-
-        ZegoServiceManager.shared.roomService.leaveRoom();
-      }
-    });
+    }
   }
 }

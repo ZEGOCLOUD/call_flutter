@@ -24,8 +24,6 @@ class OnlineListPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     useEffect(() {
-      ZegoUserListManager.shared.init();
-
       try {
         // On calling notification tap
         AwesomeNotifications()
@@ -37,11 +35,6 @@ class OnlineListPage extends HookWidget {
       } catch (e) {
         print(e);
       }
-
-      //  call test
-      ZegoServiceManager.shared.initWithAPPID(841790877).then((value) {
-        ZegoServiceManager.shared.roomService.joinRoom('999', '');
-      });
 
       return null;
     }, const []);

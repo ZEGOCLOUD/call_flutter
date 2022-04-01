@@ -1,9 +1,11 @@
-// Project imports:
+// Package imports:
 import 'package:result_type/result_type.dart';
+import 'package:zego_express_engine/zego_express_engine.dart';
+
+// Project imports:
 import 'package:zego_call_flutter/zegocall/core/commands/zego_token_command.dart';
 import 'package:zego_call_flutter/zegocall/core/interface/zego_event_handler.dart';
 import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_stream_service_impl.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
 import '../../listener/zego_listener.dart';
 import '../../listener/zego_listener_manager.dart';
 import '../interface/zego_user_service.dart';
@@ -15,7 +17,8 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   /// In-room user dictionary,  can be used to update user information.¬
   Map<String, ZegoUserInfo> userDic = <String, ZegoUserInfo>{};
 
-  ZegoUserServiceImpl() {
+  @override
+  void init() {
     registerListener();
     ZegoServiceManager.shared.addExpressEventHandler(this);
   }
@@ -117,10 +120,11 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   }
 
   void registerListener() {
-    ZegoListenerManager.shared.addListener(notifyUserError,
-        (ZegoNotifyListenerParameter parameter) {
-      var error = ZegoUserError.values[parameter['error'] as int];
-      delegate?.onReceiveUserError(error);
-    });
+    ZegoListenerManager.shared.addListener(notifyUserError, onUserErrorNotify);
+  }
+
+  void onUserErrorNotify(ZegoNotifyListenerParameter parameter) {
+    var error = ZegoUserError.values[parameter['error'] as int];
+    delegate?.onReceiveUserError(error);
   }
 }

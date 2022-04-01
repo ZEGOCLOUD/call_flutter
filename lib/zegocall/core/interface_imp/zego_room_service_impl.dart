@@ -1,14 +1,15 @@
 // Package imports:
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_stream_service_impl.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/interface/zego_event_handler.dart';
+import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_stream_service_impl.dart';
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import '../interface/zego_room_service.dart';
 
 class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
-  ZegoRoomServiceImpl() {
+  @override
+  void init() {
     ZegoServiceManager.shared.addExpressEventHandler(this);
   }
 

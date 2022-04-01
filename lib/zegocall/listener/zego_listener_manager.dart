@@ -17,6 +17,9 @@ class ZegoListenerManager with ZegoListener, ZegoListenerUpdater {
 
     var pathListeners = listeners[path];
     pathListeners ??= [];
+    if (!listeners.containsKey(path)) {
+      listeners[path] = [];
+    }
     listeners[path]!.add(handler);
 
     print('path[$path] add listener[${handler.uid}]');

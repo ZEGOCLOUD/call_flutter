@@ -30,6 +30,8 @@ import 'package:zego_call_flutter/zegocall_uikit/pages/calling/calling_page'
 import 'package:zego_call_flutter/zegocall_demo/pages/users/online_list_page'
     '.dart';
 
+import '../zegocall/request/zego_firebase_manager.dart';
+
 class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);
 
@@ -49,6 +51,8 @@ class _ZegoAppState extends State<ZegoApp> {
     if (Platform.isAndroid) {
       supportAndroidRunBackground();
     }
+
+    initManagers();
 
     return MultiProvider(
         providers: providers(),
@@ -137,5 +141,14 @@ class _ZegoAppState extends State<ZegoApp> {
         FlutterBackground.enableBackgroundExecution();
       });
     });
+  }
+
+  void initManagers() {
+    ZegoUserListManager.shared.init();
+
+    ZegoServiceManager.shared.init();
+    ZegoServiceManager.shared.initWithAPPID(841790877);
+
+    ZegoFireBaseManager.shared.init();
   }
 }

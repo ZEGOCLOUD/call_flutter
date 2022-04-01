@@ -5,11 +5,12 @@ import 'package:flutter/foundation.dart';
 import '../zego_call_defines.dart';
 import './../delegate/zego_user_service_delegate.dart';
 import './../model/zego_user_info.dart';
+import 'zego_service.dart';
 
 /// Class user information management.
 /// <p>Description: This class contains the user information management logics, such as the logic of log in, log out,
 /// get the logged-in user info, get the in-room user list, and add co-hosts, etc. </>
-abstract class IZegoUserService extends ChangeNotifier {
+abstract class IZegoUserService extends ChangeNotifier with ZegoService {
   /// In-room user list, can be used when displaying the user list in the room.
   List<ZegoUserInfo> userList = [];
   ZegoUserServiceDelegate? delegate;

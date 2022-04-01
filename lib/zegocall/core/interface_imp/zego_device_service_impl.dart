@@ -11,7 +11,8 @@ import '../manager/zego_service_manager.dart';
 import './../zego_call_defines.dart';
 
 class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
-  ZegoDeviceServiceImpl() : super() {
+  @override
+  void init() {
     ZegoServiceManager.shared.addExpressEventHandler(this);
   }
 

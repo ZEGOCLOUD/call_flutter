@@ -6,11 +6,13 @@ import '../model/zego_user_info.dart';
 import './../delegate/zego_call_service_delegate.dart';
 import './../model/zego_call_info.dart';
 import './../zego_call_defines.dart';
+import 'zego_service.dart';
 
-abstract class IZegoCallService extends ChangeNotifier {
+abstract class IZegoCallService extends ChangeNotifier with ZegoService {
   ZegoCallInfo callInfo = ZegoCallInfo.empty();
-  ZegoCallServiceDelegate? delegate;
   LocalUserStatus status = LocalUserStatus.free;
+
+  ZegoCallServiceDelegate? delegate;
 
   Future<int> callUser(ZegoUserInfo user, String token, ZegoCallType type);
 

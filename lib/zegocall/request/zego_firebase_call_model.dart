@@ -84,7 +84,7 @@ class ZegoFirebaseCallModel {
   bool isEmpty() => callID.isEmpty;
 
   void fromMap(Map<String, dynamic> dict) {
-    callID = dict["call_id"] as String ?? "";
+    callID = dict["call_id"] as String;
     callType = FirebaseCallType.values[dict["call_type"] as int];
     callStatus = FirebaseCallStatus.values[dict["call_status"] as int];
 

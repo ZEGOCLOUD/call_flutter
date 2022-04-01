@@ -73,8 +73,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     callModel.users.clear();
 
     var firebaseCaller = FirebaseCallUser.empty();
-    firebaseCaller.callerID = caller.userID ?? "";
-    firebaseCaller.userID = caller.userID ?? "";
+    firebaseCaller.callerID = caller.userID;
+    firebaseCaller.userID = caller.userID;
     firebaseCaller.userName = caller.userName;
     firebaseCaller.startTime = DateTime.now().millisecondsSinceEpoch;
     firebaseCaller.status = FirebaseCallStatus.connecting;

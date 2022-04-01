@@ -14,6 +14,7 @@ import 'package:statemachine/statemachine.dart' as sm;
 import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/core/manager/zego_service_manager.dart';
 import 'mini_overlay_be_invite_frame.dart';
 import 'mini_overlay_page_delegate_notifier.dart';
 import 'mini_overlay_state.dart';
@@ -51,10 +52,19 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
   void initState() {
     super.initState();
 
+    ZegoServiceManager.shared.callService.delegate = this;
+
     initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ZegoServiceManager.shared.callService.delegate = null;
   }
 
   @override
