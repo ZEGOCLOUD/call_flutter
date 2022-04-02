@@ -214,8 +214,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     return result;
   }
 
-  void addUserToDatabase(User user) {
-    addUser(User user, String token) {
+  void addFcmTokenToDatabase(User user) {
+    addFcmToken(User user, String token) {
       var data = {
         "user_id": user.uid,
         "display_name": user.displayName,
@@ -246,25 +246,29 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     if (fcmToken.isEmpty) {
       FirebaseMessaging.instance.getToken().then((token) {
         fcmToken = token ?? "";
-        addUser(user, fcmToken);
+        addFcmToken(user, fcmToken);
         addFcmTokenListener();
       });
     } else {
-      addUser(user, fcmToken);
+      addFcmToken(user, fcmToken);
     }
   }
 
   void addConnectedListener() {
     final connectedRef = FirebaseDatabase.instance.ref(".info/connected");
     connectedListenerSubscription = connectedRef.onValue.listen((event) async {
-      final connected = event.snapshot.value as bool? ?? false;
+      var snapshotValue = event.snapshot.value;
+      print('[firebase] .info/connected onValue: $snapshotValue');
+
+      final connected = snapshotValue as bool? ?? false;
       if (!connected) {
         return;
       }
       if (user == null) {
         return;
       }
-      addUserToDatabase(user!);
+      addFcmTokenToDatabase(user!);
+      addIncomingCallListener();
     });
   }
 
@@ -275,7 +279,10 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .child('token_id')
         .onValue
         .listen((DatabaseEvent event) async {
-      var token = event.snapshot.value ?? "";
+      var snapshotValue = event.snapshot.value;
+      print('[firebase] fcm token onValue: $snapshotValue');
+
+      var token = snapshotValue ?? "";
       if (token == fcmToken) {
         return;
       }
@@ -294,8 +301,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .ref('call')
         .onChildAdded
         .listen((DatabaseEvent event) async {
-      var dict = event.snapshot.value as Map<String, dynamic>;
-      var callStatus = FirebaseCallStatus.values[dict['call_status'] as int];
+      var snapshotValue = event.snapshot.value;
+      print('[firebase] call onChildAdded: $snapshotValue');
+
+      var dict = snapshotValue as Map<dynamic, dynamic>;
+      var callStatus = FirebaseCallStatusExtension
+          .mapValue[dict['call_status'] as int] as FirebaseCallStatus;
       if (callStatus != FirebaseCallStatus.connecting) {
         return;
       }
@@ -345,9 +356,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .child(callID)
         .onValue
         .listen((DatabaseEvent event) async {
-      //
-      var dict = event.snapshot.value as Map<String, dynamic>;
-      var callStatus = FirebaseCallStatus.values[dict['call_status'] as int];
+      var snapshotValue = event.snapshot.value;
+      print('[firebase] call onValue: $snapshotValue');
+
+      var dict = snapshotValue as Map<dynamic, dynamic>;
+      var callStatus = FirebaseCallStatusExtension
+          .mapValue[dict['call_status'] as int] as FirebaseCallStatus;
       if (callStatus == FirebaseCallStatus.connecting) {
         return;
       }

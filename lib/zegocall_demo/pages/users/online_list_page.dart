@@ -10,8 +10,6 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
 import 'package:zego_call_flutter/zegocall_demo/firebase/zego_user_list_manager.dart';

@@ -22,7 +22,7 @@ class ZegoListenerManager with ZegoListener, ZegoListenerUpdater {
     }
     listeners[path]!.add(handler);
 
-    print('path[$path] add listener[${handler.uid}]');
+    print('[Listener] path[$path] add listener[${handler.uid}]');
 
     return handler.uid;
   }
@@ -33,13 +33,13 @@ class ZegoListenerManager with ZegoListener, ZegoListenerUpdater {
       return;
     }
 
-    print('path[$path] add listener[$uuid]');
+    print('[Listener] path[$path] add listener[$uuid]');
     listeners[path]!.removeWhere((element) => element.uid == uuid);
   }
 
   @override
   void receiveUpdate(String path, ZegoNotifyListenerParameter parameter) {
-    print('path[$path] receive update, parameter:[$parameter]');
+    print('[Listener] path[$path] receive update, parameter:[$parameter]');
 
     if (!listeners.containsKey(path)) {
       return;

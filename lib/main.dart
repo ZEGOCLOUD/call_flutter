@@ -1,42 +1,27 @@
+// Dart imports:
+import 'dart:math';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bugly/flutter_bugly.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/zegocall_demo_app.dart';
+import '../zegocall/core/manager/zego_service_manager.dart';
+import '../zegocall/notification/zego_notification_manager.dart';
+import '../zegocall/request/zego_firebase_manager.dart';
+import 'zegocall_demo/firebase/zego_user_list_manager.dart';
+import 'zegocall_demo/zegocall_demo_app.dart';
 
 Future<void> main() async {
   FlutterBugly.postCatchedException(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    AwesomeNotifications().initialize(
-        // set the icon to null if you want to use the default app icon
-        '',
-        [
-          NotificationChannel(
-              channelGroupKey: 'basic_channel_group',
-              channelKey: 'basic_channel',
-              channelName: 'Basic notifications',
-              channelDescription: 'Notification channel for basic tests',
-              defaultColor: const Color(0xFF9D50DD),
-              playSound: true,
-              ledColor: Colors.white)
-        ],
-        // Channel groups are only visual and are not required
-        channelGroups: [
-          NotificationChannelGroup(
-              channelGroupkey: 'basic_channel_group',
-              channelGroupName: 'Basic group')
-        ],
-        debug: true);
 
     await Firebase.initializeApp();
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    initManagers();
 
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
         .then((_) {
@@ -49,14 +34,12 @@ Future<void> main() async {
   });
 }
 
-// Declared as global, outside of any class
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
+void initManagers() {
+  ZegoUserListManager.shared.init();
 
-  print("Handling a background message: ${message.messageId}");
+  ZegoServiceManager.shared.init();
+  ZegoServiceManager.shared.initWithAPPID(841790877);
 
-  // Use this method to automatically convert the push data, in case you gonna use our data standard
-  AwesomeNotifications().createNotificationFromJsonData(message.data);
+  ZegoFireBaseManager.shared.init();
+  ZegoNotificationManager.shared.init();
 }

@@ -29,12 +29,6 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   bool isHeartbeatTimerRunning = false;
   bool isCallTimerRunning = false;
 
-  ZegoCallServiceImpl() : super() {
-    _registerNotification();
-    _addCallObserve();
-    _requireNotificationsPermissions();
-  }
-
   @override
   void init() {
     registerListener();
@@ -148,90 +142,6 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     }
 
     return 0;
-  }
-
-  void _registerNotification() async {
-    // 1. Instantiate Firebase Messaging
-    // String? token = await FirebaseMessaging.instance.getToken();
-    // log("FCM Token $token");
-
-    // 2. On iOS, this helps to take the user permissions
-    NotificationSettings settings =
-        await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      badge: true,
-      provisional: false,
-      sound: true,
-    );
-
-    // 3. Grant permission, for iOS only, Android ignore by default
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      log('User granted permission');
-
-      // For handling the received notifications
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        // Parse the message received
-        log(message.notification?.title ?? "Empty Notification Title");
-        log(message.notification?.title ?? "Empty Notification Body");
-        log(message.data['title']);
-        log(message.data['body']);
-      });
-    } else {
-      log('User declined or has not accepted permission');
-    }
-  }
-
-  void _addCallObserve() {
-    DatabaseReference ref = FirebaseDatabase.instance.ref('call');
-    ref.onChildAdded.listen((event) {
-      var selfUserID = FirebaseAuth.instance.currentUser?.uid;
-      var callID = event.snapshot.key;
-      var callInfo = event.snapshot.value as Map<dynamic, dynamic>;
-      var users = Map<String, dynamic>.from(callInfo['users']);
-      var callerID = '';
-      var callerName = '';
-      var callerPhotoUrl = '';
-      bool isSelfBeenCall = false;
-      users.forEach((key, value) {
-        if (value['role'] == 0) {
-          callerID = key;
-          callerName = value['display_name'];
-          callerPhotoUrl = value['photo_url'];
-        } else if (key == selfUserID) {
-          isSelfBeenCall = value['role'] == 1;
-        }
-      });
-      if (isSelfBeenCall) {
-        Map<String, String> notificationPayload = {
-          'call_id': callID!,
-          'caller_id': callerID,
-          'caller_name': callerName,
-          'caller_photo_url': callerPhotoUrl,
-        };
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: 1,
-          // largeIcon: callerPhotoUrl,
-          // icon: callerPhotoUrl,
-          channelKey: 'basic_channel',
-          title: '$callerName',
-          body: 'Invite you to call...',
-          payload: notificationPayload,
-          category: NotificationCategory.Call,
-        ));
-      }
-    });
-  }
-
-  void _requireNotificationsPermissions() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
   }
 
   @override

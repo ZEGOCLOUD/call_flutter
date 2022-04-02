@@ -35,6 +35,17 @@ extension FirebaseCallStatusExtension on FirebaseCallStatus {
         return -1;
     }
   }
+
+  static const Map<int, FirebaseCallStatus> mapValue = {
+    1: FirebaseCallStatus.connecting,
+    2: FirebaseCallStatus.calling,
+    3: FirebaseCallStatus.ended,
+    4: FirebaseCallStatus.declined,
+    5: FirebaseCallStatus.busy,
+    6: FirebaseCallStatus.canceled,
+    7: FirebaseCallStatus.connectingTimeout,
+    8: FirebaseCallStatus.callingTimeout,
+  };
 }
 
 // FirebaseCallStatus.busy.id;
@@ -45,14 +56,26 @@ enum FirebaseCallType {
 }
 
 extension FirebaseCallTypeExtension on FirebaseCallType {
+  static const Map<int, FirebaseCallType> mapValue = {
+    1: FirebaseCallType.voice,
+    2: FirebaseCallType.video,
+  };
+
   int get id {
     switch (this) {
       case FirebaseCallType.voice:
         return 1;
       case FirebaseCallType.video:
         return 2;
-      default:
-        return -1;
+    }
+  }
+
+  String get string {
+    switch (this) {
+      case FirebaseCallType.voice:
+        return "voice";
+      case FirebaseCallType.video:
+        return "video";
     }
   }
 }
@@ -83,23 +106,27 @@ class ZegoFirebaseCallModel {
 
   bool isEmpty() => callID.isEmpty;
 
-  void fromMap(Map<String, dynamic> dict) {
+  void fromMap(Map<dynamic, dynamic> dict) {
     callID = dict["call_id"] as String;
-    callType = FirebaseCallType.values[dict["call_type"] as int];
-    callStatus = FirebaseCallStatus.values[dict["call_status"] as int];
 
-    var usersDict = dict["users"] as Map<String, dynamic>;
+    callType = FirebaseCallTypeExtension.mapValue[dict["call_type"] as int]
+        as FirebaseCallType;
+    callStatus = FirebaseCallStatusExtension
+        .mapValue[dict["call_status"] as int] as FirebaseCallStatus;
+
+    var usersDict = dict["users"] as Map<dynamic, dynamic>;
     usersDict.forEach((userID, userDict) {
       var user = FirebaseCallUser.empty();
       user.userID = userID;
       user.userName = userDict["user_name"] as String;
       user.callerID = userDict["caller_id"] as String;
       user.startTime = userDict["start_time"] as int;
-      user.status = FirebaseCallStatus.values[dict["status"] as int];
+      user.status = FirebaseCallStatusExtension.mapValue[userDict["status"] as int]
+          as FirebaseCallStatus;
 
-      user.connectedTime = userDict["connected_time"] as int;
-      user.finishTime = userDict["finish_time"] as int;
-      user.heartbeatTime = userDict["heartbeat_time"] as int;
+      user.connectedTime = (userDict["connected_time"] ?? 0) as int;
+      user.finishTime = (userDict["finish_time"] ?? 0) as int;
+      user.heartbeatTime = (userDict["heartbeat_time"] ?? 0) as int;
 
       users.add(user);
     });
