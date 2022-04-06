@@ -69,15 +69,6 @@ extension FirebaseCallTypeExtension on FirebaseCallType {
         return 2;
     }
   }
-
-  String get string {
-    switch (this) {
-      case FirebaseCallType.voice:
-        return "voice";
-      case FirebaseCallType.video:
-        return "video";
-    }
-  }
 }
 
 class FirebaseCallUser {
@@ -106,7 +97,7 @@ class ZegoFirebaseCallModel {
 
   bool isEmpty() => callID.isEmpty;
 
-  void fromMap(Map<dynamic, dynamic> dict) {
+  ZegoFirebaseCallModel.fromMap(Map<dynamic, dynamic> dict) {
     callID = dict["call_id"] as String;
 
     callType = FirebaseCallTypeExtension.mapValue[dict["call_type"] as int]
@@ -121,8 +112,8 @@ class ZegoFirebaseCallModel {
       user.userName = userDict["user_name"] as String;
       user.callerID = userDict["caller_id"] as String;
       user.startTime = userDict["start_time"] as int;
-      user.status = FirebaseCallStatusExtension.mapValue[userDict["status"] as int]
-          as FirebaseCallStatus;
+      user.status = FirebaseCallStatusExtension
+          .mapValue[userDict["status"] as int] as FirebaseCallStatus;
 
       user.connectedTime = (userDict["connected_time"] ?? 0) as int;
       user.finishTime = (userDict["finish_time"] ?? 0) as int;

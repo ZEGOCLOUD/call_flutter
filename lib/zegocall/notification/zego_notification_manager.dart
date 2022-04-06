@@ -11,9 +11,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/request/zego_firebase_call_model.dart';
+import '../core/manager/zego_service_manager.dart';
+import '../core/zego_call_defines.dart';
+import '../core/model/zego_user_info.dart';
 import 'zego_notification_call_model.dart';
 
+const firebaseChannelGroupName = 'firebase_channel_group';
 const firebaseChannelKey = 'firebase_channel';
 
 class ZegoNotificationManager {
@@ -26,7 +29,7 @@ class ZegoNotificationManager {
             '',
             [
               NotificationChannel(
-                  channelGroupKey: 'firebase_channel_group',
+                  channelGroupKey: firebaseChannelGroupName,
                   channelKey: firebaseChannelKey,
                   channelName: 'Firebase notifications',
                   channelDescription: 'Notification channel for firebase',
@@ -40,7 +43,7 @@ class ZegoNotificationManager {
             // Channel groups are only visual and are not required
             channelGroups: [
               NotificationChannelGroup(
-                  channelGroupkey: 'firebase_channel_group',
+                  channelGroupkey: firebaseChannelGroupName,
                   channelGroupName: 'Firebase group')
             ],
             debug: true)
@@ -102,10 +105,21 @@ class ZegoNotificationManager {
   void listenAwesomeNotification() {
     AwesomeNotifications().actionStream.listen((receivedAction) {
       if (receivedAction.channelKey != firebaseChannelKey) {
+        developer.log('[awesome notification] unknown channel key');
         return;
       }
-      // switch (receivedAction.buttonKeyPressed) {
-      // }
+
+      var model = ZegoNotificationModel.fromMap(
+          receivedAction.payload ?? <String, String>{});
+      developer.log('[awesome notification] receive:${model.toMap()}');
+
+      //  dispatch notification message
+      var caller = ZegoUserInfo(model.callerID, model.callerName);
+      var callType =
+          ZegoCallTypeExtension.mapValue[int.parse(model.callTypeID)] ??
+              ZegoCallType.kZegoCallTypeVoice;
+      ZegoServiceManager.shared.callService.delegate
+          ?.onReceiveCallInvite(caller, callType);
     });
   }
 
@@ -116,17 +130,22 @@ class ZegoNotificationManager {
 
   void onFirebaseRemoteMessageReceive(RemoteMessage message) {
     developer.log('[firebase] remote message receive: ${message.data}');
-    var notificationModel = ZegoNotificationCallModel.fromMap(message.data);
+    var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
 
     Map<String, dynamic> notificationAdapter = {
       NOTIFICATION_CONTENT: {
         NOTIFICATION_ID: Random().nextInt(2147483647),
+        NOTIFICATION_GROUP_KEY: firebaseChannelGroupName,
         NOTIFICATION_CHANNEL_KEY: firebaseChannelKey,
-        NOTIFICATION_TITLE: notificationModel.callType.string,
+        NOTIFICATION_TITLE: ZegoCallTypeExtension
+                .mapValue[int.parse(notificationModel.callTypeID)]?.string ??
+            "",
         NOTIFICATION_BODY: "${notificationModel.callerName} Calling...",
-        NOTIFICATION_PAYLOAD: notificationModel.callModel.toMap(),
+        NOTIFICATION_PAYLOAD: notificationModel.toMap(),
       }
     };
+    developer.log(
+        '[awesome notification] create notification: $notificationAdapter');
     AwesomeNotifications().createNotificationFromJsonData(notificationAdapter);
   }
 }

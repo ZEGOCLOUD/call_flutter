@@ -35,8 +35,7 @@ class CallingSettingsViewState extends State<CallingSettingsView> {
 
   @override
   void initState() {
-    pageIndex = CallingSettingPageIndexExtension
-        .valueMap[CallingSettingPageIndex.mainPageIndex]!;
+    pageIndex = CallingSettingPageIndex.mainPageIndex.id;
 
     var deviceService = context.read<IZegoDeviceService>();
     deviceService.getAudioBitrate().then((value) {

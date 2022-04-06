@@ -109,9 +109,7 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame>
         const Expanded(child: Text("")),
         GestureDetector(
           onTap: () {
-            context
-                .read<IZegoCallService>()
-                .declineCall('token', ZegoDeclineType.kZegoDeclineTypeDecline);
+            context.read<IZegoCallService>().declineCall();
             widget.onDecline();
           },
           child: SizedBox(

@@ -311,8 +311,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         return;
       }
 
-      var model = ZegoFirebaseCallModel.empty();
-      model.fromMap(dict);
+      var model = ZegoFirebaseCallModel.fromMap(dict);
       var firebaseUser = model.getUser(user?.uid ?? "");
       if (firebaseUser.userID != firebaseUser.callerID) {
         return;
@@ -366,8 +365,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         return;
       }
 
-      var model = ZegoFirebaseCallModel.empty();
-      model.fromMap(dict);
+      var model = ZegoFirebaseCallModel.fromMap(dict);
       var firebaseUser = model.getUser(user?.uid ?? "");
       if (firebaseUser.isEmpty()) {
         return;

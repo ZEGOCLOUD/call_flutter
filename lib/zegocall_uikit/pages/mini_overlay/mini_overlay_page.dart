@@ -36,7 +36,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
 
   // Both of the caller and callee disable the camera while calling
   bool fromVideoToVoice = false;
-  ZegoUserInfo inviteInfo = ZegoUserInfo.empty();
+  ZegoUserInfo inviteUser = ZegoUserInfo.empty();
   ZegoCallType inviteCallType = ZegoCallType.kZegoCallTypeVoice;
 
   final machine = sm.Machine<MiniOverlayPageState>();
@@ -96,18 +96,18 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
   }
 
   @override
-  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type) {
+  void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type) {
     if (machine.current?.identifier != MiniOverlayPageState.kIdle) {
       return;
     }
     setState(() {
-      inviteInfo = info;
+      inviteUser = caller;
       inviteCallType = type;
     });
     stateBeInvite.enter();
 
     if (null != delegateNotifier.onPageReceiveCallInvite) {
-      delegateNotifier.onPageReceiveCallInvite!(info, type);
+      delegateNotifier.onPageReceiveCallInvite!(caller, type);
     }
   }
 
@@ -204,8 +204,8 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
               borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
             ),
             child: MiniOverlayBeInviteFrame(
-              callerID: inviteInfo.userID,
-              callerName: inviteInfo.userName,
+              callerID: inviteUser.userID,
+              callerName: inviteUser.userName,
               callType: inviteCallType,
               onDecline: () => stateIdle.enter(),
               onAccept: () => stateIdle.enter(),
@@ -235,7 +235,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
     stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite)
       ..onExit(() {
         setState(() {
-          inviteInfo = ZegoUserInfo.empty();
+          inviteUser = ZegoUserInfo.empty();
           inviteCallType = ZegoCallType.kZegoCallTypeVoice;
         });
       });

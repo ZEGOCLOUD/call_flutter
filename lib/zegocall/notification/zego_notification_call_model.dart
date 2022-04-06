@@ -1,22 +1,42 @@
-// Project imports:
+// Dart imports:
 import 'dart:convert';
 
+// Project imports:
 import '../request/zego_firebase_call_model.dart';
 
-class ZegoNotificationCallModel {
+class ZegoNotificationModel {
   String callID = "";
   String callerID = "";
   String callerName = "";
-  FirebaseCallType callType = FirebaseCallType.voice;
-  ZegoFirebaseCallModel callModel = ZegoFirebaseCallModel.empty();
+  String callTypeID = "";
+  String callStatusID = "";
 
-  ZegoNotificationCallModel.fromMap(Map<dynamic, dynamic> dict) {
+  ZegoNotificationModel.fromMessageMap(Map<dynamic, dynamic> dict) {
     callID = dict["call_id"] as String;
     callerID = dict["caller_id"] as String;
     callerName = dict["caller_name"] as String;
-    callType = FirebaseCallTypeExtension
-        .mapValue[int.parse(dict["call_type"] as String)] as FirebaseCallType;
+    callTypeID = dict["call_type"] as String;
 
-    callModel.fromMap(Map.castFrom(json.decode(dict["call_data"])));
+    var firebaseModel = ZegoFirebaseCallModel.fromMap(
+        Map.castFrom(json.decode(dict["call_data"])));
+    callStatusID = firebaseModel.callStatus.id.toString();
+  }
+
+  ZegoNotificationModel.fromMap(Map<String, String> data) {
+    callID = data["call_id"] ?? "";
+    callerID = data["caller_id"] ?? "";
+    callerName = data["caller_name"] ?? "";
+    callTypeID = data["call_type"] ?? "";
+    callStatusID = data["call_status"] ?? "";
+  }
+
+  Map<String, String> toMap() {
+    return {
+      'call_id': callID,
+      'caller_id': callerID,
+      'caller_name': callerName,
+      'call_type': callTypeID,
+      'call_status': callStatusID,
+    };
   }
 }

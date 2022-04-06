@@ -6,9 +6,11 @@ enum CallingSettingPageIndex {
 }
 
 extension CallingSettingPageIndexExtension on CallingSettingPageIndex {
-  static const valueMap = {
-    CallingSettingPageIndex.mainPageIndex: 0,
-    CallingSettingPageIndex.audioBitratePageIndex: 1,
-    CallingSettingPageIndex.videoResolutionPageIndex: 2,
-  };
+  int get id {
+    switch(this) {
+      case CallingSettingPageIndex.mainPageIndex: return 0;
+      case CallingSettingPageIndex.audioBitratePageIndex:return 1;
+      case CallingSettingPageIndex.videoResolutionPageIndex:return 2;
+    }
+  }
 }

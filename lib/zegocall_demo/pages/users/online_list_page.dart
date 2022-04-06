@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -21,22 +20,6 @@ class OnlineListPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      try {
-        // On calling notification tap
-        AwesomeNotifications()
-            .actionStream
-            .listen((ReceivedNotification receivedNotification) {
-          Navigator.of(context).pushNamed(PageRouteNames.calling,
-              arguments: receivedNotification.payload);
-        });
-      } catch (e) {
-        print(e);
-      }
-
-      return null;
-    }, const []);
-
     return Scaffold(
         body: SafeArea(
             child: Container(

@@ -16,11 +16,11 @@ abstract class IZegoCallService extends ChangeNotifier with ZegoService {
 
   Future<int> callUser(ZegoUserInfo user, String token, ZegoCallType type);
 
-  Future<int> cancelCall(String userID);
+  Future<int> cancelCall();
 
   Future<int> acceptCall(String token);
 
-  Future<int> declineCall(String userID, ZegoDeclineType type);
+  Future<int> declineCall();
 
   Future<int> endCall();
 }

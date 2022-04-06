@@ -45,8 +45,7 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
                 height: 85.h,
                 child: header()),
             onTap: () {
-              pageIndexChanged(CallingSettingPageIndexExtension
-                  .valueMap[CallingSettingPageIndex.mainPageIndex]!);
+              pageIndexChanged(CallingSettingPageIndex.mainPageIndex.id);
             }),
         SizedBox(
           width: double.infinity,
@@ -89,8 +88,7 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
           onSelected: (T selectedValue) {
             onSelected(selectedValue);
 
-            pageIndexChanged(CallingSettingPageIndexExtension
-                .valueMap[CallingSettingPageIndex.mainPageIndex]!);
+            pageIndexChanged(CallingSettingPageIndex.mainPageIndex.id);
           },
         );
       },

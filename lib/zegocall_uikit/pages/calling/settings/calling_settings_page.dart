@@ -114,8 +114,8 @@ class CallingSettingsPage extends HookWidget {
                 title: 'Resolution',
                 subTitle: videoResolutionSubTitle,
                 onTap: () {
-                  pageIndexChanged(CallingSettingPageIndexExtension.valueMap[
-                      CallingSettingPageIndex.videoResolutionPageIndex]!);
+                  pageIndexChanged(
+                      CallingSettingPageIndex.videoResolutionPageIndex.id);
                 },
               )
             : const SizedBox(),
@@ -123,8 +123,7 @@ class CallingSettingsPage extends HookWidget {
           title: 'Audio bitrate',
           subTitle: audioBitrateSubTitle,
           onTap: () {
-            pageIndexChanged(CallingSettingPageIndexExtension
-                .valueMap[CallingSettingPageIndex.audioBitratePageIndex]!);
+            pageIndexChanged(CallingSettingPageIndex.audioBitratePageIndex.id);
           },
         )
       ],

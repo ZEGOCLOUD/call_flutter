@@ -96,7 +96,7 @@ class CallingCallerBottomToolBar extends StatelessWidget {
         child: GestureDetector(
           onTap: () {
             //  todo
-            context.read<IZegoCallService>().cancelCall("");
+            context.read<IZegoCallService>().cancelCall();
           },
           child: SizedBox(
             width: 120.w,
@@ -129,8 +129,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
                 iconURL: StyleIconUrls.toolbarBottomDecline,
                 onTap: () {
                   //  todo
-                  context.read<IZegoCallService>().declineCall(
-                      'token', ZegoDeclineType.kZegoDeclineTypeDecline);
+                  context.read<IZegoCallService>().declineCall();
                 }),
             SizedBox(
               width: 230.w,

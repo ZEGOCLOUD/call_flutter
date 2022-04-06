@@ -69,7 +69,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   }
 
   @override
-  Future<int> cancelCall(String userID) async {
+  Future<int> cancelCall() async {
     ZegoServiceManager.shared.roomService.leaveRoom();
 
     status = LocalUserStatus.free;
@@ -78,7 +78,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
 
     var callerUserID =
         ZegoServiceManager.shared.userService.localUserInfo.userID;
-    var command = ZegoCancelCallCommand(callerUserID, callInfo.callID, userID);
+    var command = ZegoCancelCallCommand(callerUserID, callInfo.callID);
     var result = await command.execute();
     if (result.isSuccess) {
     } else {
@@ -108,9 +108,9 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   }
 
   @override
-  Future<int> declineCall(String userID, ZegoDeclineType type) async {
-    var command = ZegoDeclineCallCommand(
-        userID, callInfo.callID, callInfo.caller.userID, type);
+  Future<int> declineCall() async {
+    var command =
+        ZegoDeclineCallCommand(callInfo.callID, callInfo.caller.userID);
 
     status = LocalUserStatus.free;
     cancelCallTimer();

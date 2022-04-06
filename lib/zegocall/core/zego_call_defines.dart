@@ -31,6 +31,20 @@ extension ZegoCallTypeExtension on ZegoCallType {
         return 2;
     }
   }
+
+  static const Map<int, ZegoCallType> mapValue = {
+    1: ZegoCallType.kZegoCallTypeVoice,
+    2: ZegoCallType.kZegoCallTypeVideo,
+  };
+
+  String get string {
+    switch (this) {
+      case ZegoCallType.kZegoCallTypeVoice:
+        return "voice";
+      case ZegoCallType.kZegoCallTypeVideo:
+        return "video";
+    }
+  }
 }
 
 enum ZegoCallTimeoutType {
