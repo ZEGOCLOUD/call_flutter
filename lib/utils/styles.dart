@@ -1,6 +1,8 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
 
+const String callRingName = 'CallRing.wav';
+
 /// colors
 class StyleColors {
   static const Color dark = Color(0xff1B1B1B);
@@ -27,60 +29,81 @@ class StyleColors {
 
 /// icons
 class StyleIconUrls {
-  static const String navigatorBack = 'images/navigator_back.png';
-  static const String roomTopQuit = 'images/room_top_quit.png';
-  static const String titleBarSettings = 'images/title_bar_settings.png';
+  static const String navigatorBack = 'assets/images/navigator_back.png';
+  static const String roomTopQuit = 'assets/images/room_top_quit.png';
+  static const String titleBarSettings = 'assets/images/title_bar_settings.png';
 
-  static const String authLogo = 'images/auth_logo.png';
-  static const String authIconGoogle = 'images/auth_icon_google.png';
+  static const String authLogo = 'assets/images/auth_logo.png';
+  static const String authIconGoogle = 'assets/images/auth_icon_google.png';
 
-  static const String inviteVoice = 'images/invite_voice.png';
-  static const String inviteVoicePressed = 'images/invite_voice_pressed.png';
-  static const String inviteRejectPressed = 'images/invite_reject_pressed.png';
-  static const String inviteReject = 'images/invite_reject.png';
-  static const String inviteVideoPressed = 'images/invite_video_pressed.png';
-  static const String inviteVideo = 'images/invite_video.png';
+  static const String inviteVoice = 'assets/images/invite_voice.png';
+  static const String inviteVoicePressed =
+      'assets/images/invite_voice_pressed.png';
+  static const String inviteRejectPressed =
+      'assets/images/invite_reject_pressed.png';
+  static const String inviteReject = 'assets/images/invite_reject.png';
+  static const String inviteVideoPressed =
+      'assets/images/invite_video_pressed.png';
+  static const String inviteVideo = 'assets/images/invite_video.png';
 
-  static const String userListDefault = 'images/user_list_default.png';
-  static const String userLIstVideoCall = 'images/user_list_video_call.png';
-  static const String userListAudioCall = 'images/user_list_audio_call.png';
+  static const String userListDefault = 'assets/images/user_list_default.png';
+  static const String userLIstVideoCall =
+      'assets/images/user_list_video_call.png';
+  static const String userListAudioCall =
+      'assets/images/user_list_audio_call.png';
 
-  static const String welcomeCardBanner = 'images/welcome_card_banner.png';
-  static const String welcomeCardBg = 'images/welcome_card_bg.png';
-  static const String welcomeContactUs = 'images/welcome_contact_us.png';
-  static const String welcomeGetMore = 'images/welcome_get_more.png';
+  static const String welcomeCardBanner =
+      'assets/images/welcome_card_banner.png';
+  static const String welcomeCardBg = 'assets/images/welcome_card_bg.png';
+  static const String welcomeContactUs = 'assets/images/welcome_contact_us.png';
+  static const String welcomeGetMore = 'assets/images/welcome_get_more.png';
 
-  static const String settingNext = 'images/setting_next.png';
-  static const String settingBack = 'images/setting_back.png';
-  static const String settingTick = 'images/settings_tick.png';
+  static const String settingNext = 'assets/images/setting_next.png';
+  static const String settingBack = 'assets/images/setting_back.png';
+  static const String settingTick = 'assets/images/settings_tick.png';
 
-  static const String roomOverlayVoiceCalling = 'images/room_overlay_voice_'
+  static const String roomOverlayVoiceCalling =
+      'assets/images/room_overlay_voice_'
       'calling.png';
 
-  static const String toolbarBottomCameraClosed = 'images/toolbar_bottom_cam'
+  static const String toolbarBottomCameraClosed =
+      'assets/images/toolbar_bottom_cam'
       'era_closed.png';
-  static const String toolbarBottomCameraOpen = 'images/toolbar_bottom_camer'
+  static const String toolbarBottomCameraOpen =
+      'assets/images/toolbar_bottom_camer'
       'a_open.png';
-  static const String toolbarBottomCancel = 'images/toolbar_bottom_cancel.png';
-  static const String toolbarBottomEnd = 'images/toolbar_bottom_cancel.png';
-  static const String toolbarBottomClosed = 'images/toolbar_bottom_closed.png';
-  static const String toolbarBottomDecline = 'images/toolbar_bottom_decline'
+  static const String toolbarBottomCancel =
+      'assets/images/toolbar_bottom_cancel.png';
+  static const String toolbarBottomEnd =
+      'assets/images/toolbar_bottom_cancel.png';
+  static const String toolbarBottomClosed =
+      'assets/images/toolbar_bottom_closed.png';
+  static const String toolbarBottomDecline =
+      'assets/images/toolbar_bottom_decline'
       '.png';
-  static const String toolbarBottomMicClosed = 'images/toolbar_bottom_mic_cl'
+  static const String toolbarBottomMicClosed =
+      'assets/images/toolbar_bottom_mic_cl'
       'osed.png';
-  static const String toolbarBottomMicOpen = 'images/toolbar_bottom_mic_open'
+  static const String toolbarBottomMicOpen =
+      'assets/images/toolbar_bottom_mic_open'
       '.png';
   static const String toolbarBottomSpeakerOpen =
-      'images/toolbar_bottom_speaker_open.png';
-  static const String toolbarBottomSpeakerClosed = 'images/toolbar_bottom_speak'
+      'assets/images/toolbar_bottom_speaker_open.png';
+  static const String toolbarBottomSpeakerClosed =
+      'assets/images/toolbar_bottom_speak'
       'er_closed.png';
-  static const String toolbarBottomSwitchCamera = 'images/toolbar_bottom_swi'
+  static const String toolbarBottomSwitchCamera =
+      'assets/images/toolbar_bottom_swi'
       'tch_camera.png';
-  static const String toolbarBottomVideo = 'images/toolbar_bottom_video.png';
-  static const String toolbarBottomVoice = 'images/toolbar_bottom_voice.png';
-  static const String toolbarTopMini = 'images/toolbar_top_mini.png';
-  static const String toolbarTopSettings = 'images/toolbar_top_settings.png';
-  static const String toolbarTopSwitchCamera = 'images/toolbar_top_switch_camera.png';
+  static const String toolbarBottomVideo =
+      'assets/images/toolbar_bottom_video.png';
+  static const String toolbarBottomVoice =
+      'assets/images/toolbar_bottom_voice.png';
+  static const String toolbarTopMini = 'assets/images/toolbar_top_mini.png';
+  static const String toolbarTopSettings =
+      'assets/images/toolbar_top_settings.png';
+  static const String toolbarTopSwitchCamera =
+      'assets/images/toolbar_top_switch_camera.png';
 }
 
 /// constant style
