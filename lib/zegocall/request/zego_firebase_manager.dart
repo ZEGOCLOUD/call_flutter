@@ -49,7 +49,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       user = user;
 
-      if(null != user) {
+      if (null != user) {
         addFcmTokenToDatabase(user!);
         addIncomingCallListener();
       } else {
@@ -257,7 +257,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
 
       var dict = snapshotValue as Map<dynamic, dynamic>;
       log('[firebase] call onChildAdded: $dict');
-      if(! dict.containsKey('call_status')) {
+      if (!dict.containsKey('call_status')) {
         return;
       }
 
@@ -294,13 +294,13 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         callees.add(ZegoUserInfo(user.userID,
             user.userName.isNotEmpty ? user.userName : user.userID));
       });
+      var callerUser = ZegoUserInfo(caller.callerID,
+          caller.userName.isNotEmpty ? caller.userName : caller.userID);
 
       ZegoNotifyListenerParameter parameter = {};
       parameter['call_id'] = model.callID;
       parameter['call_type'] = model.callType.id;
-      parameter['caller_id'] = caller.callerID;
-      parameter['caller_name'] =
-          caller.userName.isNotEmpty ? caller.userName : caller.userID;
+      parameter['caller'] = callerUser;
       parameter['callees'] = callees;
       ZegoListenerManager.shared.receiveUpdate(notifyCallInvited, parameter);
     });
@@ -316,7 +316,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
 
       var dict = snapshotValue as Map<dynamic, dynamic>;
       log('[firebase] call onValue: $dict');
-      if(! dict.containsKey('call_status')) {
+      if (!dict.containsKey('call_status')) {
         return;
       }
 

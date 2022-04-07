@@ -18,6 +18,20 @@ extension ZegoUserErrorExtension on ZegoUserError {
         return 2;
     }
   }
+
+  static const Map<int, ZegoUserError> mapValue = {
+    1: ZegoUserError.kickOut,
+    2: ZegoUserError.tokenExpire,
+  };
+
+  String get string {
+    switch (this) {
+      case ZegoUserError.kickOut:
+        return "kick out";
+      case ZegoUserError.tokenExpire:
+        return "token expire";
+    }
+  }
 }
 
 enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
@@ -86,6 +100,15 @@ extension ZegoDeclineTypeExtension on ZegoDeclineType {
         return 1;
       case ZegoDeclineType.kZegoDeclineTypeBusy:
         return 2;
+    }
+  }
+
+  String get string {
+    switch (this) {
+      case ZegoDeclineType.kZegoDeclineTypeDecline:
+        return "decline";
+      case ZegoDeclineType.kZegoDeclineTypeBusy:
+        return "busy";
     }
   }
 }
