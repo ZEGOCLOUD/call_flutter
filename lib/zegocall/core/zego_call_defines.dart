@@ -103,6 +103,11 @@ extension ZegoDeclineTypeExtension on ZegoDeclineType {
     }
   }
 
+  static const Map<int, ZegoDeclineType> mapValue = {
+    1: ZegoDeclineType.kZegoDeclineTypeDecline,
+    2: ZegoDeclineType.kZegoDeclineTypeBusy,
+  };
+
   String get string {
     switch (this) {
       case ZegoDeclineType.kZegoDeclineTypeDecline:

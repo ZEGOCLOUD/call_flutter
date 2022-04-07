@@ -10,6 +10,7 @@ enum FirebaseCallStatus {
   canceled,
   connectingTimeout,
   callingTimeout,
+  unknown,
 }
 
 extension FirebaseCallStatusExtension on FirebaseCallStatus {
@@ -37,6 +38,7 @@ extension FirebaseCallStatusExtension on FirebaseCallStatus {
   }
 
   static const Map<int, FirebaseCallStatus> mapValue = {
+    -1: FirebaseCallStatus.unknown,
     1: FirebaseCallStatus.connecting,
     2: FirebaseCallStatus.calling,
     3: FirebaseCallStatus.ended,

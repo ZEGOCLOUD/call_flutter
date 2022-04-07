@@ -32,11 +32,11 @@ class ZegoLoginManager extends ChangeNotifier {
 
   void init() {
     user = FirebaseAuth.instance.currentUser;
-    FirebaseAuth.instance.authStateChanges().listen((event) {
-      user = event;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      this.user = user;
 
-      if (null != user) {
-        addUserToDatabase(user!);
+      if (null != this.user) {
+        addUserToDatabase(this.user!);
 
         ZegoUserListManager.shared.init();
       }
