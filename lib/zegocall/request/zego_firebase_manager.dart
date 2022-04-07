@@ -402,7 +402,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         return;
       }
 
-      var callDict = snapshotValue as Map<String, dynamic>;
+      var callDict = snapshotValue as Map<dynamic, dynamic>;
       log('[firebase] incoming call, call dict: $callDict');
 
       var callStatus = FirebaseCallStatusExtension.mapValue[
@@ -513,7 +513,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         return;
       }
 
-      var callDict = snapshotValue as Map<String, dynamic>;
+      var callDict = snapshotValue as Map<dynamic, dynamic>;
       log('[firebase] call, call dict: $callDict');
 
       var callStatus = FirebaseCallStatusExtension.mapValue[

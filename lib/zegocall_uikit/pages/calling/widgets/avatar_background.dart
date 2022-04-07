@@ -24,7 +24,7 @@ class AvatarBackgroundView extends StatelessWidget {
             height: double.infinity,
             decoration: BoxDecoration(
                 image: DecorationImage(
-              image: AssetImage("images/avatar_${avatarIndex}_big.png"),
+              image: AssetImage("assets/images/avatar_${avatarIndex}_big.png"),
               fit: BoxFit.fitHeight,
             ))));
   }

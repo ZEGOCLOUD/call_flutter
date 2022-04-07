@@ -54,7 +54,7 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
       children: [
         CircleAvatar(
           maxRadius: 37.w,
-          backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+          backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
         ),
         Container(
           padding: EdgeInsets.fromLTRB(36.w, 0, 0, 0),

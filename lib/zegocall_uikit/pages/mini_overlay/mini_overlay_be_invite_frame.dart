@@ -84,7 +84,7 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame>
       children: [
         CircleAvatar(
           maxRadius: 84.w,
-          backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+          backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
         ),
         SizedBox(
           width: 26.w,

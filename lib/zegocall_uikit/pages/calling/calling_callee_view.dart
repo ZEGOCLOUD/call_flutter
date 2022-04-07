@@ -49,7 +49,7 @@ class CallingCalleeView extends StatelessWidget {
           height: 200.h,
           child: CircleAvatar(
             maxRadius: 200.w,
-            backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+            backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
           ),
         ),
         SizedBox(
