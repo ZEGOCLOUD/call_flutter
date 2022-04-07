@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:developer';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -7,9 +10,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
+import '../../../zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/zego_call_defines.dart';
 import 'mini_overlay_page_delegate_notifier.dart';
 import 'mini_overlay_state.dart';
 
@@ -120,7 +123,7 @@ class _MiniOverlayVoiceCallingFrameState
   void initStateMachine() {
     // Update current for drive UI rebuild
     machine.onAfterTransition.listen((event) {
-      print('[state machine] mini overlay video : from ${event.source} to '
+      log('[state machine] mini overlay video : from ${event.source} to '
           '${event.target}');
 
       updatePageCurrentState();
@@ -146,7 +149,7 @@ class _MiniOverlayVoiceCallingFrameState
     try {
       setState(() => currentState = machine.current!.identifier);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -163,5 +166,9 @@ class _MiniOverlayVoiceCallingFrameState
       ),
       child: playingView,
     ));
+  }
+
+  @override
+  void onCallingStateUpdated(ZegoCallingState state) {
   }
 }

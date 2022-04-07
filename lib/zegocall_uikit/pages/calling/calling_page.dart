@@ -1,5 +1,7 @@
 // Dart imports:
-import 'dart:math';
+
+// Dart imports:
+import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -10,21 +12,16 @@ import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import '../../../zegocall/core/interface/zego_call_service.dart';
+import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/interface/zego_user_service.dart';
+import '../../../zegocall/core/manager/zego_service_manager.dart';
+import '../../../zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/zego_call_defines.dart';
 import 'calling_callee_view.dart';
 import 'calling_caller_view.dart';
 import 'calling_state.dart';
 import 'online_video_view.dart';
 import 'online_voice_view.dart';
-
-import 'package:zego_call_flutter/zegocall/core/interface_imp'
-    '/zego_call_service_impl.dart';
 
 class CallingPage extends StatefulWidget {
   // ignore: public_member_api_docs
@@ -72,8 +69,7 @@ class _CallingPageState extends State<CallingPage>
 
   void initStateMachine() {
     machine.onAfterTransition.listen((event) {
-      print(
-          '[state machine] calling page: from ${event.source} to ${event.target}');
+      log('[state machine] calling page: from ${event.source} to ${event.target}');
 
       updatePageCurrentState();
     });
@@ -161,4 +157,7 @@ class _CallingPageState extends State<CallingPage>
 
   @override
   void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {}
+
+  @override
+  void onCallingStateUpdated(ZegoCallingState state) {}
 }

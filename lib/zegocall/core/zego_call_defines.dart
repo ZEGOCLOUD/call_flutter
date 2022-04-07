@@ -55,6 +55,25 @@ enum ZegoCallTimeoutType {
   calling
 }
 
+enum ZegoCallingState {
+  disconnected,
+  connecting,
+  connected,
+}
+
+extension ZegoCallingStateExtension on ZegoCallingState {
+  int get id {
+    switch (this) {
+      case ZegoCallingState.disconnected:
+        return 0;
+      case ZegoCallingState.connecting:
+        return 1;
+      case ZegoCallingState.connected:
+        return 2;
+    }
+  }
+}
+
 enum ZegoDeclineType {
   kZegoDeclineTypeDecline, //  Actively refuse
   kZegoDeclineTypeBusy //  The call was busy, Passive refused

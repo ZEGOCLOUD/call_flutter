@@ -32,17 +32,13 @@ class OnlineListPage extends HookWidget {
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
         Consumer<ZegoUserListManager>(
-            builder: (_, userListManager, child) => RefreshIndicator(
-                onRefresh: () async {
-                  ZegoUserListManager.shared.getOnlineUsers();
-                },
-                child: SizedBox(
+            builder: (_, userListManager, child) => SizedBox(
                   width: double.infinity,
                   height: 1080.h,
                   child: userListManager.userList.isEmpty
                       ? emptyTips()
                       : userListView(userListManager),
-                ))),
+                )),
       ]),
     )));
   }

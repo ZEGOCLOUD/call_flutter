@@ -7,13 +7,11 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import '../../../../zegocall/core/interface/zego_device_service.dart';
+import '../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
+import '../../../../zegocall/core/zego_call_defines.dart';
 import 'calling_settings_defines.dart';
 import 'calling_settings_item.dart';
-
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_device_service'
-    '_impl.dart';
 
 class CallingSettingsListViewPage<T> extends StatelessWidget {
   final String title;

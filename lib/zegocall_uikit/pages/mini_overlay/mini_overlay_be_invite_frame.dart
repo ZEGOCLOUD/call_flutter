@@ -1,5 +1,4 @@
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -9,10 +8,10 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/user_avatar.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/interface/zego_call_service.dart';
+import '../../../zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/zego_call_defines.dart';
 import 'mini_overlay_page_delegate_notifier.dart';
 
 class MiniOverlayBeInviteFrame extends StatefulWidget {
@@ -159,5 +158,9 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame>
       case ZegoCallType.kZegoCallTypeVideo:
         return "Zego Video Call";
     }
+  }
+
+  @override
+  void onCallingStateUpdated(ZegoCallingState state) {
   }
 }

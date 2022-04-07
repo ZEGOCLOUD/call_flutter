@@ -1,23 +1,18 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer';
 
 // Package imports:
-import "package:firebase_messaging/firebase_messaging.dart";
-import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/commands/zego_accept_call_command.dart';
-import 'package:zego_call_flutter/zegocall/core/commands/zego_call_command.dart';
-import 'package:zego_call_flutter/zegocall/core/commands/zego_cancel_call_command.dart';
-import 'package:zego_call_flutter/zegocall/core/commands/zego_decline_call_command.dart';
-import 'package:zego_call_flutter/zegocall/core/commands/zego_end_call_command.dart';
-import 'package:zego_call_flutter/zegocall/core/commands/zego_heartbeat_command.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_call_info.dart';
-import 'package:zego_call_flutter/zegocall/listener/zego_listener_manager.dart';
+import '../../../zegocall/core/commands/zego_accept_call_command.dart';
+import '../../../zegocall/core/commands/zego_call_command.dart';
+import '../../../zegocall/core/commands/zego_cancel_call_command.dart';
+import '../../../zegocall/core/commands/zego_decline_call_command.dart';
+import '../../../zegocall/core/commands/zego_end_call_command.dart';
+import '../../../zegocall/core/commands/zego_heartbeat_command.dart';
+import '../../../zegocall/core/model/zego_call_info.dart';
+import '../../../zegocall/listener/zego_listener_manager.dart';
 import '../../listener/zego_listener.dart';
 import '../interface/zego_call_service.dart';
 import '../interface/zego_event_handler.dart';
@@ -28,6 +23,7 @@ import './../zego_call_defines.dart';
 class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   bool isHeartbeatTimerRunning = false;
   bool isCallTimerRunning = false;
+  String currentRoomID = "";
 
   @override
   void init() {
@@ -146,7 +142,37 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
 
   @override
   void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
-      Map<String, dynamic> extendedData) {}
+      Map<String, dynamic> extendedData) {
+    if (ZegoRoomState.Disconnected == state &&
+        status == LocalUserStatus.calling) {
+      status = LocalUserStatus.free;
+      callInfo = ZegoCallInfo.empty();
+
+      ZegoServiceManager.shared.roomService.leaveRoom();
+
+      delegate?.onReceiveCallTimeout(
+          ZegoServiceManager.shared.userService.localUserInfo,
+          ZegoCallTimeoutType.calling);
+      stopHeartbeatTimer();
+    }
+
+    if (currentRoomID == roomID) {
+      var callingState = ZegoCallingState.connected;
+      switch (state) {
+        case ZegoRoomState.Disconnected:
+          callingState = ZegoCallingState.disconnected;
+          break;
+        case ZegoRoomState.Connecting:
+          callingState = ZegoCallingState.connecting;
+          break;
+        case ZegoRoomState.Connected:
+          callingState = ZegoCallingState.connected;
+          break;
+      }
+      delegate?.onCallingStateUpdated(callingState);
+    }
+    currentRoomID = roomID;
+  }
 
   String generateCallID(String userID) {
     return userID + "${DateTime.now().millisecondsSinceEpoch * 1000}";
@@ -156,7 +182,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     if (callInfo.caller.userID == userID) {
       return callInfo.caller;
     }
-    return callInfo.callees.firstWhere((user) => user.userID == userID);
+    return callInfo.callees.firstWhere((user) => user.userID == userID,
+        orElse: () => ZegoUserInfo.empty());
   }
 
   void startHeartbeatTimer() {
@@ -268,7 +295,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       return;
     }
 
-    var callee = callInfo.callees.firstWhere((user) => user.userID == calleeID);
+    var callee = callInfo.callees.firstWhere((user) => user.userID == calleeID,
+        orElse: () => ZegoUserInfo.empty());
 
     cancelCallTimer();
     startHeartbeatTimer();
@@ -288,7 +316,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     if (status != LocalUserStatus.outgoing) {
       return;
     }
-    var callee = callInfo.callees.firstWhere((user) => user.userID == calleeID);
+    var callee = callInfo.callees.firstWhere((user) => user.userID == calleeID,
+        orElse: () => ZegoUserInfo.empty());
 
     status = LocalUserStatus.free;
     callInfo = ZegoCallInfo.empty();
@@ -315,7 +344,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     }
     if (callInfo.caller.userID != userID &&
         callInfo.callees
-            .firstWhere((user) => user.userID == userID)
+            .firstWhere((user) => user.userID == userID,
+                orElse: () => ZegoUserInfo.empty())
             .isEmpty()) {
       // the user ended call is not caller or callees
       return;

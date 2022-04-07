@@ -15,8 +15,9 @@ const sendButtonText = TextStyle(
 );
 
 class InputWidget extends HookWidget {
-  InputWidget({required this.tempEditController, Key? key}) : super(key: key);
-  TextEditingController tempEditController;
+  const InputWidget({required this.tempEditController, Key? key})
+      : super(key: key);
+  final TextEditingController tempEditController;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,8 @@ class InputWidget extends HookWidget {
         _areFieldsEmpty.value = editController.text.toString().isEmpty;
         tempEditController.text = editController.text;
       });
+
+      return null;
     }, [editController]);
 
     return Scaffold(

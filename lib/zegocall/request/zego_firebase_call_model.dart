@@ -152,6 +152,7 @@ class ZegoFirebaseCallModel {
   }
 
   FirebaseCallUser getUser(String userID) {
-    return users.firstWhere((user) => user.userID == userID);
+    return users.firstWhere((user) => user.userID == userID,
+        orElse: () => FirebaseCallUser.empty());
   }
 }

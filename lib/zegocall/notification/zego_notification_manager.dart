@@ -1,19 +1,24 @@
 // Dart imports:
+import 'dart:async';
 import 'dart:developer' as developer;
+import 'dart:io';
 import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 // Project imports:
+import '../../utils/styles.dart';
 import '../core/manager/zego_service_manager.dart';
-import '../core/zego_call_defines.dart';
 import '../core/model/zego_user_info.dart';
+import '../core/zego_call_defines.dart';
 import 'zego_notification_call_model.dart';
 
 const firebaseChannelGroupName = 'firebase_channel_group';
@@ -21,6 +26,10 @@ const firebaseChannelKey = 'firebase_channel';
 
 class ZegoNotificationManager {
   static var shared = ZegoNotificationManager();
+
+  bool isRingTimerRunning = false;
+  AudioPlayer? audioPlayer;
+  late AudioCache audioCache;
 
   void init() {
     AwesomeNotifications()
@@ -48,6 +57,17 @@ class ZegoNotificationManager {
             ],
             debug: true)
         .then(onInitFinished);
+
+    audioCache = AudioCache(
+      prefix: 'assets/audio/',
+      fixedPlayer: AudioPlayer()..setReleaseMode(ReleaseMode.STOP),
+    );
+  }
+
+  void uninit() {
+    stopRing();
+
+    audioCache.clearAll();
   }
 
   void onInitFinished(bool initResult) async {
@@ -57,6 +77,12 @@ class ZegoNotificationManager {
     FirebaseMessaging.onBackgroundMessage(onFirebaseBackgroundMessage);
 
     listenAwesomeNotification();
+  }
+
+  void stopRing() async {
+    isRingTimerRunning = false;
+
+    await audioPlayer?.release();
   }
 
   void requestFirebaseMessagePermission() async {
@@ -89,9 +115,7 @@ class ZegoNotificationManager {
       if (!isAllowed) {
         developer
             .log('[AwesomeNotifications] requestPermissionToSendNotifications');
-        // This is just a basic example. For real apps, you must show some
-        // friendly dialog box before call the request method.
-        // This is very important to not harm the user experience
+
         AwesomeNotifications()
             .requestPermissionToSendNotifications()
             .then((bool hasPermission) {
@@ -124,11 +148,32 @@ class ZegoNotificationManager {
   }
 
   Future<void> onFirebaseForegroundMessage(RemoteMessage message) async {
+    // for more reliable, faster notification in foreground
+    // use listener in firebase manager
+    // return;
+
     developer.log("[firebase] foreground message: $message");
     onFirebaseRemoteMessageReceive(message);
   }
 
-  void onFirebaseRemoteMessageReceive(RemoteMessage message) {
+  Future<void> onFirebaseRemoteMessageReceive(RemoteMessage message) async {
+    if (isRingTimerRunning) {
+      return;
+    }
+
+    isRingTimerRunning = true;
+    audioCache.loop(callRingName).then((player) => audioPlayer = player);
+
+    Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
+      if (!isRingTimerRunning) {
+        audioPlayer?.stop();
+
+        timer.cancel();
+      }
+
+      Vibrate.vibrate();
+    });
+
     developer.log('[firebase] remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
 
@@ -142,6 +187,8 @@ class ZegoNotificationManager {
             "",
         NOTIFICATION_BODY: "${notificationModel.callerName} Calling...",
         NOTIFICATION_PAYLOAD: notificationModel.toMap(),
+        NOTIFICATION_PLAY_SOUND: false,
+        NOTIFICATION_ENABLE_VIBRATION: false,
       }
     };
     developer.log(

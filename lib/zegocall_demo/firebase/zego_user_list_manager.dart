@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:developer';
+
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
@@ -6,8 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-import 'package:zego_call_flutter/zegocall/request/zego_firebase_manager.dart';
 import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
 
 class ZegoUserListManager extends ChangeNotifier {
@@ -17,15 +18,15 @@ class ZegoUserListManager extends ChangeNotifier {
   Map<String, DemoUserInfo> userDic = <String, DemoUserInfo>{};
 
   void init() {
-    getOnlineUsers();
-    addOnlineUsersListener();
+    addOnlineUsersValueListener();
+    addOnlineUsersAddedListener();
   }
 
   DemoUserInfo getUserInfoByID(String userID) {
     return userDic[userID] ?? DemoUserInfo.empty();
   }
 
-  void getOnlineUsers() {
+  void addOnlineUsersValueListener() {
     FirebaseDatabase.instance
         .ref()
         .child('online_user')
@@ -36,7 +37,7 @@ class ZegoUserListManager extends ChangeNotifier {
       userDic.clear();
 
       var map = event.snapshot.value as Map<dynamic, dynamic>?;
-      print('[firebase] getOnlineUsers: $map');
+      log('[firebase] getOnlineUsers: $map');
       if (map != null) {
         var currentUser = FirebaseAuth.instance.currentUser!;
 
@@ -54,14 +55,14 @@ class ZegoUserListManager extends ChangeNotifier {
     });
   }
 
-  void addOnlineUsersListener() {
+  void addOnlineUsersAddedListener() {
     FirebaseDatabase.instance
         .ref()
         .child('online_user')
         .onChildAdded
         .listen((event) {
       var map = event.snapshot.value as Map<dynamic, dynamic>?;
-      print('[firebase] online_user add :$map');
+      log('[firebase] online_user add :$map');
       if (map != null) {
         var currentUser = FirebaseAuth.instance.currentUser!;
 
@@ -87,7 +88,7 @@ class ZegoUserListManager extends ChangeNotifier {
         .onChildRemoved
         .listen((event) {
       var map = event.snapshot.value as Map<dynamic, dynamic>?;
-      print('[firebase] online_user removed :$map');
+      log('[firebase] online_user removed :$map');
       if (map != null) {
         var userID = map['user_id'] as String? ?? "";
 

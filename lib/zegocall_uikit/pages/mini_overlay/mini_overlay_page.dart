@@ -1,4 +1,7 @@
 // Dart imports:
+
+// Dart imports:
+import 'dart:developer' as developer;
 import 'dart:math';
 
 // Flutter imports:
@@ -11,10 +14,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/delegate/zego_call_service_delegate.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
+import '../../../zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/zego_call_defines.dart';
 import 'mini_overlay_be_invite_frame.dart';
 import 'mini_overlay_page_delegate_notifier.dart';
 import 'mini_overlay_state.dart';
@@ -215,7 +218,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
   }
 
   void onMachineStateChanged(event) {
-    print(
+    developer.log(
         '[state machine] mini overlay page : from ${event.source} to ${event.target}');
 
     updatePage();
@@ -279,4 +282,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage>
     delegateNotifier.onPageReceiveCallEnded = null;
     delegateNotifier.onPageReceiveCallTimeout = null;
   }
+
+  @override
+  void onCallingStateUpdated(ZegoCallingState state) {}
 }

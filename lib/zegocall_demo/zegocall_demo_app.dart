@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/notification/zego_notification_manager.dart';
 import './../zegocall/core/manager/zego_service_manager.dart';
 import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
 import './constants/zego_page_constant.dart';
@@ -28,7 +29,7 @@ class ZegoApp extends StatefulWidget {
   _ZegoAppState createState() => _ZegoAppState();
 }
 
-class _ZegoAppState extends State<ZegoApp> {
+class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable(); //  always bright
@@ -58,6 +59,21 @@ class _ZegoAppState extends State<ZegoApp> {
         ));
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (AppLifecycleState.detached == state) {
+      WidgetsBinding.instance?.removeObserver(this);
+      ZegoNotificationManager.shared.uninit();
+    }
+  }
+
   MaterialApp materialApp() {
     return MaterialApp(
       title: "ZegoCall",
@@ -79,7 +95,7 @@ class _ZegoAppState extends State<ZegoApp> {
         return Stack(
           children: [
             child!,
-            MiniOverlayPage(),
+            const MiniOverlayPage(),
           ],
         );
       },

@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 // Package imports:
@@ -8,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
-import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import '../command/zego_request_protocol.dart';
@@ -35,7 +35,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
   @override
   Future<RequestResult> request(
       String path, RequestParameterType parameters) async {
-    print('[FireBase call] path:$path, parameters:$parameters');
+    log('[FireBase call] path:$path, parameters:$parameters');
 
     if (!functionMap.containsKey(path)) {
       return Failure(ZegoError.firebasePathNotExist);
@@ -45,10 +45,16 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
   }
 
   void init() {
-    addConnectedListener();
+    user = FirebaseAuth.instance.currentUser;
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      user = user;
 
-    FirebaseAuth.instance.authStateChanges().listen((event) {
-      user = event;
+      if(null != user) {
+        addFcmTokenToDatabase(user!);
+        addIncomingCallListener();
+      } else {
+        resetData();
+      }
     });
 
     functionMap[apiStartCall] = callUsers;
@@ -216,17 +222,6 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
 
   void addFcmTokenToDatabase(User user) {
     addFcmToken(User user, String token) {
-      var data = {
-        "user_id": user.uid,
-        "display_name": user.displayName,
-        "token_id": token,
-        "last_changed": DateTime.now().millisecondsSinceEpoch
-      };
-      var userRef =
-          FirebaseDatabase.instance.ref('online_user').child(user.uid);
-      userRef.set(data);
-      userRef.onDisconnect().remove();
-
       var platform = "android";
       if (Platform.isIOS) {
         platform = "ios";
@@ -247,53 +242,10 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       FirebaseMessaging.instance.getToken().then((token) {
         fcmToken = token ?? "";
         addFcmToken(user, fcmToken);
-        addFcmTokenListener();
       });
     } else {
       addFcmToken(user, fcmToken);
     }
-  }
-
-  void addConnectedListener() {
-    final connectedRef = FirebaseDatabase.instance.ref(".info/connected");
-    connectedListenerSubscription = connectedRef.onValue.listen((event) async {
-      var snapshotValue = event.snapshot.value;
-      print('[firebase] .info/connected onValue: $snapshotValue');
-
-      final connected = snapshotValue as bool? ?? false;
-      if (!connected) {
-        return;
-      }
-      if (user == null) {
-        return;
-      }
-      addFcmTokenToDatabase(user!);
-      addIncomingCallListener();
-    });
-  }
-
-  void addFcmTokenListener() {
-    fcmTokenListenerSubscription = FirebaseDatabase.instance
-        .ref('online_user')
-        .child(user!.uid)
-        .child('token_id')
-        .onValue
-        .listen((DatabaseEvent event) async {
-      var snapshotValue = event.snapshot.value;
-      print('[firebase] fcm token onValue: $snapshotValue');
-
-      var token = snapshotValue ?? "";
-      if (token == fcmToken) {
-        return;
-      }
-
-      await FirebaseAuth.instance.signOut();
-      resetData(false);
-
-      ZegoNotifyListenerParameter parameter = {};
-      parameter["error"] = 1;
-      ZegoListenerManager.shared.receiveUpdate(notifyUserError, parameter);
-    });
   }
 
   void addIncomingCallListener() {
@@ -302,9 +254,13 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .onChildAdded
         .listen((DatabaseEvent event) async {
       var snapshotValue = event.snapshot.value;
-      print('[firebase] call onChildAdded: $snapshotValue');
 
       var dict = snapshotValue as Map<dynamic, dynamic>;
+      log('[firebase] call onChildAdded: $dict');
+      if(! dict.containsKey('call_status')) {
+        return;
+      }
+
       var callStatus = FirebaseCallStatusExtension
           .mapValue[dict['call_status'] as int] as FirebaseCallStatus;
       if (callStatus != FirebaseCallStatus.connecting) {
@@ -316,8 +272,9 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       if (firebaseUser.userID != firebaseUser.callerID) {
         return;
       }
-      var caller =
-          model.users.firstWhere((user) => user.callerID == user.userID);
+      var caller = model.users.firstWhere(
+          (user) => user.callerID == user.userID,
+          orElse: () => FirebaseCallUser.empty());
       if (caller.isEmpty()) {
         return;
       }
@@ -356,9 +313,13 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .onValue
         .listen((DatabaseEvent event) async {
       var snapshotValue = event.snapshot.value;
-      print('[firebase] call onValue: $snapshotValue');
 
       var dict = snapshotValue as Map<dynamic, dynamic>;
+      log('[firebase] call onValue: $dict');
+      if(! dict.containsKey('call_status')) {
+        return;
+      }
+
       var callStatus = FirebaseCallStatusExtension
           .mapValue[dict['call_status'] as int] as FirebaseCallStatus;
       if (callStatus == FirebaseCallStatus.connecting) {
@@ -387,8 +348,9 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
           firebaseUser.status == FirebaseCallStatus.calling &&
           callModel.callStatus == FirebaseCallStatus.connecting) {
         // MARK: - caller receive call accept
-        var callee = model.users
-            .firstWhere((user) => user.userID != firebaseUser.userID);
+        var callee = model.users.firstWhere(
+            (user) => user.userID != firebaseUser.userID,
+            orElse: () => FirebaseCallUser.empty());
         if (callee.isEmpty()) {
           return;
         }
@@ -404,8 +366,9 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
               firebaseUser.status == FirebaseCallStatus.busy) &&
           callModel.callStatus == FirebaseCallStatus.connecting) {
         // MARK: - caller receive call decline
-        var callee = model.users
-            .firstWhere((user) => user.userID != firebaseUser.userID);
+        var callee = model.users.firstWhere(
+            (user) => user.userID != firebaseUser.userID,
+            orElse: () => FirebaseCallUser.empty());
         if (callee.isEmpty()) {
           return;
         }
@@ -426,9 +389,11 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       if (model.callStatus == FirebaseCallStatus.ended &&
           callModel.callStatus == FirebaseCallStatus.calling) {
         // caller and callee receive call ended
-        var other = model.users.firstWhere((user) =>
-            user.userID != firebaseUser.userID &&
-            user.status != FirebaseCallStatus.ended);
+        var other = model.users.firstWhere(
+            (user) =>
+                user.userID != firebaseUser.userID &&
+                user.status != FirebaseCallStatus.ended,
+            orElse: () => FirebaseCallUser.empty());
         parameter['call_id'] = model.callID;
         parameter['user_id'] = other.userID;
         ZegoListenerManager.shared.receiveUpdate(notifyCallEnd, parameter);
@@ -448,7 +413,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     });
   }
 
-  void resetData(bool removeUserData) {
+  void resetData() {
     if (callListenerSubscription != null) {
       callListenerSubscription!.cancel();
     }
@@ -461,12 +426,6 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
           .remove();
 
       fcmToken = "";
-
-      FirebaseDatabase.instance.ref('online_user').onDisconnect().cancel();
-
-      if (removeUserData) {
-        FirebaseDatabase.instance.ref('online_user').child(user!.uid).remove();
-      }
 
       user = null;
     }

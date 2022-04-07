@@ -3,15 +3,17 @@ import '../model/zego_user_info.dart';
 import '../zego_call_defines.dart';
 
 mixin ZegoCallServiceDelegate {
-  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type);
+  void onReceiveCallInvite(ZegoUserInfo user, ZegoCallType type);
 
-  void onReceiveCallCanceled(ZegoUserInfo info);
+  void onReceiveCallCanceled(ZegoUserInfo user);
 
-  void onReceiveCallAccept(ZegoUserInfo info);
+  void onReceiveCallAccept(ZegoUserInfo user);
 
-  void onReceiveCallDecline(ZegoUserInfo info, ZegoDeclineType type);
+  void onReceiveCallDecline(ZegoUserInfo user, ZegoDeclineType type);
 
   void onReceiveCallEnded();
 
-  void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type);
+  void onReceiveCallTimeout(ZegoUserInfo user, ZegoCallTimeoutType type);
+
+  void onCallingStateUpdated(ZegoCallingState state);
 }

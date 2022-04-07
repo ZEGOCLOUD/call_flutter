@@ -1,5 +1,5 @@
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/model/zego_user_info.dart';
 import './../../command/zego_command.dart';
 import './../../core/zego_call_defines.dart';
 

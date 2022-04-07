@@ -42,6 +42,8 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
     super.initState();
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
+      checkPermission();
+
       FirebaseAuth.instance.authStateChanges().listen((event) {
         if (event != null) {
           Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
@@ -173,7 +175,6 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
 
   void onLogInGooglePressed() {
     if (isPolicyCheck) {
-      checkPermission();
       _signInWithGoogle();
     } else {
       Fluttertoast.showToast(
