@@ -1,5 +1,3 @@
-
-
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
@@ -54,9 +52,9 @@ abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
 
   void enableCamera(bool enable);
 
-  void muteMic(bool mute);
+  void enableMic(bool enable);
 
-  Future<bool> isMicMuted();
+  Future<bool> isMicEnabled();
 
   void useFrontCamera(bool enable, {ZegoPublishChannel? channel});
 
@@ -65,4 +63,6 @@ abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
   Future<bool> isSpeakerEnabled();
 
   void setBestConfig();
+
+  void resetDeviceConfig();
 }

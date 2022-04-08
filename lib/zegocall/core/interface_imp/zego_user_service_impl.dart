@@ -34,12 +34,13 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   }
 
   @override
-  Future<RequestResult> getToken(String userID) async {
-    var command = ZegoTokenCommand(userID);
+  Future<RequestResult> getToken(
+      String userID, int effectiveTimeInSeconds) async {
+    var command = ZegoTokenCommand(userID, effectiveTimeInSeconds);
 
     var result = await command.execute();
     if (result.isSuccess) {
-      var dict = result as Map<String, dynamic>;
+      var dict = result.success as Map<String, dynamic>;
       return Success(dict['token'] as String);
     }
     return Failure(ZegoError.failed);

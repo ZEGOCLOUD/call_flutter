@@ -4,11 +4,11 @@ import 'dart:convert';
 // Flutter imports:
 import 'package:flutter/services.dart' show rootBundle;
 
-class SecretReader {
+class ZegoSecretReader {
   int _appID = 0;
   String _serverSecret = "";
 
-  static SecretReader? _instance;
+  static ZegoSecretReader? _instance;
 
   int get appID {
     return _appID;
@@ -25,15 +25,14 @@ class SecretReader {
     _serverSecret = dataObj['serverSecret'];
   }
 
-  SecretReader._internal();
+  ZegoSecretReader._internal();
 
-  factory SecretReader() => _getInstance();
+  factory ZegoSecretReader() => _getInstance();
 
-  static SecretReader get instance => _getInstance();
+  static ZegoSecretReader get instance => _getInstance();
 
   static _getInstance() {
-    // 只能有一个实例
-    _instance ??= SecretReader._internal();
+    _instance ??= ZegoSecretReader._internal();
     return _instance;
   }
 }

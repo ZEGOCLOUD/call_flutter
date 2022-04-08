@@ -18,8 +18,8 @@ class OnlineVoiceBottomToolBar extends HookWidget {
   @override
   Widget build(BuildContext context) {
     var deviceService = context.read<IZegoDeviceService>();
-    var isMicMuted = useState(false);
-    deviceService.isMicMuted().then((value) => {isMicMuted.value = value});
+    var isMicEnabled = useState(true);
+    deviceService.isMicEnabled().then((value) => {isMicEnabled.value = value});
     var isSpeakerEnabled = useState(false);
     deviceService
         .isSpeakerEnabled()
@@ -36,14 +36,14 @@ class OnlineVoiceBottomToolBar extends HookWidget {
             CallingCalleeBottomToolBarButton(
               iconWidth: 120.w,
               iconHeight: 120.h,
-              iconURL: isMicMuted.value
-                  ? StyleIconUrls.toolbarBottomMicClosed
-                  : StyleIconUrls.toolbarBottomMicOpen,
+              iconURL: isMicEnabled.value
+                  ? StyleIconUrls.toolbarBottomMicOpen
+                  : StyleIconUrls.toolbarBottomMicClosed,
               onTap: () async {
                 var deviceDevice = context.read<IZegoDeviceService>();
-                deviceDevice.muteMic(!isMicMuted.value);
+                deviceDevice.enableMic(isMicEnabled.value);
 
-                isMicMuted.value = !isMicMuted.value;
+                isMicEnabled.value = !isMicEnabled.value;
               },
             ),
             CallingCalleeBottomToolBarButton(
@@ -83,8 +83,8 @@ class OnlineVideoBottomToolBar extends HookWidget {
 
     var deviceService = context.read<IZegoDeviceService>();
     var isFrontCameraUsed = useState(deviceService.isFrontCamera);
-    var isMicMuted = useState(false);
-    deviceService.isMicMuted().then((value) => {isMicMuted.value = value});
+    var isMicEnabled = useState(false);
+    deviceService.isMicEnabled().then((value) => {isMicEnabled.value = value});
     var isSpeakerEnabled = useState(false);
     deviceService
         .isSpeakerEnabled()
@@ -114,14 +114,14 @@ class OnlineVideoBottomToolBar extends HookWidget {
             CallingCalleeBottomToolBarButton(
               iconWidth: 94.w,
               iconHeight: 120.h,
-              iconURL: isMicMuted.value
-                  ? StyleIconUrls.toolbarBottomMicClosed
-                  : StyleIconUrls.toolbarBottomMicOpen,
+              iconURL: isMicEnabled.value
+                  ? StyleIconUrls.toolbarBottomMicOpen
+                  : StyleIconUrls.toolbarBottomMicClosed,
               onTap: () async {
                 var deviceDevice = context.read<IZegoDeviceService>();
-                deviceDevice.muteMic(!isMicMuted.value);
+                deviceDevice.enableMic(isMicEnabled.value);
 
-                isMicMuted.value = !isMicMuted.value;
+                isMicEnabled.value = !isMicEnabled.value;
               },
             ),
             CallingCalleeBottomToolBarButton(

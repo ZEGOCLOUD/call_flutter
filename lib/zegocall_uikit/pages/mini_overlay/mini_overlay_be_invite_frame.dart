@@ -8,11 +8,8 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/user_avatar.dart';
-import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/interface/zego_call_service.dart';
-import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
-import 'mini_overlay_page_delegate_notifier.dart';
 
 class MiniOverlayBeInviteFrame extends StatefulWidget {
   const MiniOverlayBeInviteFrame(
@@ -21,8 +18,7 @@ class MiniOverlayBeInviteFrame extends StatefulWidget {
       required this.callerID,
       required this.callType,
       required this.onDecline,
-      required this.onAccept,
-      required this.delegateNotifier})
+      required this.onAccept})
       : super(key: key);
 
   final String callerID;
@@ -30,51 +26,12 @@ class MiniOverlayBeInviteFrame extends StatefulWidget {
   final ZegoCallType callType;
   final VoidCallback onDecline;
   final VoidCallback onAccept;
-  final ZegoOverlayPageDelegatePageNotifier delegateNotifier;
 
   @override
   _MiniOverlayBeInviteFrame createState() => _MiniOverlayBeInviteFrame();
 }
 
-class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame>
-    with ZegoCallServiceDelegate {
-  @override
-  void initState() {
-    super.initState();
-
-    initDelegateNotifier();
-  }
-
-  @override
-  void onReceiveCallAccept(ZegoUserInfo info) {
-    // TODO: implement onReceiveCallAccept
-  }
-
-  @override
-  void onReceiveCallCanceled(ZegoUserInfo info) {
-    // TODO: implement onReceiveCallCanceled
-  }
-
-  @override
-  void onReceiveCallDecline(ZegoUserInfo info, ZegoDeclineType type) {
-    // TODO: implement onReceiveCallDecline
-  }
-
-  @override
-  void onReceiveCallEnded() {
-    // TODO: implement onReceiveCallEnded
-  }
-
-  @override
-  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type) {
-    // TODO: implement onReceiveCallInvite
-  }
-
-  @override
-  void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {
-    // TODO: implement onReceiveCallTimeout
-  }
-
+class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame> {
   @override
   Widget build(BuildContext context) {
     var avatarIndex = getUserAvatarIndex(widget.callerName);
@@ -133,15 +90,6 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame>
     );
   }
 
-  void initDelegateNotifier() {
-    widget.delegateNotifier.onPageReceiveCallInvite = onReceiveCallInvite;
-    widget.delegateNotifier.onPageReceiveCallCanceled = onReceiveCallCanceled;
-    widget.delegateNotifier.onPageReceiveCallAccept = onReceiveCallAccept;
-    widget.delegateNotifier.onPageReceiveCallDecline = onReceiveCallDecline;
-    widget.delegateNotifier.onPageReceiveCallEnded = onReceiveCallEnded;
-    widget.delegateNotifier.onPageReceiveCallTimeout = onReceiveCallTimeout;
-  }
-
   String imageURLByCallType(ZegoCallType callType) {
     switch (callType) {
       case ZegoCallType.kZegoCallTypeVoice:
@@ -158,9 +106,5 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame>
       case ZegoCallType.kZegoCallTypeVideo:
         return "Zego Video Call";
     }
-  }
-
-  @override
-  void onCallingStateUpdated(ZegoCallingState state) {
   }
 }

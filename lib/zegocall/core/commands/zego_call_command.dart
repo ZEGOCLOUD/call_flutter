@@ -9,7 +9,7 @@ class ZegoCallCommand extends ZegoCommand {
       : super(apiStartCall) {
     parameters["call_id"] = callID;
     parameters["caller"] = caller;
-    parameters["callee"] = callees;
-    parameters["type"] = callType;
+    parameters["callees"] = callees;
+    parameters["type"] = callType.id;
   }
 }

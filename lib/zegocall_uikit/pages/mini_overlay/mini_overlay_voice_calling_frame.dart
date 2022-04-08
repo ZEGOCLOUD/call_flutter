@@ -12,10 +12,6 @@ import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
-import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
-import '../../../zegocall/core/model/zego_user_info.dart';
-import '../../../zegocall/core/zego_call_defines.dart';
-import 'mini_overlay_page_delegate_notifier.dart';
 import 'mini_overlay_state.dart';
 
 class MiniOverlayVoiceCallingFrame extends StatefulWidget {
@@ -23,7 +19,6 @@ class MiniOverlayVoiceCallingFrame extends StatefulWidget {
       {required this.onIdleStateEntry,
       this.waitingDuration = 60,
       this.defaultState = MiniOverlayPageVoiceCallingState.kIdle,
-      required this.delegateNotifier,
       Key? key})
       : super(key: key);
 
@@ -31,7 +26,6 @@ class MiniOverlayVoiceCallingFrame extends StatefulWidget {
   final int waitingDuration;
   final MiniOverlayPageVoiceCallingState defaultState;
   final VoidCallback onIdleStateEntry;
-  final ZegoOverlayPageDelegatePageNotifier delegateNotifier;
 
   @override
   _MiniOverlayVoiceCallingFrameState createState() =>
@@ -39,7 +33,7 @@ class MiniOverlayVoiceCallingFrame extends StatefulWidget {
 }
 
 class _MiniOverlayVoiceCallingFrameState
-    extends State<MiniOverlayVoiceCallingFrame> with ZegoCallServiceDelegate {
+    extends State<MiniOverlayVoiceCallingFrame> {
   MiniOverlayPageVoiceCallingState currentState =
       MiniOverlayPageVoiceCallingState.kIdle;
 
@@ -55,38 +49,10 @@ class _MiniOverlayVoiceCallingFrameState
   void initState() {
     super.initState();
 
-    initDelegateNotifier();
-
     initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
     });
-  }
-
-  @override
-  void onReceiveCallAccept(ZegoUserInfo info) {
-    stateOnline.enter();
-  }
-
-  @override
-  void onReceiveCallCanceled(ZegoUserInfo info) {
-    stateDeclined.enter();
-  }
-
-  @override
-  void onReceiveCallDecline(ZegoUserInfo info, ZegoDeclineType type) {}
-
-  @override
-  void onReceiveCallEnded() {
-    stateEnded.enter();
-  }
-
-  @override
-  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type) {}
-
-  @override
-  void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {
-    stateMissed.enter();
   }
 
   @override
@@ -109,15 +75,6 @@ class _MiniOverlayVoiceCallingFrameState
                 style: StyleConstant.voiceCallingText),
           ],
         ));
-  }
-
-  void initDelegateNotifier() {
-    widget.delegateNotifier.onPageReceiveCallInvite = onReceiveCallInvite;
-    widget.delegateNotifier.onPageReceiveCallCanceled = onReceiveCallCanceled;
-    widget.delegateNotifier.onPageReceiveCallAccept = onReceiveCallAccept;
-    widget.delegateNotifier.onPageReceiveCallDecline = onReceiveCallDecline;
-    widget.delegateNotifier.onPageReceiveCallEnded = onReceiveCallEnded;
-    widget.delegateNotifier.onPageReceiveCallTimeout = onReceiveCallTimeout;
   }
 
   void initStateMachine() {
@@ -167,7 +124,4 @@ class _MiniOverlayVoiceCallingFrameState
 
     return stateTextMap[state]!;
   }
-
-  @override
-  void onCallingStateUpdated(ZegoCallingState state) {}
 }

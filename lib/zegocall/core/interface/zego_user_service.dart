@@ -20,7 +20,7 @@ abstract class IZegoUserService extends ChangeNotifier with ZegoService {
 
   void setLocalUser(String userID, String userName);
 
-  Future<RequestResult> getToken(String userID);
+  Future<RequestResult> getToken(String userID, int effectiveTimeInSeconds);
 
   ZegoUserInfo getUserInfoByID(String userID);
 }

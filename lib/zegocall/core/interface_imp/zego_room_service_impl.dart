@@ -20,10 +20,6 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
       return -1;
     }
 
-    //  call test
-    token = "04AAAAAGI+14sAEEA3w3mYVYquqWbKCtSJwt4AgJsEEWk8/l64adBsuW+jxEM"
-        "/PGdcPPbgkO+iqhy0JXo7sJDPGP2Mxiw+gdRNmwbywyOuFeEW5bOLgeV78dji/MlH0IS3q2f/Lmj1/gQn42JsykFo8aiupDRsS4VWz/Eu6ABKzqeu6W7Kv89qoo8dqzzoPs3urU2dGP7gkH+kkzvp";
-
     roomInfo.roomID = roomID;
 
     // login rtc room
@@ -48,8 +44,8 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
 
   @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) async {
-    var result = await ZegoServiceManager.shared.userService
-        .getToken(ZegoServiceManager.shared.userService.localUserInfo.userID);
+    var result = await ZegoServiceManager.shared.userService.getToken(
+        ZegoServiceManager.shared.userService.localUserInfo.userID, 24 * 3600);
     if (result.isSuccess) {
       ZegoExpressEngine.instance.renewToken(roomID, result.success as String);
     }

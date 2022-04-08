@@ -39,7 +39,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       ZegoUserInfo callee, String token, ZegoCallType type) async {
     if (callee.userID.isEmpty) {
       log('[call service] call user, user id is empty');
-      return -1;
+      return ZegoError.failed.id;
     }
 
     var caller = ZegoServiceManager.shared.userService.localUserInfo;
@@ -65,14 +65,14 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       return result.failure.id;
     }
 
-    return 0;
+    return ZegoError.success.id;
   }
 
   @override
   Future<int> cancelCall() async {
     if (callInfo.callees.isEmpty) {
       log('[call service] cancel call, callees is empty');
-      return -1;
+      return ZegoError.failed.id;
     }
 
     var calleeID = callInfo.callees.first.userID;
@@ -94,7 +94,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     } else {
       return result.failure.id;
     }
-    return 0;
+
+    return ZegoError.success.id;
   }
 
   @override
@@ -120,7 +121,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     } else {
       return result.failure.id;
     }
-    return 0;
+
+    return ZegoError.success.id;
   }
 
   @override
@@ -143,12 +145,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     var command = ZegoDeclineCallCommand(userID, callID, callerID, type);
 
     var result = await command.execute();
-    if (result.isSuccess) {
-    } else {
-      return result.failure.id;
-    }
-
-    return 0;
+    return result.isSuccess ? ZegoError.success.id : result.failure.id;
   }
 
   @override
@@ -163,12 +160,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     var command = ZegoEndCallCommand(callerUserID, callInfo.callID);
 
     var result = await command.execute();
-    if (result.isSuccess) {
-    } else {
-      return result.failure.id;
-    }
-
-    return 0;
+    return result.isSuccess ? ZegoError.success.id : result.failure.id;
   }
 
   @override
@@ -206,7 +198,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   }
 
   String generateCallID(String userID) {
-    return userID + "${DateTime.now().millisecondsSinceEpoch * 1000}";
+    return userID + "${DateTime.now().millisecondsSinceEpoch}";
   }
 
   ZegoUserInfo getUser(String userID) {

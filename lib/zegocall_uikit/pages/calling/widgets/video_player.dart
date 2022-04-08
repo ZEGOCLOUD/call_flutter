@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/interface/zego_device_service.dart';
+import 'package:zego_call_flutter/zegocall/core/interface/zego_user_service.dart';
 import '../../../../zegocall/core/interface/zego_stream_service.dart';
 import 'avatar_background.dart';
 
@@ -69,8 +71,21 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
     return ZegoExpressEngine.instance.createPlatformView((int playingViewID) {
       playingViewID = playingViewID;
 
+      var userService = context.read<IZegoUserService>();
       var streamService = context.read<IZegoStreamService>();
-      streamService.startPlaying(widget.userID, playingViewID);
+
+      if (userService.localUserInfo.userID == widget.userID) {
+        var userInfo = userService.getUserInfoByID(widget.userID);
+
+        var deviceService = context.read<IZegoDeviceService>();
+        deviceService.enableCamera(userInfo.camera);
+        deviceService.enableMic(userInfo.mic);
+        deviceService.useFrontCamera(true);
+
+        streamService.startPreview(playingViewID);
+      } else {
+        streamService.startPlaying(widget.userID, playingViewID);
+      }
     });
   }
 }

@@ -428,6 +428,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         return;
       }
 
+      // if the start time of call is beyond 60s means this call is ended.
       var startTime = caller.startTime;
       var timeInterval = DateTime.now().millisecondsSinceEpoch - startTime;
       if (timeInterval > 60 * 1000) {

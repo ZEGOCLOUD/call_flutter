@@ -12,7 +12,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/firebase/zego_user_list_manager.dart';
+import 'zego_user_list_manager.dart';
 
 typedef LoginResult = Result<User, int>;
 

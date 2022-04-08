@@ -10,7 +10,7 @@ import 'zego_request_protocol.dart';
 class ZegoCommandManager extends ChangeNotifier {
   static var shared = ZegoCommandManager();
 
-  ZegoRequestProtocol service = ZegoFireBaseManager();
+  ZegoRequestProtocol service = ZegoFireBaseManager.shared;
 
   Future<RequestResult> execute(ZegoCommand command) async {
     return service.request(command.path, command.parameters);

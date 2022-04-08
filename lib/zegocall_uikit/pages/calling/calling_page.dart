@@ -12,9 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
-import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/interface/zego_user_service.dart';
-import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import 'calling_callee_view.dart';
@@ -31,8 +29,7 @@ class CallingPage extends StatefulWidget {
   _CallingPageState createState() => _CallingPageState();
 }
 
-class _CallingPageState extends State<CallingPage>
-    with ZegoCallServiceDelegate {
+class _CallingPageState extends State<CallingPage> {
   CallingState currentState = CallingState.kIdle;
 
   final machine = sm.Machine<CallingState>();
@@ -50,21 +47,12 @@ class _CallingPageState extends State<CallingPage>
   void initState() {
     super.initState();
 
-    ZegoServiceManager.shared.callService.delegate = this;
-
     initStateMachine();
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.start();
 
       machine.current = stateOnlineVideo; // call test
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    ZegoServiceManager.shared.callService.delegate = null;
   }
 
   void initStateMachine() {
@@ -125,39 +113,4 @@ class _CallingPageState extends State<CallingPage>
     }
   }
 
-  @override
-  void onReceiveCallAccept(ZegoUserInfo info) {
-    // TODO: implement onReceiveCallAccept
-  }
-
-  @override
-  void onReceiveCallCanceled(ZegoUserInfo info) {
-    stateIdle.enter();
-  }
-
-  @override
-  void onReceiveCallDecline(ZegoUserInfo info, ZegoDeclineType type) {
-    // TODO: implement onReceiveCallDecline
-  }
-
-  @override
-  void onReceiveCallEnded() {
-    stateIdle.enter();
-  }
-
-  @override
-  void onReceiveCallInvite(ZegoUserInfo info, ZegoCallType type) {
-    // TODO update UI info
-    if (type == ZegoCallType.kZegoCallTypeVideo) {
-      stateOnlineVideo.enter();
-    } else {
-      stateOnlineVoice.enter();
-    }
-  }
-
-  @override
-  void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {}
-
-  @override
-  void onCallingStateUpdated(ZegoCallingState state) {}
 }

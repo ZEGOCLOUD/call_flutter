@@ -19,18 +19,23 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   }
 
   @override
-  void startPlaying(String userID, int playingViewID) {
-    ZegoCanvas canvas = ZegoCanvas.view(playingViewID);
+  void startPreview(int viewID) {
+    ZegoCanvas canvas = ZegoCanvas.view(viewID);
     canvas.viewMode = ZegoViewMode.AspectFill;
 
     //  bind stream to view, by stream id and view id
-    if (ZegoServiceManager.shared.userService.localUserInfo.userID == userID) {
-      ZegoExpressEngine.instance
-          .startPreview(canvas: canvas, channel: ZegoPublishChannel.Main);
-    } else {
-      var streamID = generateStreamIDByUserID(userID);
-      ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
-    }
+    ZegoExpressEngine.instance
+        .startPreview(canvas: canvas, channel: ZegoPublishChannel.Main);
+  }
+
+  @override
+  void startPlaying(String userID, int viewID) {
+    ZegoCanvas canvas = ZegoCanvas.view(viewID);
+    canvas.viewMode = ZegoViewMode.AspectFill;
+
+    //  bind stream to view, by stream id and view id
+    var streamID = generateStreamIDByUserID(userID);
+    ZegoExpressEngine.instance.startPlayingStream(streamID, canvas: canvas);
   }
 
   @override

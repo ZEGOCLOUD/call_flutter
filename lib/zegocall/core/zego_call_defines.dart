@@ -69,6 +69,17 @@ enum ZegoCallTimeoutType {
   calling
 }
 
+extension ZegoCallTimeoutTypeExtension on ZegoCallTimeoutType {
+  String get string {
+    switch (this) {
+      case ZegoCallTimeoutType.connecting:
+        return "connecting";
+      case ZegoCallTimeoutType.calling:
+        return "calling";
+    }
+  }
+}
+
 enum ZegoCallingState {
   disconnected,
   connecting,
@@ -84,6 +95,17 @@ extension ZegoCallingStateExtension on ZegoCallingState {
         return 1;
       case ZegoCallingState.connected:
         return 2;
+    }
+  }
+
+  String get string {
+    switch (this) {
+      case ZegoCallingState.disconnected:
+        return "disconnected";
+      case ZegoCallingState.connecting:
+        return "connecting";
+      case ZegoCallingState.connected:
+        return "connected";
     }
   }
 }
@@ -156,6 +178,7 @@ enum LocalUserStatus {
 }
 
 enum ZegoError {
+  success,
   failed,
   paramInvalid,
   firebasePathNotExist,
@@ -164,6 +187,8 @@ enum ZegoError {
 extension ZegoErrorExtension on ZegoError {
   int get id {
     switch (this) {
+      case ZegoError.success:
+        return 0;
       case ZegoError.failed:
         return 1;
       case ZegoError.paramInvalid:
