@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
+import 'package:zego_call_flutter/zegocall_demo/core/zego_token_manager.dart';
 
 // Project imports:
 import 'zego_user_list_manager.dart';
@@ -77,23 +78,24 @@ class ZegoLoginManager extends ChangeNotifier {
           FirebaseDatabase.instance.ref('online_user').child(user.uid);
       userRef.set(data);
       userRef.onDisconnect().remove();
+
+      addFcmTokenListener(user.uid);
     }
 
     if (fcmToken.isEmpty) {
       FirebaseMessaging.instance.getToken().then((token) {
         fcmToken = token ?? "";
         addUser(user, fcmToken);
-        addFcmTokenListener();
       });
     } else {
       addUser(user, fcmToken);
     }
   }
 
-  void addFcmTokenListener() {
+  void addFcmTokenListener(String userID) {
     fcmTokenListenerSubscription = FirebaseDatabase.instance
         .ref('online_user')
-        .child(user!.uid)
+        .child(userID)
         .child('token_id')
         .onValue
         .listen((DatabaseEvent event) async {
@@ -129,6 +131,7 @@ class ZegoLoginManager extends ChangeNotifier {
       }
 
       user = null;
+      ZegoTokenManager.shared.saveToken("", 0);
     }
   }
 }

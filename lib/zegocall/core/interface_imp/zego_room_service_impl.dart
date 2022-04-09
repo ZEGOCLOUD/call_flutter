@@ -22,6 +22,8 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
 
     roomInfo.roomID = roomID;
 
+    ZegoExpressEngine.instance.logoutRoom();
+
     // login rtc room
     var config = ZegoRoomConfig.defaultConfig();
     config.token = token;

@@ -166,6 +166,11 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   @override
   void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
       Map<String, dynamic> extendedData) {
+    if(ZegoServiceManager.shared.roomService.roomInfo.roomID != roomID) {
+      log('[call service] room state update, room id is not equal');
+      return;
+    }
+
     if (ZegoRoomState.Disconnected == state &&
         status == LocalUserStatus.calling) {
       status = LocalUserStatus.free;

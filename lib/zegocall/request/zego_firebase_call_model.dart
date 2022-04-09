@@ -85,6 +85,17 @@ class FirebaseCallUser {
 
   FirebaseCallUser.empty();
 
+  FirebaseCallUser.clone(FirebaseCallUser object) {
+    callerID = object.callerID;
+    userID = object.userID;
+    userName = object.userName;
+    startTime = object.startTime;
+    connectedTime = object.connectedTime;
+    finishTime = object.finishTime;
+    heartbeatTime = object.heartbeatTime;
+    status = object.status;
+  }
+
   bool isEmpty() => userID.isEmpty;
 }
 

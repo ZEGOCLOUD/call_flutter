@@ -112,12 +112,13 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     callModel.users.add(firebaseCaller);
 
     for (var user in callees) {
-      var callee = firebaseCaller;
+      var callee = FirebaseCallUser.clone(firebaseCaller);
       callee.userID = user.userID;
       callee.userName = user.userName;
       callModel.users.add(callee);
     }
 
+    log('call user, call id:$callID, data:${callModel.toMap()}');
     await FirebaseDatabase.instance
         .ref('call')
         .child(callID)
@@ -139,7 +140,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       return Failure(ZegoError.failed);
     }
 
-    if (modelDict.containsKey(callID)) {
+    if (!modelDict.containsKey(callID)) {
       log('[firebase] cancel call, model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
@@ -175,7 +176,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       return Failure(ZegoError.failed);
     }
 
-    if (modelDict.containsKey(callID)) {
+    if (!modelDict.containsKey(callID)) {
       log('[firebase] accept call, model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
@@ -214,7 +215,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       return Failure(ZegoError.failed);
     }
 
-    if (modelDict.containsKey(callID)) {
+    if (!modelDict.containsKey(callID)) {
       log('[firebase] decline call, model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
@@ -238,7 +239,6 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         user.status = (type == ZegoDeclineType.kZegoDeclineTypeDecline)
             ? FirebaseCallStatus.declined
             : FirebaseCallStatus.busy;
-        user.connectedTime = DateTime.now().millisecondsSinceEpoch;
       }
 
       return Transaction.success(model.toMap());
@@ -259,7 +259,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       return Failure(ZegoError.failed);
     }
 
-    if (modelDict.containsKey(callID)) {
+    if (!modelDict.containsKey(callID)) {
       log('[firebase] end call, model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
@@ -297,7 +297,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       return Failure(ZegoError.failed);
     }
 
-    if (modelDict.containsKey(callID)) {
+    if (!modelDict.containsKey(callID)) {
       log('[firebase] heartbeat , model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
@@ -369,9 +369,11 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
           .child(user!.uid)
           .child(token);
       var tokenData = {
-        "device_type": platform,
-        "token_id": fcmToken,
-        "user_id": user!.uid
+        'token': {
+          "device_type": platform,
+          "token_id": fcmToken,
+          "user_id": user!.uid
+        }
       };
       fcmTokenRef.set(tokenData);
     }
@@ -408,15 +410,20 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       var callStatus = FirebaseCallStatusExtension.mapValue[
               callDict['call_status'] as int? ?? FirebaseCallStatus.unknown.id]
           as FirebaseCallStatus;
-      if (callStatus == FirebaseCallStatus.connecting) {
-        log('[firebase] incoming call, call status is connecting');
+      if (callStatus != FirebaseCallStatus.connecting) {
+        log('[firebase] incoming call, call status is not connecting');
         return;
       }
 
       var model = ZegoFirebaseCallModel.fromMap(callDict);
+      if (model.isEmpty()) {
+        log('[firebase] incoming call, model is empty');
+        return;
+      }
       var firebaseUser = model.getUser(user?.uid ?? "");
-      if (firebaseUser.userID != firebaseUser.callerID) {
-        log('[firebase] incoming call, user id is not same as caller id');
+      if (firebaseUser.userID == firebaseUser.callerID) {
+        log('[firebase] incoming call, user id is same as caller id, '
+            '$firebaseUser');
         return;
       }
 
@@ -438,9 +445,9 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       }
 
       if (!modelDict.containsKey(model.callID)) {
+        log('[firebase] incoming call,  model dict does not contain ${model.callID}');
         modelDict[model.callID] = model;
         addCallListener(model.callID);
-        return;
       }
 
       var callerUser = ZegoUserInfo(caller.callerID,
@@ -520,8 +527,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       var callStatus = FirebaseCallStatusExtension.mapValue[
               callDict['call_status'] as int? ?? FirebaseCallStatus.unknown.id]
           as FirebaseCallStatus;
-      if (callStatus != FirebaseCallStatus.connecting) {
-        log('[firebase] call on value changed, call status is not connecting');
+      if (callStatus == FirebaseCallStatus.connecting) {
+        log('[firebase] call on value changed, call status is connecting');
         return;
       }
 
@@ -550,16 +557,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
           oldModel.callStatus == FirebaseCallStatus.connecting) {
         // callee receive call canceled
         onReceiveCanceledNotify(model.callID, myUser.callerID);
-      }
-
-      if (myUser.userID == myUser.callerID &&
+      } else if (myUser.userID == myUser.callerID &&
           myUser.status == FirebaseCallStatus.calling &&
           oldModel.callStatus == FirebaseCallStatus.connecting) {
         // caller receive call accept
         onReceiveAcceptedNotify(model, otherUser.userID);
-      }
-
-      if (myUser.userID == myUser.callerID &&
+      } else if (myUser.userID == myUser.callerID &&
           (myUser.status == FirebaseCallStatus.declined ||
               myUser.status == FirebaseCallStatus.busy) &&
           oldModel.callStatus == FirebaseCallStatus.connecting) {
@@ -572,23 +575,18 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
             ? ZegoDeclineType.kZegoDeclineTypeDecline
             : ZegoDeclineType.kZegoDeclineTypeBusy;
         onReceiveDeclinedNotify(model.callID, otherUser.userID, declineType.id);
-      }
-
-      if (model.callStatus == FirebaseCallStatus.ended &&
+      } else if (model.callStatus == FirebaseCallStatus.ended &&
           oldModel.callStatus == FirebaseCallStatus.calling) {
         // caller and callee receive call ended
         if (otherUser.status != FirebaseCallStatus.ended) {
           return;
         }
         onReceiveEndedNotify(model.callID, otherUser.userID);
-      }
-
-      if (myUser.status == FirebaseCallStatus.connectingTimeout &&
+      } else if (myUser.status == FirebaseCallStatus.connectingTimeout &&
           oldModel.callStatus == FirebaseCallStatus.connecting) {
         // caller or callee receive connecting timeout
 
-      }
-      if (myUser.status == FirebaseCallStatus.connectingTimeout &&
+      } else if (myUser.status == FirebaseCallStatus.connectingTimeout &&
           oldModel.callStatus == FirebaseCallStatus.calling) {
         // caller or callee receive calling timeout
         if (myUser.heartbeatTime > 0 && otherUser.heartbeatTime > 0) {
