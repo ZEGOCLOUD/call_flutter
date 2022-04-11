@@ -3,7 +3,7 @@ import '../model/zego_user_info.dart';
 import '../zego_call_defines.dart';
 
 mixin ZegoCallServiceDelegate {
-  void onReceiveCallInvite(ZegoUserInfo user, ZegoCallType type);
+  void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type);
 
   void onReceiveCallCanceled(ZegoUserInfo user);
 

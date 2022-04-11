@@ -9,6 +9,4 @@ mixin ZegoUserServiceDelegate {
   void onUserInfoUpdate(ZegoUserInfo info);
 
   void onNetworkQuality(String userID, ZegoStreamQualityLevel level);
-
-  void onReceiveUserError(ZegoUserError error);
 }

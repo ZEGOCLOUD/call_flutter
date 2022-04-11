@@ -445,7 +445,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       }
 
       if (!modelDict.containsKey(model.callID)) {
-        log('[firebase] incoming call,  model dict does not contain ${model.callID}');
+        log('[firebase] incoming call,  model dict does not contain ${model.callID}, add to dict.');
         modelDict[model.callID] = model;
         addCallListener(model.callID);
       }
@@ -590,7 +590,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
           oldModel.callStatus == FirebaseCallStatus.calling) {
         // caller or callee receive calling timeout
         if (myUser.heartbeatTime > 0 && otherUser.heartbeatTime > 0) {
-          if (myUser.heartbeatTime - otherUser.heartbeatTime > 30 * 1000) {
+          if (myUser.heartbeatTime - otherUser.heartbeatTime > 60 * 1000) {
             onReceiveTimeoutNotify(model.callID, otherUser.userID);
             event.snapshot.ref
                 .update({"call_status": FirebaseCallStatus.ended.id});

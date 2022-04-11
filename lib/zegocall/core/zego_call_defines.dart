@@ -4,36 +4,6 @@ import 'package:result_type/result_type.dart';
 typedef RequestResult = Result<dynamic, ZegoError>;
 typedef RequestParameterType = Map<String, dynamic>;
 
-enum ZegoUserError {
-  kickOut,
-  tokenExpire,
-}
-
-extension ZegoUserErrorExtension on ZegoUserError {
-  int get id {
-    switch (this) {
-      case ZegoUserError.kickOut:
-        return 1;
-      case ZegoUserError.tokenExpire:
-        return 2;
-    }
-  }
-
-  static const Map<int, ZegoUserError> mapValue = {
-    1: ZegoUserError.kickOut,
-    2: ZegoUserError.tokenExpire,
-  };
-
-  String get string {
-    switch (this) {
-      case ZegoUserError.kickOut:
-        return "kick out";
-      case ZegoUserError.tokenExpire:
-        return "token expire";
-    }
-  }
-}
-
 enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
 
 extension ZegoCallTypeExtension on ZegoCallType {
@@ -180,6 +150,7 @@ enum LocalUserStatus {
 enum ZegoError {
   success,
   failed,
+  tokenExpired,
   paramInvalid,
   firebasePathNotExist,
 }
@@ -191,10 +162,12 @@ extension ZegoErrorExtension on ZegoError {
         return 0;
       case ZegoError.failed:
         return 1;
+      case ZegoError.tokenExpired:
+        return 1001;
       case ZegoError.paramInvalid:
-        return 2;
-      case ZegoError.firebasePathNotExist:
         return 2001;
+      case ZegoError.firebasePathNotExist:
+        return 10001;
     }
   }
 }
@@ -214,4 +187,3 @@ const String notifyCallAccept = "/call/notify_call_accept";
 const String notifyCallDecline = "/call/notify_call_decline";
 const String notifyCallEnd = "/call/notify_call_end";
 const String notifyCallTimeout = "/call/notify_timeout";
-const String notifyUserError = "/user/notify_error";

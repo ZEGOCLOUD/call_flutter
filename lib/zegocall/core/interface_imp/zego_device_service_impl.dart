@@ -177,12 +177,14 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
         ZegoTrafficControlFocusOnMode.ZegoTrafficControlFounsOnRemote);
     ZegoExpressEngine.instance.enableANS(false);
 
+    Map<String, String> advancedConfig = {"room_retry_time": "60"};
     if (Platform.isIOS) {
       //  only for iOS
-      var config = ZegoEngineConfig();
-      config.advancedConfig = {"support_apple_callkit": "true"};
-      ZegoExpressEngine.setEngineConfig(config);
+      advancedConfig["support_apple_callkit"] = "true";
     }
+    var config = ZegoEngineConfig();
+    config.advancedConfig = advancedConfig;
+    ZegoExpressEngine.setEngineConfig(config);
   }
 
   @override

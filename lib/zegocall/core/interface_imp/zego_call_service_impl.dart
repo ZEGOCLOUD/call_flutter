@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:developer';
 
 // Package imports:
+import 'package:flutter/cupertino.dart';
+import 'package:result_type/result_type.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
@@ -25,7 +27,11 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   bool isHeartbeatTimerRunning = false;
   bool isCallTimerRunning = false;
   String currentRoomID = "";
-  String currentToken = "";
+
+  ZegoCallCommand? callCommand;
+  CommandCallback? callUserCallback;
+  ZegoAcceptCallCommand? acceptCallCommand;
+  CommandCallback? acceptCallCallback;
 
   @override
   void init() {
@@ -35,11 +41,15 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   }
 
   @override
-  Future<int> callUser(
-      ZegoUserInfo callee, String token, ZegoCallType type) async {
+  ZegoError callUser(ZegoUserInfo callee, String token, ZegoCallType type,
+      CommandCallback callback) {
+    if (status != LocalUserStatus.free) {
+      log('[call service] call user, status is not free');
+      return ZegoError.failed;
+    }
     if (callee.userID.isEmpty) {
       log('[call service] call user, user id is empty');
-      return ZegoError.failed.id;
+      return ZegoError.failed;
     }
 
     var caller = ZegoServiceManager.shared.userService.localUserInfo;
@@ -49,23 +59,41 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     log('[call service] call user, callID:$callID, callerID:$callerID, '
         'calleeID:${callee.userID}, type:$type, status:$status');
 
-    status = LocalUserStatus.outgoing;
-
-    var command = ZegoCallCommand(callID, caller, [callee], type);
     callInfo.callID = callID;
     callInfo.caller = caller;
     callInfo.callees = [callee];
 
-    var result = await command.execute();
-    if (result.isSuccess) {
-      // ZegoServiceManager.shared.roomService.joinRoom(callID, token);
-      startCallTimer();
-    } else {
+    currentRoomID = callID;
+    ZegoServiceManager.shared.roomService.joinRoom(callID, token);
+
+    status = LocalUserStatus.outgoing;
+
+    callCommand = ZegoCallCommand(callID, caller, [callee], type);
+    callUserCallback = callback;
+
+    addCallTimer();
+
+    return ZegoError.success;
+  }
+
+  void callUserToServer() {
+    callCommand?.execute().then((value) {
+      handleCallUserResult(value);
+    }, onError: (error) {
+      handleCallUserResult(Failure(error));
+    });
+  }
+
+  void handleCallUserResult(RequestResult result) {
+    // if call user failed
+    if (result.isFailure) {
       status = LocalUserStatus.free;
-      return result.failure.id;
+      cancelCallTimer();
     }
 
-    return ZegoError.success.id;
+    var callback = callUserCallback;
+    callUserCallback = null;
+    callback ?? (result.isSuccess ? ZegoError.success.id : result.failure.id);
   }
 
   @override
@@ -90,39 +118,52 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     var command =
         ZegoCancelCallCommand(callerUserID, callInfo.callID, calleeID);
     var result = await command.execute();
-    if (result.isSuccess) {
-    } else {
-      return result.failure.id;
-    }
-
-    return ZegoError.success.id;
+    return result.isSuccess ? ZegoError.success.id : result.failure.id;
   }
 
   @override
-  Future<int> acceptCall(String token) async {
+  ZegoError acceptCall(String token, CommandCallback callback) {
+    if (callInfo.callID.isEmpty) {
+      log('[call service] accept call, call id is empty');
+      return ZegoError.failed;
+    }
+
     var callerUserID =
         ZegoServiceManager.shared.userService.localUserInfo.userID;
 
     log('[call service] accept call, callID:${callInfo.callID}, '
         'userID:$callerUserID, status:$status');
 
-    currentToken = token;
+    status = LocalUserStatus.calling;
+    currentRoomID = callInfo.callID;
 
-    var command = ZegoAcceptCallCommand(callerUserID, callInfo.callID);
-    var result = await command.execute();
+    ZegoServiceManager.shared.roomService.joinRoom(currentRoomID, token);
+
+    acceptCallCommand = ZegoAcceptCallCommand(callerUserID, callInfo.callID);
+    acceptCallCallback = callback;
+
+    return ZegoError.success;
+  }
+
+  void acceptCallToServer() {
+    acceptCallCommand?.execute().then((value) {
+      handleAcceptCallResult(value);
+    }, onError: (error) {
+      handleAcceptCallResult(Failure(error));
+    });
+  }
+
+  void handleAcceptCallResult(RequestResult result) {
+    // if accept call success
     if (result.isSuccess) {
       status = LocalUserStatus.calling;
-      var roomID = callInfo.callID;
-
-      ZegoServiceManager.shared.roomService.joinRoom(roomID, token);
-
       cancelCallTimer();
       startHeartbeatTimer();
-    } else {
-      return result.failure.id;
     }
 
-    return ZegoError.success.id;
+    var callback = acceptCallCallback;
+    acceptCallCallback = null;
+    callback ?? (result.isSuccess ? ZegoError.success.id : result.failure.id);
   }
 
   @override
@@ -166,11 +207,46 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   @override
   void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
       Map<String, dynamic> extendedData) {
-    if(ZegoServiceManager.shared.roomService.roomInfo.roomID != roomID) {
+    if (ZegoServiceManager.shared.roomService.roomInfo.roomID != roomID) {
       log('[call service] room state update, room id is not equal');
       return;
     }
 
+    // if the callUserCallback is not nil, means `CallUser` method didn't finish
+    if (null != callUserCallback) {
+      if (state == ZegoRoomState.Connecting) {
+        return;
+      } else if (state == ZegoRoomState.Disconnected) {
+        var result = ZegoError.failed;
+        if (1002033 == errorCode) {
+          result = ZegoError.tokenExpired;
+        }
+        handleCallUserResult(Failure(result));
+      } else {
+        callUserToServer();
+      }
+
+      return;
+    }
+
+    // if the acceptCallBack is not nil, means `acceptCall` didn't finish
+    if (null != acceptCallCallback) {
+      if (state == ZegoRoomState.Connecting) {
+        return;
+      } else if (state == ZegoRoomState.Disconnected) {
+        var result = ZegoError.failed;
+        if (1002033 == errorCode) {
+          result = ZegoError.tokenExpired;
+        }
+        handleAcceptCallResult(Failure(result));
+      } else {
+        acceptCallToServer();
+      }
+
+      return;
+    }
+
+    // if myself disconnected, just callback the `timeout`.
     if (ZegoRoomState.Disconnected == state &&
         status == LocalUserStatus.calling) {
       status = LocalUserStatus.free;
@@ -181,10 +257,9 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       delegate?.onReceiveCallTimeout(
           ZegoServiceManager.shared.userService.localUserInfo,
           ZegoCallTimeoutType.calling);
-      stopHeartbeatTimer();
-    }
 
-    if (currentRoomID == roomID) {
+      stopHeartbeatTimer();
+    } else {
       var callingState = ZegoCallingState.connected;
       switch (state) {
         case ZegoRoomState.Disconnected:
@@ -199,7 +274,6 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       }
       delegate?.onCallingStateUpdated(callingState);
     }
-    currentRoomID = roomID;
   }
 
   String generateCallID(String userID) {
@@ -217,7 +291,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   void startHeartbeatTimer() {
     isHeartbeatTimerRunning = true;
 
-    Timer.periodic(const Duration(seconds: 10), (Timer timer) {
+    Timer.periodic(const Duration(seconds: 20), (Timer timer) {
       if (!isHeartbeatTimerRunning) {
         timer.cancel();
         return;
@@ -234,13 +308,18 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     isHeartbeatTimerRunning = false;
   }
 
-  void startCallTimer() {
+  void addCallTimer() {
     isCallTimerRunning = true;
 
     Timer(const Duration(seconds: 60), () {
       if (!isCallTimerRunning) {
         return;
       }
+
+      status = LocalUserStatus.free;
+      callInfo = ZegoCallInfo.empty();
+
+      ZegoServiceManager.shared.roomService.leaveRoom();
 
       delegate?.onReceiveCallTimeout(
           ZegoServiceManager.shared.userService.localUserInfo,
@@ -264,7 +343,6 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     ZegoListenerManager.shared.addListener(notifyCallEnd, onCallEndNotify);
     ZegoListenerManager.shared
         .addListener(notifyCallTimeout, onCallTimeoutNotify);
-    ZegoListenerManager.shared.addListener(notifyUserError, onUserErrorNotify);
   }
 
   void onCallInvitedNotify(ZegoNotifyListenerParameter parameter) {
@@ -280,13 +358,14 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     if (status != LocalUserStatus.free) {
       log('[call service] invited notify, status is not free');
 
-      declineCall();
+      _declineCall(ZegoServiceManager.shared.userService.localUserInfo.userID,
+          callID, caller.userID, ZegoDeclineType.kZegoDeclineTypeBusy);
       return;
     }
 
     status = LocalUserStatus.incoming;
     callInfo.callID = callID;
-    startCallTimer();
+    addCallTimer();
 
     callInfo.caller = caller;
     callInfo.callees = callees;
@@ -451,20 +530,5 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     ZegoServiceManager.shared.roomService.leaveRoom();
 
     delegate?.onReceiveCallTimeout(user, ZegoCallTimeoutType.calling);
-  }
-
-  void onUserErrorNotify(ZegoNotifyListenerParameter parameter) {
-    var error = ZegoUserErrorExtension.mapValue[parameter['error'] as int]!;
-
-    log('[call service] timeout notify, error:${error.string}, status:$status');
-
-    if (ZegoUserError.kickOut == error) {
-      status = LocalUserStatus.free;
-      callInfo = ZegoCallInfo.empty();
-      cancelCallTimer();
-      stopHeartbeatTimer();
-
-      ZegoServiceManager.shared.roomService.leaveRoom();
-    }
   }
 }

@@ -8,17 +8,20 @@ import './../model/zego_call_info.dart';
 import './../zego_call_defines.dart';
 import 'zego_service.dart';
 
+typedef CommandCallback = void Function(int);
+
 abstract class IZegoCallService extends ChangeNotifier with ZegoService {
   ZegoCallInfo callInfo = ZegoCallInfo.empty();
   LocalUserStatus status = LocalUserStatus.free;
 
   ZegoCallServiceDelegate? delegate;
 
-  Future<int> callUser(ZegoUserInfo callee, String token, ZegoCallType type);
+  ZegoError callUser(ZegoUserInfo callee, String token, ZegoCallType type,
+      CommandCallback callback);
 
   Future<int> cancelCall();
 
-  Future<int> acceptCall(String token);
+  ZegoError acceptCall(String token, CommandCallback callback);
 
   Future<int> declineCall();
 

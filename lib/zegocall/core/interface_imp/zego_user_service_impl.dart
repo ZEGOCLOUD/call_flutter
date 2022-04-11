@@ -19,7 +19,6 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
 
   @override
   void init() {
-    registerListener();
     ZegoServiceManager.shared.addExpressEventHandler(this);
   }
 
@@ -96,14 +95,6 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   }
 
   @override
-  void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
-      Map<String, dynamic> extendedData) {
-    if (1002033 == errorCode) {
-      delegate?.onReceiveUserError(ZegoUserError.tokenExpire);
-    }
-  }
-
-  @override
   void onRoomUserUpdate(
       String roomID, ZegoUpdateType updateType, List<ZegoUser> userList) {
     for (var user in userList) {
@@ -118,14 +109,5 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
         this.userList.removeWhere((element) => element.userID == user.userID);
       }
     }
-  }
-
-  void registerListener() {
-    ZegoListenerManager.shared.addListener(notifyUserError, onUserErrorNotify);
-  }
-
-  void onUserErrorNotify(ZegoNotifyListenerParameter parameter) {
-    var error = ZegoUserError.values[parameter['error'] as int];
-    delegate?.onReceiveUserError(error);
   }
 }

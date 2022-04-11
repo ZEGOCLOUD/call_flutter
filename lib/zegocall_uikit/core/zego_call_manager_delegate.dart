@@ -37,9 +37,4 @@ mixin ZegoCallManagerDelegate {
   ///
   /// - Description: This callback will be triggered when called refused the call.
   onReceiveCallDeclined(ZegoUserInfo userInfo, ZegoDeclineType type);
-
-  /// Callback for user is kick out
-  ///
-  /// - Description: This callback will be triggered when user is kickedout.
-  onReceiveUserError(ZegoUserError error);
 }

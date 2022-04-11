@@ -215,8 +215,8 @@ class ZegoCallManager
   }
 
   @override
-  void onReceiveCallInvite(ZegoUserInfo user, ZegoCallType type) {
-    log('[call manager] receive call invite, user:${user.toString()}, '
+  void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type) {
+    log('[call manager] receive call invite, caller:${caller.toString()}, '
         'type:${type.string}');
   }
 
@@ -234,11 +234,6 @@ class ZegoCallManager
   @override
   void onNetworkQuality(String userID, ZegoStreamQualityLevel level) {
     log('[call manager] network quality, user id:$userID, level:$level');
-  }
-
-  @override
-  void onReceiveUserError(ZegoUserError error) {
-    log('[call manager] receive user error, error:${error.string}');
   }
 
   @override
