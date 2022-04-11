@@ -36,6 +36,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void init() {
     initServices();
+    registerExpressEventHandle();
   }
 
   void initServices() {

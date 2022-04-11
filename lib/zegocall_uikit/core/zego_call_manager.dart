@@ -41,7 +41,7 @@ class ZegoCallManager
         'type:${callType.string}');
 
     if (currentCallStatus != ZegoCallStatus.free) {
-      log('[call manager] current call status is not free');
+      log('[call manager] current call status is not free, $currentCallStatus}');
       return ZegoError.failed;
     }
 
@@ -49,16 +49,13 @@ class ZegoCallManager
     resetDeviceConfig();
 
     return ZegoServiceManager.shared.callService
-        .callUser(targetUserInfo, token, callType)
-        .then((int errorCode) {
-      if (ZegoError.success.id != errorCode) {
+        .callUser(targetUserInfo, token, callType, (int errorCode) {
+      if (ZegoError.success.id == errorCode) {
         targetUser = targetUserInfo;
         // todo show video player
       } else {
         currentCallStatus = ZegoCallStatus.free;
       }
-
-      return ZegoError.success;
     });
   }
 
@@ -140,11 +137,12 @@ class ZegoCallManager
         'type:${callType.string}');
 
     resetDeviceConfig();
-    ZegoServiceManager.shared.callService
-        .acceptCall(token)
-        .then((int errorCode) {
+    ZegoServiceManager.shared.callService.acceptCall(token, (int errorCode) {
       if (ZegoError.success.id == errorCode) {
-        //
+        currentCallStatus = ZegoCallStatus.calling;
+        targetUser = targetUserInfo;
+      } else {
+        currentCallStatus = ZegoCallStatus.free;
       }
     });
   }

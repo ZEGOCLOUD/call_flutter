@@ -1,4 +1,6 @@
 // Package imports:
+import 'dart:developer';
+
 import 'package:result_type/result_type.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
@@ -40,6 +42,7 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
     var result = await command.execute();
     if (result.isSuccess) {
       var dict = result.success as Map<String, dynamic>;
+      log('[user service] get token, $dict');
       return Success(dict['token'] as String);
     }
     return Failure(ZegoError.failed);

@@ -57,15 +57,16 @@ class CallingCalleeView extends StatelessWidget {
         ),
         SizedBox(
           height: 59.h,
-          child: Text(callee.userName,
-              style: StyleConstant.callingCenterUserName),
+          child:
+              Text(callee.userName, style: StyleConstant.callingCenterUserName),
         ),
         SizedBox(
           height: 47.h,
         ),
         const Text('Calling...', style: StyleConstant.callingCenterStatus),
         const Expanded(child: SizedBox()),
-        CallingCalleeBottomToolBar(callType: callType),
+        CallingCalleeBottomToolBar(
+            caller: caller, callee: callee, callType: callType),
         SizedBox(
           height: 105.h,
         ),

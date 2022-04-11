@@ -9,8 +9,10 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/widgets/show_bottom_sheet.dart';
+import 'package:zego_call_flutter/zegocall_uikit/core/zego_call_manager.dart';
 import '../../../../zegocall/core/interface/zego_call_service.dart';
 import '../../../../zegocall/core/interface/zego_device_service.dart';
+import '../../../../zegocall/core/model/zego_user_info.dart';
 import '../../../../zegocall/core/zego_call_defines.dart';
 import '../settings/calling_settings.dart';
 import 'calling_bottom_toolbar_button.dart';
@@ -91,8 +93,7 @@ class CallingCallerBottomToolBar extends StatelessWidget {
       child: Center(
         child: GestureDetector(
           onTap: () {
-            //  todo
-            context.read<IZegoCallService>().cancelCall();
+            ZegoCallManager.shared.cancelCall();
           },
           child: SizedBox(
             width: 120.w,
@@ -105,10 +106,16 @@ class CallingCallerBottomToolBar extends StatelessWidget {
 }
 
 class CallingCalleeBottomToolBar extends StatelessWidget {
-  const CallingCalleeBottomToolBar({required this.callType, Key? key})
+  const CallingCalleeBottomToolBar(
+      {required this.caller,
+      required this.callee,
+      required this.callType,
+      Key? key})
       : super(key: key);
 
   final ZegoCallType callType;
+  final ZegoUserInfo caller;
+  final ZegoUserInfo callee;
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +131,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
                 iconHeight: 120.h,
                 iconURL: StyleIconUrls.toolbarBottomDecline,
                 onTap: () {
-                  //  todo
-                  context.read<IZegoCallService>().declineCall();
+                  ZegoCallManager.shared.declineCall();
                 }),
             SizedBox(
               width: 230.w,
@@ -136,8 +142,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
                 iconHeight: 120.h,
                 iconURL: imageURLByCallType(callType),
                 onTap: () {
-                  //  todo
-                  context.read<IZegoCallService>().acceptCall("");
+                  ZegoCallManager.shared.acceptCall(caller, callType);
                 }),
           ],
         ),

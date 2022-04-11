@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
+import 'package:zego_call_flutter/zegocall_uikit/core/zego_call_manager.dart';
 import '../../../../zegocall/core/interface/zego_call_service.dart';
 import '../../../../zegocall/core/interface/zego_device_service.dart';
 import 'calling_bottom_toolbar_button.dart';
@@ -51,7 +52,7 @@ class OnlineVoiceBottomToolBar extends HookWidget {
               iconHeight: 120.h,
               iconURL: StyleIconUrls.toolbarBottomEnd,
               onTap: () {
-                context.read<IZegoCallService>().endCall();
+                ZegoCallManager.shared.endCall();
               },
             ),
             CallingCalleeBottomToolBarButton(

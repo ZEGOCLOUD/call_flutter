@@ -405,7 +405,6 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       }
 
       var callDict = snapshotValue as Map<dynamic, dynamic>;
-      log('[firebase] incoming call, call dict: $callDict');
 
       var callStatus = FirebaseCallStatusExtension.mapValue[
               callDict['call_status'] as int? ?? FirebaseCallStatus.unknown.id]
@@ -426,6 +425,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
             '$firebaseUser');
         return;
       }
+
+      log('[firebase] incoming call, call dict: $callDict');
 
       var caller = model.users.firstWhere(
           (user) => user.callerID == user.userID,

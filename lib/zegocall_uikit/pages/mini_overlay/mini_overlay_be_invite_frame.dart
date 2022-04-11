@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 // Project imports:
 import 'package:zego_call_flutter/utils/styles.dart';
 import 'package:zego_call_flutter/utils/user_avatar.dart';
+import 'package:zego_call_flutter/zegocall_uikit/core/zego_call_manager.dart';
 import '../../../zegocall/core/interface/zego_call_service.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 
@@ -65,7 +66,7 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame> {
         const Expanded(child: Text("")),
         GestureDetector(
           onTap: () {
-            context.read<IZegoCallService>().declineCall();
+            ZegoCallManager.shared.declineCall();
             widget.onDecline();
           },
           child: SizedBox(
@@ -78,7 +79,7 @@ class _MiniOverlayBeInviteFrame extends State<MiniOverlayBeInviteFrame> {
         ),
         GestureDetector(
           onTap: () {
-            context.read<IZegoCallService>().acceptCall("");
+            // ZegoCallManager.shared.acceptCall(targetUserInfo, callType)
             widget.onAccept();
           },
           child: SizedBox(
