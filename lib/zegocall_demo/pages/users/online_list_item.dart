@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
-import 'package:zego_call_flutter/zegocall_uikit/core/zego_call_manager.dart';
+import '../../constants/user_info.dart';
+import '../../../zegocall_uikit/core/zego_call_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import './../../../utils/styles.dart';
@@ -17,17 +17,25 @@ class OnlineListItem extends StatelessWidget {
   final DemoUserInfo userInfo;
 
   void onAudioCallTap(BuildContext context) async {
-    // var token = ZegoServiceManager.shared.userService.getToken(userID)
-
-    ZegoCallManager.shared.callUser(
-        ZegoUserInfo(userInfo.userID, userInfo.userName),
-        ZegoCallType.kZegoCallTypeVoice);
+    ZegoCallManager.shared
+        .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
+            ZegoCallType.kZegoCallTypeVoice)
+        .then((error) {
+      if (ZegoError.success != error) {
+        //  todo show tips
+      }
+    });
   }
 
   void onVideoCallTap(BuildContext context) async {
-    ZegoCallManager.shared.callUser(
-        ZegoUserInfo(userInfo.userID, userInfo.userName),
-        ZegoCallType.kZegoCallTypeVideo);
+    ZegoCallManager.shared
+        .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
+            ZegoCallType.kZegoCallTypeVideo)
+        .then((error) {
+      if (ZegoError.success != error) {
+        //  todo show tips
+      }
+    });
   }
 
   @override

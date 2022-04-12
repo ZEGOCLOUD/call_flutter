@@ -21,8 +21,8 @@ mixin ZegoCallManagerInterface {
   /// The local logged-in user information.
   ZegoUserInfo? localUserInfo;
 
-  /// The state of the current call
   ZegoCallStatus currentCallStatus = ZegoCallStatus.free;
+  ZegoCallType currentCallType = ZegoCallType.kZegoCallTypeVoice;
 
   /// The token of use to call
   String token = "";
@@ -34,14 +34,14 @@ mixin ZegoCallManagerInterface {
   /// Call this method at: Before you log in. We recommend you call this method when the application starts.
   ///
   /// - Parameter appID: refers to the project ID. To get this, go to ZEGOCLOUD Admin Console: https://console.zego.im/dashboard?lang=en
-  initWithAppID(int appID);
+  void initWithAppID(int appID);
 
   /// The method to deinitialize the SDK
   ///
   /// Description: This method can be used to deinitialize the SDK and release the resources it occupies.
   ///
   /// Call this method at: When the SDK is no longer be used. We recommend you call this method when the application exits.
-  uninit();
+  void uninit();
 
   /// Get a Token
   ///
@@ -60,14 +60,14 @@ mixin ZegoCallManagerInterface {
   ///
   /// - Parameter userID: the user ID.
   /// - Parameter userName: the username.
-  setLocalUser(String userID, String userName);
+  void setLocalUser(String userID, String userName);
 
   /// Clear cached data
   ///
   /// - Description: this can be used to clear data cached by the CallManager.
   ///
   /// Call this method at: when logging out from a room or being removed from a room.
-  resetCallData();
+  void resetCallData();
 
   /// Upload local logs to the ZEGOCLOUD Server
   ///
@@ -77,16 +77,16 @@ mixin ZegoCallManagerInterface {
   ///
   /// - Parameter fileName: refers to the name of the file you upload. We recommend you name the file in the format of "appid_platform_timestamp".
   /// - Parameter callback: refers to the callback that be triggered when the logs are upload successfully or failed to upload logs.
-  uploadLog();
+  void uploadLog();
 
   /// Make an outbound call
   ///
   /// Description: This method can be used to initiate a call to a online user. The called user receives a notification once this method gets called. And if the call is not answered in 60 seconds, you will need to call a method to cancel the call.
   ///
   /// Call this method at: After the user login
-  /// - Parameter targetUserInfo: The information of the user you want to call, including the userID and userName.
+  /// - Parameter callee: The information of the user you want to call, including the userID and userName.
   /// - Parameter type: refers to the call type.  ZegoCallTypeVoice: Voice call.  ZegoCallTypeVideo: Video call.
   /// - Parameter callback: refers to the callback for make a outbound call.
   Future<ZegoError> callUser(
-      ZegoUserInfo targetUserInfo, ZegoCallType callType);
+      ZegoUserInfo callee, ZegoCallType callType);
 }

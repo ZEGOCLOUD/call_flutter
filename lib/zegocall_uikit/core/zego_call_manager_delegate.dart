@@ -7,21 +7,21 @@ mixin ZegoCallManagerDelegate {
   ///
   /// Description: This callback will be triggered when receiving an incoming call.
   ///
-  /// - Parameter userInfo: refers to the caller information.
+  /// - Parameter caller: refers to the caller information.
   /// - Parameter type: indicates the call type.  ZegoCallTypeVoice: Voice call.  ZegoCallTypeVideo: Video call.
-  onReceiveCallInvite(ZegoUserInfo userInfo, ZegoCallType type);
+  onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type);
 
   /// Callback for receive a canceled call
   ///
   /// Description: This callback will be triggered when the caller cancel the outbound call.
   ///
-  /// - Parameter userInfo: refers to the caller information.
-  onReceiveCallCanceled(ZegoUserInfo userInfo);
+  /// - Parameter caller: refers to the caller information.
+  onReceiveCallCanceled(ZegoUserInfo caller);
 
   /// Callback for timeout a call
   ///
   /// - Description: This callback will be triggered when the caller or called user ends the call.
-  onReceiveCallTimeout(ZegoCallTimeoutType type, ZegoUserInfo info);
+  onReceiveCallTimeout(ZegoCallTimeoutType type, ZegoUserInfo caller);
 
   /// Callback for end a call
   ///
@@ -31,7 +31,7 @@ mixin ZegoCallManagerDelegate {
   /// Callback for call is accept
   ///
   /// - Description: This callback will be triggered when called accept the call.
-  onReceiveCallAccepted(ZegoUserInfo userInfo);
+  onReceiveCallAccepted(ZegoUserInfo callee);
 
   /// Callback for call is decline
   ///

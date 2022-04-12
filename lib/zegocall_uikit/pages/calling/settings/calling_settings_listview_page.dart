@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
+import '../../../../utils/styles.dart';
 import '../../../../zegocall/core/interface/zego_device_service.dart';
 import '../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
 import '../../../../zegocall/core/zego_call_defines.dart';

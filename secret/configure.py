@@ -14,9 +14,9 @@ class KeyCenterHelper:
         return os.path.dirname(__file__)
 
     def _add_key_center_file_to_git_ignore(self):
-        git_ignore_file = os.path.join(self._get_current_path(), '.gitignore')
+        git_ignore_file = os.path.join(self._get_current_path(), '../.gitignore')
         with open(git_ignore_file, 'r', encoding='utf-8') as in_file:
-            ignore_line = self._file_name + "\n"
+            ignore_line = self._file_name.replace("../", "") + "\n"
             if ignore_line not in in_file.readlines():
                 with open(git_ignore_file, 'a+', encoding='utf-8') as out_file:
                     out_file.write(ignore_line)

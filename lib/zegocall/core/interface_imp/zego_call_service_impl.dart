@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:developer';
 
 // Package imports:
-import 'package:flutter/cupertino.dart';
 import 'package:result_type/result_type.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
@@ -25,7 +24,7 @@ import './../zego_call_defines.dart';
 
 class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   bool isHeartbeatTimerRunning = false;
-  bool isCallTimerRunning = false;
+  Timer? callTimer;
   String currentRoomID = "";
 
   ZegoCallCommand? callUserCommand;
@@ -318,13 +317,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   }
 
   void addCallTimer() {
-    isCallTimerRunning = true;
-
-    Timer(const Duration(seconds: 60), () {
-      if (!isCallTimerRunning) {
-        return;
-      }
-
+    callTimer = Timer(const Duration(seconds: 60), () {
       status = LocalUserStatus.free;
       callInfo = ZegoCallInfo.empty();
 
@@ -337,7 +330,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   }
 
   void cancelCallTimer() {
-    isCallTimerRunning = false;
+    callTimer?.cancel();
   }
 
   void registerListener() {
@@ -438,7 +431,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
 
     status = LocalUserStatus.calling;
 
-    delegate?.onReceiveCallAccept(callee);
+    delegate?.onReceiveCallAccepted(callee);
   }
 
   void onCallDeclineNotify(ZegoNotifyListenerParameter parameter) {
@@ -509,9 +502,9 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
 
   void onCallTimeoutNotify(ZegoNotifyListenerParameter parameter) {
     var callID = parameter['call_id'] as String;
-    var userID = parameter['user_id'] as String;
+    var callerID = parameter['user_id'] as String;
 
-    log('[call service] timeout notify, callID:$callID, userID:$userID, status:$status');
+    log('[call service] timeout notify, callID:$callID, caller ID:$callerID, status:$status');
 
     if (callInfo.callID != callID) {
       log('[call service] timeout notify, call id is different, call info '
@@ -522,8 +515,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       log('[call service] timeout notify, status is not calling');
       return;
     }
-    var user = getUser(userID);
-    if (user.isEmpty()) {
+    var caller = getUser(callerID);
+    if (caller.isEmpty()) {
       log('[call service] timeout notify, user is empty');
       return;
     }
@@ -534,6 +527,6 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
 
     ZegoServiceManager.shared.roomService.leaveRoom();
 
-    delegate?.onReceiveCallTimeout(user, ZegoCallTimeoutType.calling);
+    delegate?.onReceiveCallTimeout(caller, ZegoCallTimeoutType.calling);
   }
 }

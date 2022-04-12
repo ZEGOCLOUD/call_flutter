@@ -20,6 +20,6 @@ Map<String, WidgetBuilder> materialRoutes = {
   PageRouteNames.login: (context) => const GoogleLoginPage(),
   PageRouteNames.welcome: (context) => const WelcomePage(),
   PageRouteNames.settings: (context) => const SettingsPage(),
-  PageRouteNames.calling: (context) => const CallingPage(),
+  PageRouteNames.calling: (context) =>  CallingPage(),
   PageRouteNames.onlineList: (context) => const OnlineListPage(),
 };

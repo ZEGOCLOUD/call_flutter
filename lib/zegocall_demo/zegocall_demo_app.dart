@@ -16,12 +16,11 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/notification/zego_notification_manager.dart';
+import '../zegocall/core/manager/zego_service_manager.dart';
 import '../zegocall_uikit/core/zego_call_manager.dart';
-import './../zegocall/core/manager/zego_service_manager.dart';
-import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
-import './constants/zego_page_constant.dart';
-import './core/zego_user_list_manager.dart';
+import '../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
+import 'constants/zego_page_constant.dart';
+import 'core/zego_user_list_manager.dart';
 
 class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);
@@ -97,7 +96,7 @@ class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
         return Stack(
           children: [
             child!,
-            const MiniOverlayPage(),
+            MiniOverlayPage(),
           ],
         );
       },

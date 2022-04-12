@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
+import '../constants/user_info.dart';
 
 class ZegoUserListManager extends ChangeNotifier {
   static var shared = ZegoUserListManager();
@@ -37,7 +37,7 @@ class ZegoUserListManager extends ChangeNotifier {
       userDic.clear();
 
       var map = event.snapshot.value as Map<dynamic, dynamic>?;
-      log('[firebase] getOnlineUsers: $map');
+      // log('[firebase] getOnlineUsers: $map');
       if (map != null) {
         var currentUser = FirebaseAuth.instance.currentUser!;
 

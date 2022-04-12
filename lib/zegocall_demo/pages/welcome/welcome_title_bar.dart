@@ -9,9 +9,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/user_avatar.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import '../../../utils/styles.dart';
+import '../../../utils/user_avatar.dart';
+import '../../constants/zego_page_constant.dart';
 
 class WelcomeTitleBar extends StatefulWidget {
   const WelcomeTitleBar({Key? key}) : super(key: key);

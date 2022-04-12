@@ -1,7 +1,6 @@
 // Dart imports:
 
 // Dart imports:
-import 'dart:developer' as developer;
 import 'dart:math';
 
 // Flutter imports:
@@ -11,46 +10,56 @@ import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
+import '../../core/zego_call_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
-import 'mini_overlay_be_invite_frame.dart';
-import 'mini_overlay_state.dart';
-import 'mini_overlay_video_calling_frame.dart';
-import 'mini_overlay_voice_calling_frame.dart';
+import '../../../zegocall_demo/constants/zego_page_constant.dart';
+import '../core/machine/mini_overlay_machine.dart';
+import 'mini_overlay_be_invited.dart';
+import 'mini_video_calling_overlay.dart';
+import 'mini_voice_calling_overlay.dart';
 
 class MiniOverlayPage extends StatefulWidget {
-  const MiniOverlayPage({Key? key}) : super(key: key);
+  MiniOverlayPage({
+    Key? key,
+  }) : super(key: key);
+
+  MiniOverlayMachine machine =
+      ZegoCallManager.shared.pageHandler.miniOverlayMachine;
 
   @override
   _MiniOverlayPageState createState() => _MiniOverlayPageState();
 }
 
 class _MiniOverlayPageState extends State<MiniOverlayPage> {
+  MiniOverlayPageState currentState = MiniOverlayPageState.kIdle;
+
   Size overlaySize = const Size(0, 0);
   Offset overlayTopLeftPos = const Offset(0, 0);
   bool overlayVisibility = true;
 
-  // Both of the caller and callee disable the camera while calling
-  bool fromVideoToVoice = false;
-  ZegoUserInfo inviteUser = ZegoUserInfo.empty();
-  ZegoCallType inviteCallType = ZegoCallType.kZegoCallTypeVoice;
-
-  final machine = sm.Machine<MiniOverlayPageState>();
-  late sm.State<MiniOverlayPageState> stateIdle;
-  late sm.State<MiniOverlayPageState> stateVoiceCalling;
-  late sm.State<MiniOverlayPageState> stateVideoCalling;
-  late sm.State<MiniOverlayPageState> stateBeInvite;
+  late ZegoUserInfo caller;
+  late ZegoUserInfo callee;
+  ZegoCallType callType = ZegoCallType.kZegoCallTypeVoice;
 
   @override
   void initState() {
     super.initState();
 
-    initStateMachine();
+    caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
+    callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+    callType = ZegoCallManager.shared.currentCallType;
+
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      machine.start();
+      widget.machine.onStateChanged = (MiniOverlayPageState state) {
+        setState(() => currentState = state);
+        updatePage();
+      };
+
+      currentState = widget.machine.machine.current!.identifier;
+      updatePage();
     });
   }
 
@@ -75,11 +84,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   }
 
   Widget overlayItem() {
-    if (null == machine.current) {
-      return const Text('');
-    }
-
-    switch (machine.current!.identifier) {
+    switch (currentState) {
       case MiniOverlayPageState.kIdle:
         return const Text('');
       case MiniOverlayPageState.kVoiceCalling:
@@ -95,12 +100,8 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                     topLeft: Radius.circular(100.0.w),
                     bottomLeft: Radius.circular(100.0.w)),
               ),
-              child: MiniOverlayVoiceCallingFrame(
-                waitingDuration: 10,
-                onIdleStateEntry: () => stateIdle.enter(),
-                defaultState: fromVideoToVoice
-                    ? MiniOverlayPageVoiceCallingState.kOnline
-                    : MiniOverlayPageVoiceCallingState.kWaiting,
+              child: MiniVoiceCallingOverlay(
+                machine: widget.machine.voiceCallingOverlayMachine,
               ),
             ),
             SizedBox(
@@ -120,13 +121,10 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                   topLeft: Radius.circular(20.0.w),
                   bottomLeft: Radius.circular(20.0.w)),
             ),
-            child: MiniOverlayVideoCallingFrame(
-              waitingDuration: 10,
-              onIdleStateEntry: () => stateIdle.enter(),
-              onBothWithoutVideoEntry: () {
-                setState(() => fromVideoToVoice = true);
-                stateVoiceCalling.enter();
-              },
+            child: MiniVideoCallingOverlay(
+              machine: widget.machine.videoCallingOverlayMachine,
+              caller: caller,
+              callee: callee,
             ));
       case MiniOverlayPageState.kBeInvite:
         return Container(
@@ -137,48 +135,22 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
               color: const Color(0xff333333).withOpacity(0.8),
               borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
             ),
-            child: MiniOverlayBeInviteFrame(
-              callerID: inviteUser.userID,
-              callerName: inviteUser.userName,
-              callType: inviteCallType,
-              onDecline: () => stateIdle.enter(),
-              onAccept: () => stateIdle.enter(),
+            child: MiniOverlayBeInvite(
+              callerID: caller.userID,
+              callerName: caller.userName,
+              callType: callType,
+              onEmptyClick: () {
+                Navigator.pushReplacementNamed(context, PageRouteNames.calling);
+              },
+              onDecline: () => ZegoCallManager.shared.declineCall(),
+              onAccept: () =>
+                  ZegoCallManager.shared.acceptCall(caller, callType),
             ));
     }
   }
 
-  void onMachineStateChanged(event) {
-    developer.log(
-        '[state machine] mini overlay page : from ${event.source} to ${event.target}');
-
-    updatePage();
-  }
-
-  void onIdleStateEntry() {}
-
-  initStateMachine() {
-    machine.onAfterTransition.listen(onMachineStateChanged);
-
-    stateIdle = machine.newState(MiniOverlayPageState.kIdle)
-      ..onEntry(onIdleStateEntry); //  default state;
-    stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
-    stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling);
-    stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite)
-      ..onExit(() {
-        setState(() {
-          inviteUser = ZegoUserInfo.empty();
-          inviteCallType = ZegoCallType.kZegoCallTypeVoice;
-        });
-      });
-  }
-
   void updatePage() {
-    if (null == machine.current) {
-      updatePageDetails(false, const Point(0, 0), const Size(0, 0));
-      return;
-    }
-
-    switch (machine.current!.identifier) {
+    switch (currentState) {
       case MiniOverlayPageState.kIdle:
         updatePageDetails(false, const Point(0, 0), const Size(0, 0));
         break;
@@ -194,9 +166,9 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
     }
   }
 
-  updatePageDetails(bool visibility, Point<double> topLeft, Size size) {
+  void updatePageDetails(bool visibility, Point<double> topLeft, Size size) {
     setState(() {
-      overlayVisibility = true;
+      overlayVisibility = visibility;
       overlayTopLeftPos = Offset(topLeft.x, topLeft.y);
       overlaySize = size;
     });

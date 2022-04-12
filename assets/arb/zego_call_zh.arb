@@ -1,0 +1,174 @@
+{
+	"appName": "ZegoCall",
+	"loginPageUserName": "_x0008_请输入你的用户名",
+	"loginPageLogin": "登录",
+	"loginPageGoogleLogin": "通过 Google 登录 ",
+	"loginPageServicePrivacy": "我已阅读并同意《服务条款》和《隐私政策》",
+	"toastLoginServicePrivacy": "请阅读并同意《服务条款》和《隐私政策》",
+	"toastLoginFail": "登录失败，错误码：{code}",
+	"@toastLoginFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"toastLoginFailGoogle": "登录失败，错误码：{code}（Google）",
+	"@toastLoginFailGoogle": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"loginPageInputUserNameTip": "用户名应该是英文字符或数字",
+	"toastLoginKickOut": "此帐户已从其他设备登录",
+	"settingPageSettings": "设置",
+	"settingPageSdkVersion": "Express SDK 版本号",
+	"settingPageZimSdkVersion": "ZIM SDK 版本号",
+	"settingPageVersion": "App 版本号",
+	"settingPageTermsOfService": "服务条款",
+	"settingPagePrivacyPolicy": "隐私政策",
+	"settingPageUploadLog": "上传日志",
+	"toastUploadLogSuccess": "日志上传成功",
+	"toastUploadLogFail": "日志上传失败，错误码：{code}",
+	"@toastUploadLogFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"settingPageLogout": "退出登录",
+	"toastLogoutFail": "退出登录失败，错误码：{code}",
+	"@toastLogoutFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"networkReconnect": "网络发生了错误，正在重连中...",
+	"networkConnectFailed": "网络连接失败，请重新登录后再试",
+	"networkConnnectMeUnstable": "你的网络不稳定",
+	"networkConnnectOtherUnstable": "对方网络不稳定",
+	"networkConnectFailedTitle": "网络错误",
+	"dialogTipsTitle": "提示",
+	"dialogLoginPageMicCantOpen": "麦克风无法开启",
+	"dialogLoginPageMicPermission": "你还未授权我们使用麦克风",
+	"dialogLoginPageGoToSettings": "去设置",
+	"dialogLoginPageOk": "确定",
+	"dialogLoginPageCancel": "取消",
+	"dialogLoginPageTitleCannotUseCamera": "摄像头无法开启",
+	"dialogLoginPageMassageCannotUseCamera": "你还未授权我们使用摄像头",
+	"welcomePageUserName": "用户名称",
+	"welcomePageUserId": "用户 ID",
+	"welcomePageContactUs": "联系我们",
+	"bannerCallDesc": "为全球用户提供卓越的1对1语音、视频通话服务，延迟<300ms",
+	"bannerCallTitle": "1对1通话",
+	"zegoCall": "ZEGO Call",
+	"welcomePageGetMore": "更多",
+	"callPageCallFail": "呼叫失败，错误码：{code}",
+	"@callPageCallFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"callPageStatusCalling": "呼叫中...",
+	"callPageStatusBusy": "对方正忙",
+	"callPageStatusCompleted": "已完成",
+	"callPageStatusCanceled": "已取消",
+	"callPageStatusMissed": "未接听",
+	"callPageStatusDeclined": "已拒绝",
+	"callPageStatusEnded": "通话结束",
+	"callPageActionAccept": "接受",
+	"callPageActionDecline": "拒绝",
+	"callPageCallStatusFail": "呼叫失败, 请稍后再试.",
+	"callPageCallQualityPoor": "当前通话质量差...",
+	"callPageCallDisconnected": "当前通话断线,请等待.",
+	"callPageCallUnableInitiate": "正在通话中，无法发起新的通话",
+	"roomSettingsPageSettings": "设置",
+	"roomSettingsPageNoiseSuppression": "噪音抑制",
+	"roomSettingsPageEchoCancellation": "回声消除",
+	"roomSettingsPageMicVolume": "麦克风增益",
+	"roomSettingsPageMinoring": "本地视频镜像",
+	"roomSettingsPageVideoResolution": "视频分辨率",
+	"roomSettingsPageAudioBitrate": "音频码率",
+	"callUserListRefresh": "用户列表刷新",
+	"back": "返回",
+	"online": "在线",
+	"noOnlineUser": "没有用户在线",
+	"zegoVideoCall": "视频呼叫",
+	"zegoVoiceCall": "音频呼叫",
+	"floatPermissionTips": "请开启悬浮窗权限以正常使用接收通话呼叫",
+	"callNotification": "与%@ 通话中, 可点击返回。",
+	"receiveCallNotification": "%@ 请求通话，可点击查看。",
+	"inviteCallNotification": "%@ 邀请你加入通话",
+	"requestCallNotification": "正在呼叫%@, 可点击查看。",
+	"cancelCallNotification": "%@ 已取消通话",
+	"timeoutCallNotification": "通话接听超时，通话结束",
+	"micOperateFailed": "开关麦克风失败，错误码：{code}",
+	"@micOperateFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"cameraOperateFailed": "开关摄像头失败，错误码：{code}",
+	"@cameraOperateFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"cancelCallFailed": "取消呼叫失败，错误码: {code}",
+	"@cancelCallFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"endCallFailed": "结束通话失败，错误码: {code}",
+	"@endCallFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"me": "我",
+	"createUserFailed": "创建用户失败,错误码 :{code}",
+	"@createUserFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"micPermissionTip": "请允许我们使用你的麦克风，以便你能正常进行语音通话。",
+	"cameraPermissionTip": "请允许我们使用你的摄像头，以便你能正常进行视频通话。",
+	"toastKickoutError": "该帐号已在其他设备登录，你已被下线",
+	"getUserListFailed": "获取用户列表失败，错误码：{code}",
+	"@getUserListFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"responseFailed": "回应呼叫失败，错误码：{code}",
+	"@responseFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"tokenGetFail": "获取token失败",
+	"tokenIsNotExist": "token不存在"
+}

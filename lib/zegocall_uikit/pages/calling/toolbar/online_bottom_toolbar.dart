@@ -7,9 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall_uikit/core/zego_call_manager.dart';
-import '../../../../zegocall/core/interface/zego_call_service.dart';
+import '../../../../utils/styles.dart';
+import '../../../../zegocall_uikit/core/zego_call_manager.dart';
 import '../../../../zegocall/core/interface/zego_device_service.dart';
 import 'calling_bottom_toolbar_button.dart';
 

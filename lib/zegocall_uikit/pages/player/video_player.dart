@@ -7,9 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/interface/zego_device_service.dart';
-import 'package:zego_call_flutter/zegocall/core/interface/zego_user_service.dart';
-import '../../../../zegocall/core/interface/zego_stream_service.dart';
+import '../../../zegocall/core/interface/zego_device_service.dart';
+import '../../../zegocall/core/interface/zego_stream_service.dart';
+import '../../../zegocall/core/interface/zego_user_service.dart';
 import 'avatar_background.dart';
 
 class VideoPlayerView extends StatefulWidget {

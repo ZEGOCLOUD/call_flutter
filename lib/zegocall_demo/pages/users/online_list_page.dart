@@ -7,11 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
-import 'package:zego_call_flutter/zegocall_demo/core/zego_user_list_manager.dart';
+import '../../../utils/styles.dart';
+import '../../../utils/widgets/navigation_back_bar.dart';
+import '../../constants/user_info.dart';
+import '../..//constants/zego_page_constant.dart';
+import '../..//core/zego_user_list_manager.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 

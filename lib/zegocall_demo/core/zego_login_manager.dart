@@ -10,9 +10,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
-import 'package:zego_call_flutter/zegocall_demo/core/zego_token_manager.dart';
 
 // Project imports:
+import 'zego_token_manager.dart';
+import '../../zegocall_uikit/core/zego_call_manager.dart';
 import 'zego_user_list_manager.dart';
 
 typedef LoginResult = Result<User, int>;
@@ -63,6 +64,8 @@ class ZegoLoginManager extends ChangeNotifier {
   void logout() async {
     await FirebaseAuth.instance.signOut();
 
+    ZegoCallManager.shared.resetCallData();
+
     user = null;
   }
 
@@ -107,8 +110,9 @@ class ZegoLoginManager extends ChangeNotifier {
         return;
       }
 
-      await FirebaseAuth.instance.signOut();
       resetData(false);
+
+      logout();
 
       delegate?.onReceiveUserKickOut();
     });

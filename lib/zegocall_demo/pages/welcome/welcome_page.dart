@@ -1,13 +1,13 @@
 // Flutter imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/zegocall_uikit/core/zego_call_manager.dart';
 
 // Project imports:
+import '../../../zegocall_uikit/core/zego_call_manager.dart';
 import '../../core/zego_token_manager.dart';
 import 'welcome_one_on_one_bg.dart';
 import 'welcome_title_bar.dart';
