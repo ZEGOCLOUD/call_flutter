@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
-import '../../../zegocall/core/interface/zego_call_service.dart';
-import '../../../zegocall/core/zego_call_defines.dart';
 import './../../../utils/styles.dart';
-import './../../constants/zego_page_constant.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
+import './../../../zegocall_uikit/core/zego_call_manager.dart';
+import './../../constants/user_info.dart';
 import 'online_list_elements.dart';
 
 class OnlineListItem extends StatelessWidget {
@@ -19,20 +17,25 @@ class OnlineListItem extends StatelessWidget {
   final DemoUserInfo userInfo;
 
   void onAudioCallTap(BuildContext context) async {
-    //  call test
-    Navigator.pushReplacementNamed(context, PageRouteNames.calling);
-
-    context.read<IZegoCallService>().callUser(
-        ZegoUserInfo(userInfo.userID, userInfo.userName),
-        'token',
-        ZegoCallType.kZegoCallTypeVoice);
+    ZegoCallManager.shared
+        .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
+            ZegoCallType.kZegoCallTypeVoice)
+        .then((error) {
+      if (ZegoError.success != error) {
+        //  todo show tips
+      }
+    });
   }
 
   void onVideoCallTap(BuildContext context) async {
-    context.read<IZegoCallService>().callUser(
-        ZegoUserInfo(userInfo.userID, userInfo.userName),
-        'token',
-        ZegoCallType.kZegoCallTypeVideo);
+    ZegoCallManager.shared
+        .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
+            ZegoCallType.kZegoCallTypeVideo)
+        .then((error) {
+      if (ZegoError.success != error) {
+        //  todo show tips
+      }
+    });
   }
 
   @override

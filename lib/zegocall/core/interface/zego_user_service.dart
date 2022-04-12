@@ -2,9 +2,9 @@
 import 'package:flutter/foundation.dart';
 
 // Project imports:
-import '../zego_call_defines.dart';
 import './../delegate/zego_user_service_delegate.dart';
 import './../model/zego_user_info.dart';
+import './../zego_call_defines.dart';
 import 'zego_service.dart';
 
 /// Class user information management.
@@ -20,7 +20,7 @@ abstract class IZegoUserService extends ChangeNotifier with ZegoService {
 
   void setLocalUser(String userID, String userName);
 
-  Future<RequestResult> getToken(String userID);
+  Future<RequestResult> getToken(String userID, int effectiveTimeInSeconds);
 
   ZegoUserInfo getUserInfoByID(String userID);
 }

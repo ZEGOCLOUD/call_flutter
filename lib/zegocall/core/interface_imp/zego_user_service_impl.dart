@@ -1,17 +1,18 @@
+// Dart imports:
+import 'dart:developer';
+
 // Package imports:
 import 'package:result_type/result_type.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/commands/zego_token_command.dart';
-import 'package:zego_call_flutter/zegocall/core/interface/zego_event_handler.dart';
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_stream_service_impl.dart';
-import '../../listener/zego_listener.dart';
-import '../../listener/zego_listener_manager.dart';
-import '../interface/zego_user_service.dart';
-import '../manager/zego_service_manager.dart';
-import '../zego_call_defines.dart';
+import './../../../zegocall/core/commands/zego_token_command.dart';
+import './../../../zegocall/core/interface/zego_event_handler.dart';
+import './../../../zegocall/core/interface_imp/zego_stream_service_impl.dart';
+import './../interface/zego_user_service.dart';
+import './../manager/zego_service_manager.dart';
 import './../model/zego_user_info.dart';
+import './../zego_call_defines.dart';
 
 class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   /// In-room user dictionary,  can be used to update user information.¬
@@ -19,7 +20,6 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
 
   @override
   void init() {
-    registerListener();
     ZegoServiceManager.shared.addExpressEventHandler(this);
   }
 
@@ -34,12 +34,14 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   }
 
   @override
-  Future<RequestResult> getToken(String userID) async {
-    var command = ZegoTokenCommand(userID);
+  Future<RequestResult> getToken(
+      String userID, int effectiveTimeInSeconds) async {
+    var command = ZegoTokenCommand(userID, effectiveTimeInSeconds);
 
     var result = await command.execute();
     if (result.isSuccess) {
-      var dict = result as Map<String, dynamic>;
+      var dict = result.success as Map<String, dynamic>;
+      log('[user service] get token, $dict');
       return Success(dict['token'] as String);
     }
     return Failure(ZegoError.failed);
@@ -95,14 +97,6 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   }
 
   @override
-  void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
-      Map<String, dynamic> extendedData) {
-    if (1002033 == errorCode) {
-      delegate?.onReceiveUserError(ZegoUserError.tokenExpire);
-    }
-  }
-
-  @override
   void onRoomUserUpdate(
       String roomID, ZegoUpdateType updateType, List<ZegoUser> userList) {
     for (var user in userList) {
@@ -117,14 +111,5 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
         this.userList.removeWhere((element) => element.userID == user.userID);
       }
     }
-  }
-
-  void registerListener() {
-    ZegoListenerManager.shared.addListener(notifyUserError, onUserErrorNotify);
-  }
-
-  void onUserErrorNotify(ZegoNotifyListenerParameter parameter) {
-    var error = ZegoUserError.values[parameter['error'] as int];
-    delegate?.onReceiveUserError(error);
   }
 }

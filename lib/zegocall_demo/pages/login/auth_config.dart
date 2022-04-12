@@ -3,7 +3,7 @@
 /// 2. Create a new OAuth application.
 /// 3. Set **Home Page URL** to `https://react-native-firebase-testing.firebaseapp.com`.
 /// 4. Set **Authorization callback URL** to `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`.
-Map<String, String> GitHubConfig = {
+Map<String, String> gitHubConfig = {
   'CLIENT_ID': 'PLACE YOUR CLIENT ID HERE',
   'CLIENT_SECRET': 'PLACE YOUR CLIENT SECRET HERE',
   'REDIRECT_URL':
@@ -17,7 +17,7 @@ Map<String, String> GitHubConfig = {
 ///    1. `flutterfireauth://`
 ///    2. `https://react-native-firebase-testing.firebaseapp.com/__/auth/handler`
 /// 4. Add your keys to the example app config in [`lib/config.dart`](./lib/config.dart).
-Map<String, String> TwitterConfig = {
+Map<String, String> twitterConfig = {
   'API_KEY': 'PLACE YOUR API KEY HERE',
   'API_SECRET_KEY': 'PLACE YOUR API SECRET KEY HERE',
   'REDIRECT_URL': 'flutterfireauth://',

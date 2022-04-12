@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -9,16 +8,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/user_avatar.dart';
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_user_service_impl.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import '../../../zegocall/core/interface/zego_user_service.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/user_avatar.dart';
+import './../../../zegocall/core/interface/zego_user_service.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
+import './../player/avatar_background.dart';
 import 'settings/calling_settings.dart';
-import 'widgets/avatar_background.dart';
-import 'widgets/online_bottom_toolbar.dart';
-import 'widgets/online_top_toolbar.dart';
+import 'toolbar/online_bottom_toolbar.dart';
+import 'toolbar/online_top_toolbar.dart';
 
 class OnlineVoiceView extends StatelessWidget {
   const OnlineVoiceView({required this.caller, required this.callee, Key? key})
@@ -29,9 +27,7 @@ class OnlineVoiceView extends StatelessWidget {
 
   getOtherUserName(BuildContext context) {
     final localUserID = context.read<IZegoUserService>().localUserInfo.userID;
-    return localUserID == caller.userID
-        ? callee.userName
-        : caller.userName;
+    return localUserID == caller.userID ? callee.userName : caller.userName;
   }
 
   Widget surface(BuildContext context) {
@@ -53,7 +49,7 @@ class OnlineVoiceView extends StatelessWidget {
           height: 200.h,
           child: CircleAvatar(
             maxRadius: 200.w,
-            backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+            backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
           ),
         ),
         SizedBox(

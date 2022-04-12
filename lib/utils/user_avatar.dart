@@ -18,3 +18,7 @@ int getUserAvatarIndex(String userName) {
   //     radix: 16);
   // return avatarCode % 8;
 }
+
+String getUserAvatarURLByIndex(int index) {
+  return "assets/images/avatar_$index.png";
+}

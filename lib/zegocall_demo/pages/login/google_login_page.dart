@@ -12,7 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 // Project imports:
 import './../../../utils/styles.dart';
 import './../../constants/zego_page_constant.dart';
-import './../../firebase/zego_login_manager.dart';
+import './../../core/zego_login_manager.dart';
 import 'google_login_protocol_item.dart';
 
 class GoogleLoginPage extends StatefulWidget {
@@ -42,8 +42,10 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
     super.initState();
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
-      FirebaseAuth.instance.authStateChanges().listen((event) {
-        if (event != null) {
+      checkPermission();
+
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user != null) {
           Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
         }
       });
@@ -173,7 +175,6 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
 
   void onLogInGooglePressed() {
     if (isPolicyCheck) {
-      checkPermission();
       _signInWithGoogle();
     } else {
       Fluttertoast.showToast(

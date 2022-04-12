@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 // Package imports:
-import 'package:characters/src/extensions.dart';
 
 class Utf8LengthLimitingTextInputFormatter extends TextInputFormatter {
   Utf8LengthLimitingTextInputFormatter(this.maxByteLength)

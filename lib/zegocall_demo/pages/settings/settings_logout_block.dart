@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 // Project imports:
 import './../../../utils/styles.dart';
 import './../../constants/zego_page_constant.dart';
-import './../../firebase/zego_login_manager.dart';
+import './../../core/zego_login_manager.dart';
 
 class SettingsLogoutBlock extends StatelessWidget {
   const SettingsLogoutBlock({Key? key}) : super(key: key);

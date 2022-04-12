@@ -6,14 +6,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import '../../../../zegocall/core/interface/zego_device_service.dart';
+import './../../../../utils/styles.dart';
+import './../../../../zegocall/core/interface/zego_device_service.dart';
+import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
+import './../../../../zegocall/core/zego_call_defines.dart';
 import 'calling_settings_defines.dart';
 import 'calling_settings_item.dart';
-
-import 'package:zego_call_flutter/zegocall/core/interface_imp/zego_device_service'
-    '_impl.dart';
 
 class CallingSettingsListViewPage<T> extends StatelessWidget {
   final String title;
@@ -45,8 +43,7 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
                 height: 85.h,
                 child: header()),
             onTap: () {
-              pageIndexChanged(CallingSettingPageIndexExtension
-                  .valueMap[CallingSettingPageIndex.mainPageIndex]!);
+              pageIndexChanged(CallingSettingPageIndex.mainPageIndex.id);
             }),
         SizedBox(
           width: double.infinity,
@@ -89,8 +86,7 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
           onSelected: (T selectedValue) {
             onSelected(selectedValue);
 
-            pageIndexChanged(CallingSettingPageIndexExtension
-                .valueMap[CallingSettingPageIndex.mainPageIndex]!);
+            pageIndexChanged(CallingSettingPageIndex.mainPageIndex.id);
           },
         );
       },

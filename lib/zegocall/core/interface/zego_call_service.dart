@@ -2,11 +2,13 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import '../model/zego_user_info.dart';
 import './../delegate/zego_call_service_delegate.dart';
 import './../model/zego_call_info.dart';
+import './../model/zego_user_info.dart';
 import './../zego_call_defines.dart';
 import 'zego_service.dart';
+
+typedef CommandCallback = void Function(int);
 
 abstract class IZegoCallService extends ChangeNotifier with ZegoService {
   ZegoCallInfo callInfo = ZegoCallInfo.empty();
@@ -14,13 +16,14 @@ abstract class IZegoCallService extends ChangeNotifier with ZegoService {
 
   ZegoCallServiceDelegate? delegate;
 
-  Future<int> callUser(ZegoUserInfo user, String token, ZegoCallType type);
+  ZegoError callUser(ZegoUserInfo callee, String token, ZegoCallType type,
+      CommandCallback callback);
 
-  Future<int> cancelCall(String userID);
+  Future<int> cancelCall();
 
-  Future<int> acceptCall(String token);
+  ZegoError acceptCall(String token, CommandCallback callback);
 
-  Future<int> declineCall(String userID, ZegoDeclineType type);
+  Future<int> declineCall();
 
   Future<int> endCall();
 }
