@@ -5,16 +5,16 @@ import 'dart:developer';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import '../../zegocall/core/manager/zego_service_manager.dart';
-import '../../zegocall/core/model/zego_user_info.dart';
-import '../../zegocall/core/zego_call_defines.dart';
-import '../../zegocall_uikit/core/zego_call_manager_interface.dart';
-import '../../zegocall/core/delegate/zego_call_service_delegate.dart';
-import '../../zegocall/core/delegate/zego_device_service_delegate.dart';
-import '../../zegocall/core/delegate/zego_user_service_delegate.dart';
-import '../../zegocall/notification/zego_notification_manager.dart';
-import '../../zegocall/request/zego_firebase_manager.dart';
-import '../pages/core/zego_call_page_handler.dart';
+import './../../zegocall/core/delegate/zego_call_service_delegate.dart';
+import './../../zegocall/core/delegate/zego_device_service_delegate.dart';
+import './../../zegocall/core/delegate/zego_user_service_delegate.dart';
+import './../../zegocall/core/manager/zego_service_manager.dart';
+import './../../zegocall/core/model/zego_user_info.dart';
+import './../../zegocall/core/zego_call_defines.dart';
+import './../../zegocall/notification/zego_notification_manager.dart';
+import './../../zegocall/request/zego_firebase_manager.dart';
+import './../../zegocall_uikit/core/zego_call_manager_interface.dart';
+import './../pages/core/zego_call_page_handler.dart';
 import 'zego_call_manager_delegate.dart';
 
 class ZegoCallManager

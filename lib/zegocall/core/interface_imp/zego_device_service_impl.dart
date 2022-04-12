@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import '../interface/zego_device_service.dart';
-import '../interface/zego_event_handler.dart';
-import '../manager/zego_service_manager.dart';
+import './../interface/zego_device_service.dart';
+import './../interface/zego_event_handler.dart';
+import './../manager/zego_service_manager.dart';
 import './../zego_call_defines.dart';
 
 class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {

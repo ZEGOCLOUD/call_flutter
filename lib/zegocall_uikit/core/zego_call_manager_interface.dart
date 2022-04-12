@@ -1,6 +1,6 @@
 // Project imports:
-import '../../zegocall/core/model/zego_user_info.dart';
-import '../../zegocall/core/zego_call_defines.dart';
+import './../../zegocall/core/model/zego_user_info.dart';
+import './../../zegocall/core/zego_call_defines.dart';
 
 /// The call status
 enum ZegoCallStatus {

@@ -7,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import '../../../utils/styles.dart';
-import '../../../utils/user_avatar.dart';
-import '../../../zegocall/core/model/zego_user_info.dart';
-import '../../../zegocall/core/zego_call_defines.dart';
-import '../player/video_player.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/user_avatar.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
 import './../player/avatar_background.dart';
+import './../player/video_player.dart';
 import 'toolbar/calling_toolbar.dart';
 
 class CallingCallerView extends StatelessWidget {

@@ -16,9 +16,9 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
-import '../zegocall/core/manager/zego_service_manager.dart';
-import '../zegocall_uikit/core/zego_call_manager.dart';
-import '../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
+import './../zegocall/core/manager/zego_service_manager.dart';
+import './../zegocall_uikit/core/zego_call_manager.dart';
+import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
 import 'constants/zego_page_constant.dart';
 import 'core/zego_user_list_manager.dart';
 

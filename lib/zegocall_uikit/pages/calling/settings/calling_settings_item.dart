@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import '../../../../utils/styles.dart';
+import './../../../../utils/styles.dart';
 
 class CallingSettingsSwitchItem extends StatelessWidget {
   final String title;

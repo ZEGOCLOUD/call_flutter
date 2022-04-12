@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
-import '../constants/user_info.dart';
+import './../constants/user_info.dart';
 
 class ZegoUserListManager extends ChangeNotifier {
   static var shared = ZegoUserListManager();

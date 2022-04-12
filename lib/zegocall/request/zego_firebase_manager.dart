@@ -11,10 +11,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
-import '../command/zego_request_protocol.dart';
-import '../core/model/zego_user_info.dart';
-import '../listener/zego_listener.dart';
+import './../command/zego_request_protocol.dart';
+import './../core/model/zego_user_info.dart';
 import './../core/zego_call_defines.dart';
+import './../listener/zego_listener.dart';
 import './../listener/zego_listener_manager.dart';
 import 'zego_firebase_call_model.dart';
 

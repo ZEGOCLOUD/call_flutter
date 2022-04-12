@@ -12,8 +12,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
+import './../../zegocall_uikit/core/zego_call_manager.dart';
 import 'zego_token_manager.dart';
-import '../../zegocall_uikit/core/zego_call_manager.dart';
 import 'zego_user_list_manager.dart';
 
 typedef LoginResult = Result<User, int>;

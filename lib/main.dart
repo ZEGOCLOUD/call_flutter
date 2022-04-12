@@ -6,10 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // Project imports:
-import 'zegocall_demo/secret/zego_secret_reader.dart';
-import 'zegocall_uikit/core/zego_call_manager.dart';
 import 'zegocall_demo/core/zego_login_manager.dart';
+import 'zegocall_demo/secret/zego_secret_reader.dart';
 import 'zegocall_demo/zegocall_demo_app.dart';
+import 'zegocall_uikit/core/zego_call_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

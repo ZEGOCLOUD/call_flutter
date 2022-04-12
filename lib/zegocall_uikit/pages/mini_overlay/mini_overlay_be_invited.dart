@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import '../../../utils/styles.dart';
-import '../../../utils/user_avatar.dart';
-import '../../../zegocall/core/zego_call_defines.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/user_avatar.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
 
 class MiniOverlayBeInvite extends StatefulWidget {
   const MiniOverlayBeInvite({

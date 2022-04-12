@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import '../../../../utils/styles.dart';
+import './../../../../utils/styles.dart';
 
 class CallingCalleeBottomToolBarButton extends StatelessWidget {
   final String text;

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import '../../../../zegocall/core/interface/zego_device_service.dart';
-import '../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
-import '../../../../zegocall/core/zego_call_defines.dart';
+import './../../../../zegocall/core/interface/zego_device_service.dart';
+import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
+import './../../../../zegocall/core/zego_call_defines.dart';
 import 'calling_settings_defines.dart';
 import 'calling_settings_listview_page.dart';
 import 'calling_settings_page.dart';

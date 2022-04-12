@@ -30,7 +30,7 @@ class SettingsPage extends HookWidget {
                     children: [
                       NavigationBackBar(
                           targetBackUrl: PageRouteNames.welcome,
-                          title: AppLocalizations.of(context)!.roomPageSettings,
+                          title: AppLocalizations.of(context)!.settingPageSettings,
                           titleAlign: TextAlign.center,
                           titleStyle: StyleConstant.settingTitle,
                           iconColor: StyleConstant.settingTitle.color),

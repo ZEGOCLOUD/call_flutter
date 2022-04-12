@@ -2,11 +2,11 @@
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import '../../../zegocall/core/interface/zego_event_handler.dart';
-import '../../../zegocall/core/interface_imp/zego_stream_service_impl.dart';
-import '../../../zegocall/core/manager/zego_service_manager.dart';
-import '../interface/zego_room_service.dart';
-import '../zego_call_defines.dart';
+import './../../../zegocall/core/interface/zego_event_handler.dart';
+import './../../../zegocall/core/interface_imp/zego_stream_service_impl.dart';
+import './../../../zegocall/core/manager/zego_service_manager.dart';
+import './../interface/zego_room_service.dart';
+import './../zego_call_defines.dart';
 
 class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
   @override

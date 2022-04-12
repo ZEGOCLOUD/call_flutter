@@ -7,10 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import '../../../zegocall/core/interface/zego_user_service.dart';
-import '../../../zegocall/core/model/zego_user_info.dart';
-import '../../../zegocall/core/zego_call_defines.dart';
-import '../player/video_player.dart';
+import './../../../zegocall/core/interface/zego_user_service.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
+import './../player/video_player.dart';
 import 'settings/calling_settings.dart';
 import 'toolbar/online_bottom_toolbar.dart';
 import 'toolbar/online_top_toolbar.dart';

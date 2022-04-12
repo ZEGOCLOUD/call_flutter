@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 // Project imports:
-import '../request/zego_firebase_call_model.dart';
+import './../request/zego_firebase_call_model.dart';
 
 class ZegoNotificationModel {
   String callID = "";

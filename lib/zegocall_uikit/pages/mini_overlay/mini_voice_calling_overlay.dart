@@ -1,4 +1,3 @@
-
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +7,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import '../../../utils/styles.dart';
-import '../core/machine/mini_voice_calling_overlay_machine.dart';
+import './../../../utils/styles.dart';
+import './../core/machine/mini_voice_calling_overlay_machine.dart';
 
 class MiniVoiceCallingOverlay extends StatefulWidget {
   const MiniVoiceCallingOverlay(

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import '../../constants/user_info.dart';
-import '../../../zegocall_uikit/core/zego_call_manager.dart';
-import '../../../zegocall/core/model/zego_user_info.dart';
-import '../../../zegocall/core/zego_call_defines.dart';
 import './../../../utils/styles.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
+import './../../../zegocall_uikit/core/zego_call_manager.dart';
+import './../../constants/user_info.dart';
 import 'online_list_elements.dart';
 
 class OnlineListItem extends StatelessWidget {
