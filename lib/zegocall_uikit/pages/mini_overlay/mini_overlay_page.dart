@@ -16,7 +16,7 @@ import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 import './../../../zegocall_demo/constants/zego_page_constant.dart';
 import './../../core/zego_call_manager.dart';
-import './../core/machine/mini_overlay_machine.dart';
+import './../../core/machine/mini_overlay_machine.dart';
 import 'mini_overlay_be_invited.dart';
 import 'mini_video_calling_overlay.dart';
 import 'mini_voice_calling_overlay.dart';

@@ -1,11 +1,11 @@
 // Project imports:
-import './../../../zegocall/core/delegate/zego_call_service_delegate.dart';
-import './../../../zegocall/core/model/zego_user_info.dart';
-import './../../../zegocall/core/zego_call_defines.dart';
-import './../../core/zego_call_manager.dart';
-import './../../core/zego_call_manager_interface.dart';
-import 'machine/calling_machine.dart';
-import 'machine/mini_overlay_machine.dart';
+import '../../zegocall/core/delegate/zego_call_service_delegate.dart';
+import '../../zegocall/core/model/zego_user_info.dart';
+import '../../zegocall/core/zego_call_defines.dart';
+import 'zego_call_manager.dart';
+import 'zego_call_manager_interface.dart';
+import './machine/calling_machine.dart';
+import './machine/mini_overlay_machine.dart';
 import 'zego_call_page_defines.dart';
 
 class ZegoCallPageHandler with ZegoCallServiceDelegate {
@@ -19,6 +19,11 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     miniOverlayMachine = MiniOverlayMachine();
     miniOverlayMachine.init();
+  }
+
+  void toIdle() {
+    callingMachine.stateIdle.enter();
+    miniOverlayMachine.stateIdle.enter();
   }
 
   @override

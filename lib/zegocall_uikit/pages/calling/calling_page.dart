@@ -7,7 +7,7 @@ import './../../../zegocall/core/manager/zego_service_manager.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 import './../../core/zego_call_manager.dart';
-import './../core/machine/calling_machine.dart';
+import './../../core/machine/calling_machine.dart';
 import 'calling_callee_view.dart';
 import 'calling_caller_view.dart';
 import 'online_video_view.dart';

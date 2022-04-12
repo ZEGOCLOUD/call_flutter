@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import './../../../utils/styles.dart';
-import './../core/machine/mini_voice_calling_overlay_machine.dart';
+import './../../core/machine/mini_voice_calling_overlay_machine.dart';
 
 class MiniVoiceCallingOverlay extends StatefulWidget {
   const MiniVoiceCallingOverlay(

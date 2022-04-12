@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import './../../../zegocall/core/model/zego_user_info.dart';
-import './../core/machine/mini_video_calling_overlay_machine.dart';
+import './../../core/machine/mini_video_calling_overlay_machine.dart';
 import './../player/video_player.dart';
 
 class MiniVideoCallingOverlay extends StatefulWidget {

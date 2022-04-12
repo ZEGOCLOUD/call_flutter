@@ -14,7 +14,7 @@ import './../../zegocall/core/zego_call_defines.dart';
 import './../../zegocall/notification/zego_notification_manager.dart';
 import './../../zegocall/request/zego_firebase_manager.dart';
 import './../../zegocall_uikit/core/zego_call_manager_interface.dart';
-import './../pages/core/zego_call_page_handler.dart';
+import 'zego_call_page_handler.dart';
 import 'zego_call_manager_delegate.dart';
 
 class ZegoCallManager
@@ -101,17 +101,12 @@ class ZegoCallManager
     }
 
     resetCallUserInfo();
-    resetPageInfo();
+    pageHandler.toIdle();
   }
 
   void resetCallUserInfo() {
     caller = ZegoUserInfo.empty();
     callee = ZegoUserInfo.empty();
-  }
-
-  void resetPageInfo() {
-    pageHandler.callingMachine.stateIdle.enter();
-    pageHandler.miniOverlayMachine.stateIdle.enter();
   }
 
   @override
@@ -153,7 +148,7 @@ class ZegoCallManager
       } else {
         currentCallStatus = ZegoCallStatus.free;
         resetCallUserInfo();
-        resetPageInfo();
+        pageHandler.toIdle();
       }
     });
   }
@@ -179,7 +174,7 @@ class ZegoCallManager
         currentCallStatus = ZegoCallStatus.free;
 
         resetCallUserInfo();
-        resetPageInfo();
+        pageHandler.toIdle();
       }
     });
   }
@@ -189,7 +184,7 @@ class ZegoCallManager
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
-    resetPageInfo();
+    pageHandler.toIdle();
 
     ZegoServiceManager.shared.callService.declineCall();
   }
@@ -201,7 +196,7 @@ class ZegoCallManager
         LocalUserStatus.calling) {
       currentCallStatus = ZegoCallStatus.free;
       resetCallUserInfo();
-      resetPageInfo();
+      pageHandler.toIdle();
 
       ZegoServiceManager.shared.callService.endCall();
     } else {
@@ -214,7 +209,7 @@ class ZegoCallManager
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
-    resetPageInfo();
+    pageHandler.toIdle();
 
     ZegoServiceManager.shared.callService.cancelCall();
   }
