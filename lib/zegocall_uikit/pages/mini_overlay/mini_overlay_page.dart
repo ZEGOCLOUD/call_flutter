@@ -58,7 +58,9 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
         updatePage();
       };
 
-      currentState = widget.machine.machine.current!.identifier;
+      if (null != widget.machine.machine.current) {
+        currentState = widget.machine.machine.current!.identifier;
+      }
       updatePage();
     });
   }

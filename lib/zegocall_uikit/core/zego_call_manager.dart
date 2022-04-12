@@ -39,6 +39,7 @@ class ZegoCallManager
     log('[call manager] init, app id:$appID');
 
     pageHandler = ZegoCallPageHandler();
+    pageHandler.init();
 
     ZegoServiceManager.shared.init();
 
