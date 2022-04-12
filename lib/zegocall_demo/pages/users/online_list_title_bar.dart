@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
+import './../../../utils/styles.dart';
 
 class OnlineListTitleBar extends StatelessWidget {
   const OnlineListTitleBar({Key? key}) : super(key: key);

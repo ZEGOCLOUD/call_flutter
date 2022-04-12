@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -8,12 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/user_avatar.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import 'widgets/avatar_background.dart';
-import 'widgets/calling_toolbar.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/user_avatar.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
+import './../player/avatar_background.dart';
+import 'toolbar/calling_toolbar.dart';
 
 class CallingCalleeView extends StatelessWidget {
   const CallingCalleeView(
@@ -50,7 +49,7 @@ class CallingCalleeView extends StatelessWidget {
           height: 200.h,
           child: CircleAvatar(
             maxRadius: 200.w,
-            backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+            backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
           ),
         ),
         SizedBox(
@@ -58,15 +57,16 @@ class CallingCalleeView extends StatelessWidget {
         ),
         SizedBox(
           height: 59.h,
-          child: Text(callee.userName,
-              style: StyleConstant.callingCenterUserName),
+          child:
+              Text(callee.userName, style: StyleConstant.callingCenterUserName),
         ),
         SizedBox(
           height: 47.h,
         ),
         const Text('Calling...', style: StyleConstant.callingCenterStatus),
         const Expanded(child: SizedBox()),
-        CallingCalleeBottomToolBar(callType: callType),
+        CallingCalleeBottomToolBar(
+            caller: caller, callee: callee, callType: callType),
         SizedBox(
           height: 105.h,
         ),

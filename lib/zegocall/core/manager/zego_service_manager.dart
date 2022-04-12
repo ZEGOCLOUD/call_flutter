@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
@@ -9,18 +10,18 @@ import 'package:flutter/material.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/commands/zego_init_command.dart';
-import '../interface/zego_call_service.dart';
-import '../interface/zego_device_service.dart';
-import '../interface/zego_event_handler.dart';
-import '../interface/zego_room_service.dart';
-import '../interface/zego_stream_service.dart';
-import '../interface/zego_user_service.dart';
-import '../interface_imp/zego_call_service_impl.dart';
-import '../interface_imp/zego_device_service_impl.dart';
-import '../interface_imp/zego_room_service_impl.dart';
-import '../interface_imp/zego_stream_service_impl.dart';
-import '../interface_imp/zego_user_service_impl.dart';
+import './../../../zegocall/core/commands/zego_init_command.dart';
+import './../interface/zego_call_service.dart';
+import './../interface/zego_device_service.dart';
+import './../interface/zego_event_handler.dart';
+import './../interface/zego_room_service.dart';
+import './../interface/zego_stream_service.dart';
+import './../interface/zego_user_service.dart';
+import './../interface_imp/zego_call_service_impl.dart';
+import './../interface_imp/zego_device_service_impl.dart';
+import './../interface_imp/zego_room_service_impl.dart';
+import './../interface_imp/zego_stream_service_impl.dart';
+import './../interface_imp/zego_user_service_impl.dart';
 
 class ZegoServiceManager extends ChangeNotifier {
   static var shared = ZegoServiceManager();
@@ -35,6 +36,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void init() {
     initServices();
+    registerExpressEventHandle();
   }
 
   void initServices() {
@@ -165,8 +167,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onApiCalledResult(int errorCode, String funcName, String info) {
     if (0 != errorCode) {
-      print(
-          "_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
+      log("_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
     }
 
     for (var delegate in rtcEventDelegates) {

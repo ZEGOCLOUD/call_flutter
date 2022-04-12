@@ -2,19 +2,16 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/widgets/navigation_back_bar.dart';
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/user_info.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
-import 'package:zego_call_flutter/zegocall_demo/firebase/zego_user_list_manager.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/widgets/navigation_back_bar.dart';
+import './../../constants/user_info.dart';
+import './../../constants/zego_page_constant.dart';
+import './../../core/zego_user_list_manager.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 
@@ -23,22 +20,6 @@ class OnlineListPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    useEffect(() {
-      try {
-        // On calling notification tap
-        AwesomeNotifications()
-            .actionStream
-            .listen((ReceivedNotification receivedNotification) {
-          Navigator.of(context).pushNamed(PageRouteNames.calling,
-              arguments: receivedNotification.payload);
-        });
-      } catch (e) {
-        print(e);
-      }
-
-      return null;
-    }, const []);
-
     return Scaffold(
         body: SafeArea(
             child: Container(
@@ -51,17 +32,13 @@ class OnlineListPage extends HookWidget {
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
         Consumer<ZegoUserListManager>(
-            builder: (_, userListManager, child) => RefreshIndicator(
-                onRefresh: () async {
-                  ZegoUserListManager.shared.getOnlineUsers();
-                },
-                child: SizedBox(
+            builder: (_, userListManager, child) => SizedBox(
                   width: double.infinity,
                   height: 1080.h,
                   child: userListManager.userList.isEmpty
                       ? emptyTips()
                       : userListView(userListManager),
-                ))),
+                )),
       ]),
     )));
   }

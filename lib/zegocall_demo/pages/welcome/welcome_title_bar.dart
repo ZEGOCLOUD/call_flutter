@@ -9,9 +9,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/user_avatar.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/user_avatar.dart';
+import './../../constants/zego_page_constant.dart';
 
 class WelcomeTitleBar extends StatefulWidget {
   const WelcomeTitleBar({Key? key}) : super(key: key);
@@ -54,7 +54,7 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
       children: [
         CircleAvatar(
           maxRadius: 37.w,
-          backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+          backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
         ),
         Container(
           padding: EdgeInsets.fromLTRB(36.w, 0, 0, 0),

@@ -1,0 +1,174 @@
+{
+	"appName": "ZEGO Call",
+	"loginPageUserName": "Please enter your username.",
+	"loginPageLogin": "Log in",
+	"loginPageGoogleLogin": "Log in with Google",
+	"loginPageServicePrivacy": "I have read and agreed to ZEGOCLOUD's Terms of Service & Privacy Policy.",
+	"toastLoginServicePrivacy": "Please tick to agree to \"Terms of Service\" and \"Privacy Policy\"",
+	"toastLoginFail": "Failed to log in. Error code: {code}.",
+	"@toastLoginFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"toastLoginFailGoogle": "Failed to log in. Error code: {code}(Google).",
+	"@toastLoginFailGoogle": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"loginPageInputUserNameTip": "Username can only contain letters and numbers.",
+	"toastLoginKickOut": "This account has already logged in from another device.",
+	"settingPageSettings": "Settings",
+	"settingPageSdkVersion": "Express SDK Version",
+	"settingPageZimSdkVersion": "ZIM SDK Version",
+	"settingPageVersion": "App Version",
+	"settingPageTermsOfService": "Terms of Use",
+	"settingPagePrivacyPolicy": "Privacy Policy",
+	"settingPageUploadLog": "Upload logs",
+	"toastUploadLogSuccess": "Logs uploaded successfully.",
+	"toastUploadLogFail": "Failed to upload logs. Error code: {code}.",
+	"@toastUploadLogFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"settingPageLogout": "Log out",
+	"toastLogoutFail": "Failed to log out. Error code: {code}.",
+	"@toastLogoutFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"networkReconnect": "Network error. Reconnecting...",
+	"networkConnectFailed": "Network connection failed. Please re-login and try again.",
+	"networkConnnectMeUnstable": "Your connection is unstable.",
+	"networkConnnectOtherUnstable": "Other user's connection is unstable.",
+	"networkConnectFailedTitle": "Network error.",
+	"dialogTipsTitle": "Note",
+	"dialogLoginPageMicCantOpen": "The Mic is off.",
+	"dialogLoginPageMicPermission": "Please allow access to your microphone to continue.",
+	"dialogLoginPageGoToSettings": "Go to Settings",
+	"dialogLoginPageOk": "OK",
+	"dialogLoginPageCancel": "Cancel",
+	"dialogLoginPageTitleCannotUseCamera": "The Camera is off.",
+	"dialogLoginPageMassageCannotUseCamera": "Please allow access to your camera to continue.",
+	"welcomePageUserName": "Username",
+	"welcomePageUserId": "User ID",
+	"welcomePageContactUs": "Contact us",
+	"bannerCallDesc": "Deliver exceptional real-time voice and video communications regardless of distance",
+	"bannerCallTitle": "One-on-one call",
+	"zegoCall": "ZEGO Call",
+	"welcomePageGetMore": "Get more",
+	"callPageCallFail": "Call failed. Error code: {code}.",
+	"@callPageCallFail": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"callPageStatusCalling": "Calling…",
+	"callPageStatusBusy": "The one you dialed is busy.",
+	"callPageStatusCompleted": "Completed",
+	"callPageStatusCanceled": "Canceled",
+	"callPageStatusMissed": "Missed",
+	"callPageStatusDeclined": "Declined",
+	"callPageStatusEnded": "Ended",
+	"callPageActionAccept": "Accept",
+	"callPageActionDecline": "Decline",
+	"callPageCallStatusFail": "Call failed. Please try again later.",
+	"callPageCallQualityPoor": "Poor call quality...",
+	"callPageCallDisconnected": "The call has dropped. Please wait. ",
+	"callPageCallUnableInitiate": "On the line. Unable to initiate a new call",
+	"roomSettingsPageSettings": "Settings",
+	"roomSettingsPageNoiseSuppression": "Noise suppression",
+	"roomSettingsPageEchoCancellation": "Echo cancellation",
+	"roomSettingsPageMicVolume": "Mic volume auto-adjustment",
+	"roomSettingsPageMinoring": "Video minoring",
+	"roomSettingsPageVideoResolution": "Resolution",
+	"roomSettingsPageAudioBitrate": "Audio birate",
+	"callUserListRefresh": "Refreshing",
+	"back": "Back",
+	"online": "Online",
+	"noOnlineUser": "No users online",
+	"zegoVideoCall": "ZEGO Video Call",
+	"zegoVoiceCall": "ZEGO Voice Call",
+	"floatPermissionTips": "Please allow popup permission to receive incoming calls.",
+	"callNotification": "On the line with %@. Tap here to go back. ",
+	"receiveCallNotification": "%@ is calling you. Tap here to check.",
+	"inviteCallNotification": "%@ is calling you. ",
+	"requestCallNotification": "You are calling %@. Tap here to check.",
+	"cancelCallNotification": "%@ canceled the call.",
+	"timeoutCallNotification": "The call has ended.",
+	"micOperateFailed": "Failed to enable/disable the microphone. Error code: {code}",
+	"@micOperateFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"cameraOperateFailed": "Failed to enable/disable the camera. Error code: {code}",
+	"@cameraOperateFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"cancelCallFailed": "Failed to cancel the call. Error code: {code}",
+	"@cancelCallFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"endCallFailed": "Failed to end the call. Error code: {code}",
+	"@endCallFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"me": "Me",
+	"createUserFailed": "Failed to create user. Error code: {code}",
+	"@createUserFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"micPermissionTip": "Please allow access to your microphone to make voice calls.",
+	"cameraPermissionTip": "Please allow access to your camera to make video calls.",
+	"toastKickoutError": "You have been logged out because this account logged in on another device.",
+	"getUserListFailed": "Failed to get user list. Error code: {code}",
+	"@getUserListFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"responseFailed": "Failed to respond to the incoming call. Error code: {code}",
+	"@responseFailed": {
+		"placeholders": {
+			"code": {
+				"type": "int"
+			}
+		}
+	},
+	"tokenGetFail": "Get token fail.",
+	"tokenIsNotExist": "token is not exist."
+}

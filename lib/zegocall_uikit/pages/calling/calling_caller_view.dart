@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:ui';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -8,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/styles.dart';
-import 'package:zego_call_flutter/utils/user_avatar.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import 'widgets/avatar_background.dart';
-import 'widgets/calling_toolbar.dart';
-import 'widgets/video_player.dart';
+import './../../../utils/styles.dart';
+import './../../../utils/user_avatar.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
+import './../player/avatar_background.dart';
+import './../player/video_player.dart';
+import 'toolbar/calling_toolbar.dart';
 
 class CallingCallerView extends StatelessWidget {
   const CallingCallerView(
@@ -65,7 +64,7 @@ class CallingCallerView extends StatelessWidget {
           height: 200.h,
           child: CircleAvatar(
             maxRadius: 200.w,
-            backgroundImage: AssetImage("images/avatar_$avatarIndex.png"),
+            backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
           ),
         ),
         SizedBox(
@@ -73,8 +72,8 @@ class CallingCallerView extends StatelessWidget {
         ),
         SizedBox(
           height: 59.h,
-          child: Text(callee.userName,
-              style: StyleConstant.callingCenterUserName),
+          child:
+              Text(callee.userName, style: StyleConstant.callingCenterUserName),
         ),
         SizedBox(
           height: 47.h,

@@ -5,9 +5,9 @@ import 'dart:io';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import '../interface/zego_device_service.dart';
-import '../interface/zego_event_handler.dart';
-import '../manager/zego_service_manager.dart';
+import './../interface/zego_device_service.dart';
+import './../interface/zego_event_handler.dart';
+import './../manager/zego_service_manager.dart';
 import './../zego_call_defines.dart';
 
 class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
@@ -22,13 +22,15 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
   }
 
   @override
-  void muteMic(bool mute) {
-    ZegoExpressEngine.instance.muteMicrophone(mute);
+  void enableMic(bool enable) {
+    ZegoExpressEngine.instance.muteMicrophone(!enable);
   }
 
   @override
-  Future<bool> isMicMuted() async {
-    return ZegoExpressEngine.instance.isMicrophoneMuted();
+  Future<bool> isMicEnabled() async {
+    return ZegoExpressEngine.instance.isMicrophoneMuted().then((value) {
+      return !value;
+    });
   }
 
   @override
@@ -175,17 +177,30 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
         ZegoTrafficControlFocusOnMode.ZegoTrafficControlFounsOnRemote);
     ZegoExpressEngine.instance.enableANS(false);
 
+    Map<String, String> advancedConfig = {"room_retry_time": "60"};
     if (Platform.isIOS) {
       //  only for iOS
-      var config = ZegoEngineConfig();
-      config.advancedConfig = {"support_apple_callkit": "true"};
-      ZegoExpressEngine.setEngineConfig(config);
+      advancedConfig["support_apple_callkit"] = "true";
     }
+    var config = ZegoEngineConfig();
+    config.advancedConfig = advancedConfig;
+    ZegoExpressEngine.setEngineConfig(config);
   }
 
   @override
   void onAudioRouteChange(ZegoAudioRoute audioRoute) {
     delegate?.onAudioRouteChange(audioRoute);
+  }
+
+  @override
+  void resetDeviceConfig() {
+    setVideoResolution(ZegoVideoResolution.p720);
+    setAudioBitrate(ZegoAudioBitrate.b48);
+    setNoiseSlimming(true);
+    setEchoCancellation(true);
+    setVolumeAdjustment(true);
+    setIsMirroring(false);
+    useFrontCamera(true);
   }
 }
 

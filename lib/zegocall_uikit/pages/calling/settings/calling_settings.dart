@@ -6,15 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import '../../../../zegocall/core/interface/zego_device_service.dart';
+import './../../../../zegocall/core/interface/zego_device_service.dart';
+import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
+import './../../../../zegocall/core/zego_call_defines.dart';
 import 'calling_settings_defines.dart';
 import 'calling_settings_listview_page.dart';
 import 'calling_settings_page.dart';
-
-// Project imports:
-import 'package:zego_call_flutter/zegocall/core/interface_imp'
-    '/zego_device_service_impl.dart';
 
 class CallingSettingsView extends StatefulWidget {
   final ZegoCallType callType;
@@ -35,8 +32,7 @@ class CallingSettingsViewState extends State<CallingSettingsView> {
 
   @override
   void initState() {
-    pageIndex = CallingSettingPageIndexExtension
-        .valueMap[CallingSettingPageIndex.mainPageIndex]!;
+    pageIndex = CallingSettingPageIndex.mainPageIndex.id;
 
     var deviceService = context.read<IZegoDeviceService>();
     deviceService.getAudioBitrate().then((value) {

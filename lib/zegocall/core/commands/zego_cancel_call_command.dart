@@ -7,6 +7,6 @@ class ZegoCancelCallCommand extends ZegoCommand {
       : super(apiCancelCall) {
     parameters["id"] = userID;
     parameters["call_id"] = callID;
-    parameters["callee_id"] = calleeID;
+    parameters["callee_id"] = callID;
   }
 }

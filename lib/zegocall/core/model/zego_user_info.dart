@@ -6,8 +6,8 @@ class ZegoUserInfo {
 
   /// User name, cannot be null.
   String userName = "";
-  bool mic = false;
-  bool camera = false;
+  bool mic = true;
+  bool camera = true;
 
   bool isEmpty() {
     return userID.isEmpty || userName.isEmpty;

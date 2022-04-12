@@ -16,21 +16,11 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-import 'package:zego_call_flutter/zegocall_demo/constants/zego_page_constant.dart';
-import 'package:zego_call_flutter/zegocall_demo/firebase/zego_user_list_manager.dart';
-import 'package:zego_call_flutter/zegocall_demo/pages/login/google_login_page.dart';
-import 'package:zego_call_flutter/zegocall_demo/pages/settings/settings_page.dart';
-import 'package:zego_call_flutter/zegocall_demo/pages/welcome/welcome_page.dart';
-import 'package:zego_call_flutter/zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
-
-import 'package:zego_call_flutter/zegocall_uikit/pages/calling/calling_page'
-    '.dart';
-
-import 'package:zego_call_flutter/zegocall_demo/pages/users/online_list_page'
-    '.dart';
-
-import '../zegocall/request/zego_firebase_manager.dart';
+import './../zegocall/core/manager/zego_service_manager.dart';
+import './../zegocall_uikit/core/zego_call_manager.dart';
+import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
+import 'constants/zego_page_constant.dart';
+import 'core/zego_user_list_manager.dart';
 
 class ZegoApp extends StatefulWidget {
   const ZegoApp({Key? key}) : super(key: key);
@@ -39,7 +29,7 @@ class ZegoApp extends StatefulWidget {
   _ZegoAppState createState() => _ZegoAppState();
 }
 
-class _ZegoAppState extends State<ZegoApp> {
+class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable(); //  always bright
@@ -51,8 +41,6 @@ class _ZegoAppState extends State<ZegoApp> {
     if (Platform.isAndroid) {
       supportAndroidRunBackground();
     }
-
-    initManagers();
 
     return MultiProvider(
         providers: providers(),
@@ -66,40 +54,53 @@ class _ZegoAppState extends State<ZegoApp> {
               child: ScreenUtilInit(
                 designSize: const Size(750, 1334),
                 minTextAdapt: true,
-                builder: () => MaterialApp(
-                  title: "ZegoCall",
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                  ],
-                  supportedLocales: const [
-                    Locale('en', ''), // English, no country code
-                    Locale('zh', ''),
-                  ],
-                  initialRoute: FirebaseAuth.instance.currentUser != null
-                      ? PageRouteNames.welcome
-                      : PageRouteNames.login,
-                  routes: {
-                    PageRouteNames.login: (context) => const GoogleLoginPage(),
-                    PageRouteNames.welcome: (context) => const WelcomePage(),
-                    PageRouteNames.settings: (context) => const SettingsPage(),
-                    PageRouteNames.calling: (context) => const CallingPage(),
-                    PageRouteNames.onlineList: (context) =>
-                        const OnlineListPage(),
-                  },
-                  builder: (context, child) {
-                    return Stack(
-                      children: [
-                        child!,
-                        MiniOverlayPage(),
-                      ],
-                    );
-                  },
-                ),
+                builder: () => materialApp(),
               )),
         ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (AppLifecycleState.detached == state) {
+      WidgetsBinding.instance?.removeObserver(this);
+
+      ZegoCallManager.shared.uninit();
+    }
+  }
+
+  MaterialApp materialApp() {
+    return MaterialApp(
+      title: "ZegoCall",
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''), // English, no country code
+        Locale('zh', ''),
+      ],
+      initialRoute: FirebaseAuth.instance.currentUser != null
+          ? PageRouteNames.welcome
+          : PageRouteNames.login,
+      routes: materialRoutes,
+      builder: (context, child) {
+        return Stack(
+          children: [
+            child!,
+            MiniOverlayPage(),
+          ],
+        );
+      },
+    );
   }
 
   providers() {
@@ -141,14 +142,5 @@ class _ZegoAppState extends State<ZegoApp> {
         FlutterBackground.enableBackgroundExecution();
       });
     });
-  }
-
-  void initManagers() {
-    ZegoUserListManager.shared.init();
-
-    ZegoServiceManager.shared.init();
-    ZegoServiceManager.shared.initWithAPPID(841790877);
-
-    ZegoFireBaseManager.shared.init();
   }
 }

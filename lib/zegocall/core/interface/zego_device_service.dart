@@ -1,6 +1,3 @@
-// Dart imports:
-import 'dart:io';
-
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
@@ -8,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import '../delegate/zego_device_service_delegate.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
+import './../delegate/zego_device_service_delegate.dart';
 import 'zego_service.dart';
 
 abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
@@ -55,9 +52,9 @@ abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
 
   void enableCamera(bool enable);
 
-  void muteMic(bool mute);
+  void enableMic(bool enable);
 
-  Future<bool> isMicMuted();
+  Future<bool> isMicEnabled();
 
   void useFrontCamera(bool enable, {ZegoPublishChannel? channel});
 
@@ -66,4 +63,6 @@ abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
   Future<bool> isSpeakerEnabled();
 
   void setBestConfig();
+
+  void resetDeviceConfig();
 }

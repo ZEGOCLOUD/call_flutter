@@ -4,22 +4,6 @@ import 'package:result_type/result_type.dart';
 typedef RequestResult = Result<dynamic, ZegoError>;
 typedef RequestParameterType = Map<String, dynamic>;
 
-enum ZegoUserError {
-  kickOut,
-  tokenExpire,
-}
-
-extension ZegoUserErrorExtension on ZegoUserError {
-  int get id {
-    switch (this) {
-      case ZegoUserError.kickOut:
-        return 1;
-      case ZegoUserError.tokenExpire:
-        return 2;
-    }
-  }
-}
-
 enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
 
 extension ZegoCallTypeExtension on ZegoCallType {
@@ -31,6 +15,20 @@ extension ZegoCallTypeExtension on ZegoCallType {
         return 2;
     }
   }
+
+  static const Map<int, ZegoCallType> mapValue = {
+    1: ZegoCallType.kZegoCallTypeVoice,
+    2: ZegoCallType.kZegoCallTypeVideo,
+  };
+
+  String get string {
+    switch (this) {
+      case ZegoCallType.kZegoCallTypeVoice:
+        return "voice";
+      case ZegoCallType.kZegoCallTypeVideo:
+        return "video";
+    }
+  }
 }
 
 enum ZegoCallTimeoutType {
@@ -39,6 +37,47 @@ enum ZegoCallTimeoutType {
 
   /// calling: the call timed out during a call.
   calling
+}
+
+extension ZegoCallTimeoutTypeExtension on ZegoCallTimeoutType {
+  String get string {
+    switch (this) {
+      case ZegoCallTimeoutType.connecting:
+        return "connecting";
+      case ZegoCallTimeoutType.calling:
+        return "calling";
+    }
+  }
+}
+
+enum ZegoCallingState {
+  disconnected,
+  connecting,
+  connected,
+}
+
+extension ZegoCallingStateExtension on ZegoCallingState {
+  int get id {
+    switch (this) {
+      case ZegoCallingState.disconnected:
+        return 0;
+      case ZegoCallingState.connecting:
+        return 1;
+      case ZegoCallingState.connected:
+        return 2;
+    }
+  }
+
+  String get string {
+    switch (this) {
+      case ZegoCallingState.disconnected:
+        return "disconnected";
+      case ZegoCallingState.connecting:
+        return "connecting";
+      case ZegoCallingState.connected:
+        return "connected";
+    }
+  }
 }
 
 enum ZegoDeclineType {
@@ -53,6 +92,20 @@ extension ZegoDeclineTypeExtension on ZegoDeclineType {
         return 1;
       case ZegoDeclineType.kZegoDeclineTypeBusy:
         return 2;
+    }
+  }
+
+  static const Map<int, ZegoDeclineType> mapValue = {
+    1: ZegoDeclineType.kZegoDeclineTypeDecline,
+    2: ZegoDeclineType.kZegoDeclineTypeBusy,
+  };
+
+  String get string {
+    switch (this) {
+      case ZegoDeclineType.kZegoDeclineTypeDecline:
+        return "decline";
+      case ZegoDeclineType.kZegoDeclineTypeBusy:
+        return "busy";
     }
   }
 }
@@ -95,7 +148,9 @@ enum LocalUserStatus {
 }
 
 enum ZegoError {
+  success,
   failed,
+  tokenExpired,
   paramInvalid,
   firebasePathNotExist,
 }
@@ -103,12 +158,16 @@ enum ZegoError {
 extension ZegoErrorExtension on ZegoError {
   int get id {
     switch (this) {
+      case ZegoError.success:
+        return 0;
       case ZegoError.failed:
         return 1;
+      case ZegoError.tokenExpired:
+        return 1001;
       case ZegoError.paramInvalid:
-        return 2;
-      case ZegoError.firebasePathNotExist:
         return 2001;
+      case ZegoError.firebasePathNotExist:
+        return 10001;
     }
   }
 }
@@ -128,4 +187,3 @@ const String notifyCallAccept = "/call/notify_call_accept";
 const String notifyCallDecline = "/call/notify_call_decline";
 const String notifyCallEnd = "/call/notify_call_end";
 const String notifyCallTimeout = "/call/notify_timeout";
-const String notifyUserError = "/user/notify_error";
