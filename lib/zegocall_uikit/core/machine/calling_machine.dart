@@ -4,6 +4,9 @@ import 'dart:developer';
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
 
+// Project imports:
+import '../../../zegocall_demo/constants/zego_page_constant.dart';
+
 enum CallingState {
   kIdle,
   kCallingWithVoice,
@@ -33,10 +36,27 @@ class CallingMachine {
       }
     });
 
-    stateIdle = machine.newState(CallingState.kIdle); // default state;
-    stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice);
-    stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo);
-    stateOnlineVoice = machine.newState(CallingState.kOnlineVoice);
-    stateOnlineVideo = machine.newState(CallingState.kOnlineVideo);
+    stateIdle = machine.newState(CallingState.kIdle)
+      ..onEntry(() {
+        navigatorPush(PageRouteNames.onlineList);
+      }); // default state
+
+    stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice)
+      ..onEntry(() {
+        navigatorPush(PageRouteNames.calling);
+      });
+    stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo)
+      ..onEntry(() {
+        navigatorPush(PageRouteNames.calling);
+      });
+    stateOnlineVoice = machine.newState(CallingState.kOnlineVoice)
+      ..onEntry(() {
+        navigatorPush(PageRouteNames.calling);
+      });
+    stateOnlineVideo = machine.newState(CallingState.kOnlineVideo)
+      ..onEntry(() {
+        navigatorPush(PageRouteNames.calling);
+      });
   }
+
 }

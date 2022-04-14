@@ -60,6 +60,7 @@ dependencies:
   flutter_vibrate: ^1.3.0
   audioplayers: ^0.20.1
   shared_preferences: ^2.0.13
+  get_it: ^7.2.0
 
 dev_dependencies:
   flutter_test:

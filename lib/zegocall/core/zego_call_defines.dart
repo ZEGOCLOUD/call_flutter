@@ -149,10 +149,14 @@ enum LocalUserStatus {
 
 enum ZegoError {
   success,
-  failed,
-  tokenExpired,
-  paramInvalid,
   firebasePathNotExist,
+  failed,
+  paramInvalid,
+  notInit,
+  networkError,
+  notLogin,
+  callStatusWrong,
+  tokenExpired,
 }
 
 extension ZegoErrorExtension on ZegoError {
@@ -160,14 +164,24 @@ extension ZegoErrorExtension on ZegoError {
     switch (this) {
       case ZegoError.success:
         return 0;
-      case ZegoError.failed:
-        return 1;
-      case ZegoError.tokenExpired:
-        return 1001;
-      case ZegoError.paramInvalid:
-        return 2001;
       case ZegoError.firebasePathNotExist:
         return 10001;
+
+      case ZegoError.failed:
+        return 1001;
+      case ZegoError.paramInvalid:
+        return 1002;
+      case ZegoError.notInit:
+        return 1003;
+      case ZegoError.networkError:
+        return 1004;
+      case ZegoError.notLogin:
+        return 1005;
+
+      case ZegoError.callStatusWrong:
+        return 2001;
+      case ZegoError.tokenExpired:
+        return 2002;
     }
   }
 }

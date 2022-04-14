@@ -16,8 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
-import './../zegocall/core/manager/zego_service_manager.dart';
-import './../zegocall_uikit/core/zego_call_manager.dart';
+import 'package:zego_call_flutter/zegocall_demo/pages/zego_navigation_service.dart';
+import '../zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
 import 'constants/zego_page_constant.dart';
 import 'core/zego_user_list_manager.dart';
@@ -43,7 +43,10 @@ class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
     }
 
     return MultiProvider(
-        providers: providers(),
+        providers: [
+          ChangeNotifierProvider(
+              create: (context) => ZegoUserListManager.shared)
+        ],
         child: GestureDetector(
           onTap: () {
             //  for hide keyboard when click on empty place of all pages
@@ -88,35 +91,17 @@ class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
         Locale('en', ''), // English, no country code
         Locale('zh', ''),
       ],
+      navigatorKey: locator<NavigationService>().navigatorKey,
       initialRoute: FirebaseAuth.instance.currentUser != null
           ? PageRouteNames.welcome
           : PageRouteNames.login,
       routes: materialRoutes,
       builder: (context, child) {
         return Stack(
-          children: [
-            child!,
-            MiniOverlayPage(),
-          ],
+          children: [child!, const MiniOverlayPage()],
         );
       },
     );
-  }
-
-  providers() {
-    return [
-      ChangeNotifierProvider(create: (context) => ZegoUserListManager.shared),
-      ChangeNotifierProvider(
-          create: (context) => ZegoServiceManager.shared.roomService),
-      ChangeNotifierProvider(
-          create: (context) => ZegoServiceManager.shared.userService),
-      ChangeNotifierProvider(
-          create: (context) => ZegoServiceManager.shared.callService),
-      ChangeNotifierProvider(
-          create: (context) => ZegoServiceManager.shared.streamService),
-      ChangeNotifierProvider(
-          create: (context) => ZegoServiceManager.shared.deviceService),
-    ];
   }
 
   void hideKeyboard(BuildContext context) {

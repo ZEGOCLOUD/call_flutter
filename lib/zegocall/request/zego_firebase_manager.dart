@@ -94,7 +94,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .mapValue[parameters["type"] as int? ?? FirebaseCallType.voice.id]!;
     if (callID.isEmpty || caller.isEmpty() || callees.isEmpty) {
       log('[firebase] call users, parameters is invalid');
-      return Failure(ZegoError.failed);
+      return Failure(ZegoError.paramInvalid);
     }
 
     var callModel = ZegoFirebaseCallModel.empty();
@@ -118,13 +118,15 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       callModel.users.add(callee);
     }
 
-    log('call user, call id:$callID, data:${callModel.toMap()}');
+    log('[firebase] call users, call id:$callID, data:${callModel.toMap()}');
     await FirebaseDatabase.instance
         .ref('call')
         .child(callID)
         .set(callModel.toMap())
         .then((value) {
       modelDict[callID] = callModel;
+      log('[firebase] call users, model dict add $callID');
+
       addCallListener(callID);
     });
 
@@ -137,7 +139,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final userID = parameters["id"] as String? ?? "";
     if (calleeID.isEmpty || callID.isEmpty || userID.isEmpty) {
       log('[firebase] cancel call, parameters is invalid');
-      return Failure(ZegoError.failed);
+      return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
@@ -162,6 +164,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     }).then((TransactionResult result) {
       if (result.committed) {
         modelDict.remove(callID);
+        log('[firebase] cancel call, model dict remove $callID');
+
         return Success("");
       } else {
         return Failure(ZegoError.failed);
@@ -173,7 +177,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final callID = parameters["call_id"] as String? ?? "";
     if (callID.isEmpty) {
       log('[firebase] accept call, parameters is invalid');
-      return Failure(ZegoError.failed);
+      return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
@@ -198,7 +202,6 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       return Transaction.success(model.toMap());
     }).then((TransactionResult result) {
       if (result.committed) {
-        modelDict.remove(callID);
         return Success("");
       } else {
         return Failure(ZegoError.failed);
@@ -212,7 +215,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         parameters["type"] as int? ?? ZegoDeclineType.kZegoDeclineTypeDecline];
     if (callID.isEmpty) {
       log('[firebase] decline call, parameters is invalid');
-      return Failure(ZegoError.failed);
+      return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
@@ -245,6 +248,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     }).then((TransactionResult result) {
       if (result.committed) {
         modelDict.remove(callID);
+        log('[firebase] decline call, model dict remove $callID');
+
         return Success("");
       } else {
         return Failure(ZegoError.failed);
@@ -256,7 +261,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final callID = parameters["call_id"] as String? ?? "";
     if (callID.isEmpty) {
       log('[firebase] end call, parameters is invalid');
-      return Failure(ZegoError.failed);
+      return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
@@ -282,6 +287,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     }).then((TransactionResult result) {
       if (result.committed) {
         modelDict.remove(callID);
+        log('[firebase] end call, model dict remove $callID');
+
         return Success("");
       } else {
         return Failure(ZegoError.failed);
@@ -294,7 +301,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final callID = parameters["call_id"] as String? ?? "";
     if (userID.isEmpty || callID.isEmpty) {
       log('[firebase] heartbeat, parameters is invalid');
-      return Failure(ZegoError.failed);
+      return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
@@ -315,6 +322,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     }
     user.heartbeatTime = DateTime.now().millisecondsSinceEpoch;
 
+    log('[firebase] heartbeat, update heartbeat:${user.heartbeatTime}');
     await FirebaseDatabase.instance
         .ref('call')
         .child(callID)
@@ -330,7 +338,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     var effectiveTimeInSeconds = parameters['effective_time'] as int? ?? -1;
     if (userID.isEmpty || effectiveTimeInSeconds < 0) {
       log('[firebase] get token, parameters is invalid');
-      return Failure(ZegoError.failed);
+      return Failure(ZegoError.paramInvalid);
     }
 
     Map<String, dynamic> data = {
@@ -448,6 +456,8 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       if (!modelDict.containsKey(model.callID)) {
         log('[firebase] incoming call,  model dict does not contain ${model.callID}, add to dict.');
         modelDict[model.callID] = model;
+        log('[firebase] incoming call, model dict add ${model.callID}');
+
         addCallListener(model.callID);
       }
 
@@ -519,11 +529,13 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         }
 
         modelDict.remove(model.callID);
+        log('[firebase] call listener, model dict remove ${model.callID}');
+
         return;
       }
 
       var callDict = snapshotValue as Map<dynamic, dynamic>;
-      log('[firebase] call, call dict: $callDict');
+      // log('[firebase] call, call dict: $callDict');
 
       var callStatus = FirebaseCallStatusExtension.mapValue[
               callDict['call_status'] as int? ?? FirebaseCallStatus.unknown.id]
@@ -598,6 +610,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
           }
         }
         modelDict[model.callID] = model;
+        log('[firebase] call listener, model dict add ${model.callID}');
       }
     });
   }
@@ -606,7 +619,9 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
   onReceiveCanceledNotify(String callID, String callerID) {
     Map<String, dynamic> data = {"call_id": callID, "caller_id": callerID};
     ZegoListenerManager.shared.receiveUpdate(notifyCallCanceled, data);
+
     modelDict.remove(callID);
+    log('[firebase] onReceiveCanceledNotify, model dict remove $callID');
   }
 
   /// caller receive the accepted
@@ -616,7 +631,9 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       "callee_id": calleeID
     };
     ZegoListenerManager.shared.receiveUpdate(notifyCallAccept, data);
+
     modelDict[model.callID] = model;
+    log('[firebase] onReceiveAcceptedNotify, model dict add ${model.callID}');
   }
 
   /// caller receive the callee declined the call
@@ -627,14 +644,18 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       "type": type
     };
     ZegoListenerManager.shared.receiveUpdate(notifyCallDecline, data);
+
     modelDict.remove(callID);
+    log('[firebase] onReceiveDeclinedNotify, model dict remove $callID');
   }
 
   /// receive other user ended the call.
   onReceiveEndedNotify(String callID, String otherUserID) {
     Map<String, dynamic> data = {"call_id": callID, "user_id": otherUserID};
     ZegoListenerManager.shared.receiveUpdate(notifyCallEnd, data);
+
     modelDict.remove(callID);
+    log('[firebase] onReceiveEndedNotify, model dict remove $callID');
   }
 
   onReceiveTimeoutNotify(String callID, String otherUserID) {

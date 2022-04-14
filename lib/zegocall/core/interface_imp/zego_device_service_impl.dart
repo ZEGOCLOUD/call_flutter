@@ -194,8 +194,8 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
 
   @override
   void resetDeviceConfig() {
-    setVideoResolution(ZegoVideoResolution.p720);
-    setAudioBitrate(ZegoAudioBitrate.b48);
+    // setVideoResolution(ZegoVideoResolution.p720);
+    // setAudioBitrate(ZegoAudioBitrate.b48);
     setNoiseSlimming(true);
     setEchoCancellation(true);
     setVolumeAdjustment(true);

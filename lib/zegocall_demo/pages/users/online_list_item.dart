@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../../../utils/styles.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
-import './../../../zegocall_uikit/core/zego_call_manager.dart';
 import './../../constants/user_info.dart';
 import 'online_list_elements.dart';
 

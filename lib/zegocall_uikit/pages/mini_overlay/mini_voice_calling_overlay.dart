@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import './../../../utils/styles.dart';
-import './../core/machine/mini_voice_calling_overlay_machine.dart';
+import './../../core/machine/mini_voice_calling_overlay_machine.dart';
 
 class MiniVoiceCallingOverlay extends StatefulWidget {
   const MiniVoiceCallingOverlay(
@@ -36,7 +36,19 @@ class _MiniVoiceCallingOverlayState extends State<MiniVoiceCallingOverlay> {
       widget.machine.onStateChanged = (MiniVoiceCallingOverlayState state) {
         setState(() => currentState = state);
       };
+
+      if (null != widget.machine.machine.current) {
+        widget.machine
+            .onStateChanged!(widget.machine.machine.current!.identifier);
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.machine.onStateChanged = null;
   }
 
   @override

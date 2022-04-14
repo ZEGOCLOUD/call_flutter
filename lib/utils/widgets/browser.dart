@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -10,39 +9,49 @@ import 'package:webview_flutter/webview_flutter.dart';
 import './../styles.dart';
 import 'navigation_back_bar.dart';
 
-class Browser extends HookWidget {
+class Browser extends StatefulWidget {
+  const Browser({required this.url, required this.backURL, Key? key})
+      : super(key: key);
+
   final String url;
   final String backURL;
-  late WebViewController webViewController;
 
-  Browser({required this.url, required this.backURL, Key? key})
-      : super(key: key);
+  @override
+  BrowserState createState() => BrowserState();
+}
+
+class BrowserState extends State<Browser> {
+  String title = "";
+  late WebViewController webViewController;
 
   @override
   Widget build(BuildContext context) {
-    var title = useState('');
-
     return Scaffold(
         body: SafeArea(
       child: Column(
         children: [
           NavigationBackBar(
-              targetBackUrl: backURL,
-              title: title.value,
+              targetBackUrl: widget.backURL,
+              title: title,
               titleStyle: StyleConstant.browserTitle,
               iconColor: StyleConstant.browserTitle.color),
           SizedBox(
             height: 1130.h,
             child: WebView(
-                initialUrl: url,
+                initialUrl: widget.url,
                 onWebViewCreated: (controller) {
                   webViewController = controller;
                 },
                 javascriptMode: JavascriptMode.unrestricted,
                 onPageFinished: (String url) {
                   String script = 'window.document.title';
-                  webViewController.runJavascriptReturningResult(script).then(
-                      (value) => title.value = value.replaceAll("\"", ""));
+                  webViewController
+                      .runJavascriptReturningResult(script)
+                      .then((value) {
+                    setState(() {
+                      title = value.replaceAll("\"", "");
+                    });
+                  });
                 }),
           )
         ],

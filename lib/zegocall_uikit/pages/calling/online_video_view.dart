@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 // Project imports:
-import './../../../zegocall/core/interface/zego_user_service.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 import './../player/video_player.dart';
@@ -16,18 +14,11 @@ import 'toolbar/online_bottom_toolbar.dart';
 import 'toolbar/online_top_toolbar.dart';
 
 class OnlineVideoView extends StatelessWidget {
-  const OnlineVideoView({required this.caller, required this.callee, Key? key})
+  const OnlineVideoView({required this.localUser, required this.remoteUser, Key? key})
       : super(key: key);
 
-  final ZegoUserInfo caller;
-  final ZegoUserInfo callee;
-
-  getOtherUserName(BuildContext context) {
-    final localUserID = context.read<IZegoUserService>().localUserInfo.userID;
-    return localUserID == caller.userID
-        ? callee.userName
-        : caller.userName;
-  }
+  final ZegoUserInfo localUser;
+  final ZegoUserInfo remoteUser;
 
   Widget topRightVideoPlayerView(ZegoUserInfo targetUser) {
     return Positioned(
@@ -70,10 +61,10 @@ class OnlineVideoView extends StatelessWidget {
     return Stack(
       children: [
         VideoPlayerView(
-          userID: caller.userID,
-          userName: caller.userName,
+          userID: localUser.userID,
+          userName: localUser.userName,
         ),
-        topRightVideoPlayerView(callee),
+        topRightVideoPlayerView(remoteUser),
         surface(context),
       ],
     );

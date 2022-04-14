@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 // Project imports:
 import './../../../utils/styles.dart';
 import './../../../utils/user_avatar.dart';
-import './../../../zegocall/core/interface/zego_user_service.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 import './../player/avatar_background.dart';
@@ -19,19 +17,15 @@ import 'toolbar/online_bottom_toolbar.dart';
 import 'toolbar/online_top_toolbar.dart';
 
 class OnlineVoiceView extends StatelessWidget {
-  const OnlineVoiceView({required this.caller, required this.callee, Key? key})
+  const OnlineVoiceView(
+      {required this.localUser, required this.remoteUser, Key? key})
       : super(key: key);
 
-  final ZegoUserInfo caller;
-  final ZegoUserInfo callee;
-
-  getOtherUserName(BuildContext context) {
-    final localUserID = context.read<IZegoUserService>().localUserInfo.userID;
-    return localUserID == caller.userID ? callee.userName : caller.userName;
-  }
+  final ZegoUserInfo localUser;
+  final ZegoUserInfo remoteUser;
 
   Widget surface(BuildContext context) {
-    var avatarIndex = getUserAvatarIndex(getOtherUserName(context));
+    var avatarIndex = getUserAvatarIndex(remoteUser.userName);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -56,7 +50,7 @@ class OnlineVoiceView extends StatelessWidget {
           height: 10.h,
         ),
         Text(
-          getOtherUserName(context),
+          remoteUser.userName,
           style: StyleConstant.callingCenterUserName,
         ),
         const Expanded(child: SizedBox()),
@@ -71,7 +65,7 @@ class OnlineVoiceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      AvatarBackgroundView(userName: getOtherUserName(context)),
+      AvatarBackgroundView(userName: remoteUser.userName),
       surface(context),
     ]);
   }

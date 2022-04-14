@@ -5,17 +5,17 @@ import 'dart:developer';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import './../../zegocall/core/delegate/zego_call_service_delegate.dart';
-import './../../zegocall/core/delegate/zego_device_service_delegate.dart';
-import './../../zegocall/core/delegate/zego_user_service_delegate.dart';
-import './../../zegocall/core/manager/zego_service_manager.dart';
-import './../../zegocall/core/model/zego_user_info.dart';
-import './../../zegocall/core/zego_call_defines.dart';
-import './../../zegocall/notification/zego_notification_manager.dart';
-import './../../zegocall/request/zego_firebase_manager.dart';
-import './../../zegocall_uikit/core/zego_call_manager_interface.dart';
-import './../pages/core/zego_call_page_handler.dart';
+import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
+import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
+import '../../../zegocall/core/delegate/zego_user_service_delegate.dart';
+import '../../../zegocall/core/manager/zego_service_manager.dart';
+import '../../../zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/notification/zego_notification_manager.dart';
+import '../../../zegocall/request/zego_firebase_manager.dart';
+import '../zego_call_page_handler.dart';
 import 'zego_call_manager_delegate.dart';
+import 'zego_call_manager_interface.dart';
 
 class ZegoCallManager
     with
@@ -38,19 +38,16 @@ class ZegoCallManager
   void initWithAppID(int appID) {
     log('[call manager] init, app id:$appID');
 
-    pageHandler = ZegoCallPageHandler();
-    pageHandler.init();
-
-    ZegoServiceManager.shared.init();
-
-    ZegoFireBaseManager.shared.init();
-    ZegoNotificationManager.shared.init();
-
+    ZegoServiceManager.shared.initWithAPPID(appID);
     ZegoServiceManager.shared.userService.delegate = this;
     ZegoServiceManager.shared.callService.delegate = this;
     ZegoServiceManager.shared.deviceService.delegate = this;
 
-    ZegoServiceManager.shared.initWithAPPID(appID);
+    ZegoFireBaseManager.shared.init();
+    ZegoNotificationManager.shared.init();
+
+    pageHandler = ZegoCallPageHandler();
+    pageHandler.init();
   }
 
   @override
@@ -101,17 +98,13 @@ class ZegoCallManager
     }
 
     resetCallUserInfo();
-    resetPageInfo();
+
+    pageHandler.restoreToIdle();
   }
 
   void resetCallUserInfo() {
     caller = ZegoUserInfo.empty();
     callee = ZegoUserInfo.empty();
-  }
-
-  void resetPageInfo() {
-    pageHandler.callingMachine.stateIdle.enter();
-    pageHandler.miniOverlayMachine.stateIdle.enter();
   }
 
   @override
@@ -136,25 +129,24 @@ class ZegoCallManager
       return ZegoError.failed;
     }
 
+    currentCallType = callType;
     currentCallStatus = ZegoCallStatus.waitAccept;
-    resetDeviceConfig();
 
     caller = ZegoServiceManager.shared.userService.localUserInfo;
     this.callee = callee;
 
+    resetDeviceConfig();
+
     return ZegoServiceManager.shared.callService
         .callUser(callee, token, callType, (int errorCode) {
       if (ZegoError.success.id == errorCode) {
-        if (ZegoCallType.kZegoCallTypeVoice == callType) {
-          pageHandler.callingMachine.stateCallingWithVoice.enter();
-        } else {
-          pageHandler.callingMachine.stateCallingWithVideo.enter();
-        }
       } else {
         currentCallStatus = ZegoCallStatus.free;
+
         resetCallUserInfo();
-        resetPageInfo();
       }
+
+      pageHandler.onCallUserExecuted(errorCode);
     });
   }
 
@@ -162,25 +154,25 @@ class ZegoCallManager
     log('[call manager] accept call, user:${caller.toString()}, call '
         'type:${callType.string}');
 
+    currentCallType = callType;
+    currentCallStatus = ZegoCallStatus.calling;
+
+    this.caller = caller;
+    callee = ZegoServiceManager.shared.userService.localUserInfo;
+
     resetDeviceConfig();
+
+    pageHandler.onAcceptCallWillExecute();
+
     ZegoServiceManager.shared.callService.acceptCall(token, (int errorCode) {
       if (ZegoError.success.id == errorCode) {
-        currentCallStatus = ZegoCallStatus.calling;
-
-        this.caller = caller;
-        callee = ZegoServiceManager.shared.userService.localUserInfo;
-
-        if (ZegoCallType.kZegoCallTypeVoice == callType) {
-          pageHandler.callingMachine.stateCallingWithVoice.enter();
-        } else {
-          pageHandler.callingMachine.stateCallingWithVideo.enter();
-        }
       } else {
         currentCallStatus = ZegoCallStatus.free;
 
         resetCallUserInfo();
-        resetPageInfo();
       }
+
+      pageHandler.onAcceptCallExecuted(errorCode);
     });
   }
 
@@ -189,7 +181,8 @@ class ZegoCallManager
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
-    resetPageInfo();
+
+    pageHandler.onDeclineCallExecuted();
 
     ZegoServiceManager.shared.callService.declineCall();
   }
@@ -201,7 +194,8 @@ class ZegoCallManager
         LocalUserStatus.calling) {
       currentCallStatus = ZegoCallStatus.free;
       resetCallUserInfo();
-      resetPageInfo();
+
+      pageHandler.onEndCallExecuted();
 
       ZegoServiceManager.shared.callService.endCall();
     } else {
@@ -214,7 +208,8 @@ class ZegoCallManager
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
-    resetPageInfo();
+
+    pageHandler.onCancelCallExecuted();
 
     ZegoServiceManager.shared.callService.cancelCall();
   }
@@ -241,6 +236,7 @@ class ZegoCallManager
 
     caller = ZegoServiceManager.shared.userService.localUserInfo;
     this.callee = callee;
+
     currentCallStatus = ZegoCallStatus.calling;
 
     pageHandler.onReceiveCallAccepted(callee);
@@ -307,6 +303,10 @@ class ZegoCallManager
     pageHandler.onReceiveCallInvite(caller, type);
   }
 
+  void onMiniOverlayBeInvitePageEmptyClicked() {
+    pageHandler.onMiniOverlayBeInvitePageEmptyClicked();
+  }
+
   @override
   void onReceiveCallTimeout(ZegoUserInfo caller, ZegoCallTimeoutType type) {
     log('[call manager] receive call timeout, user:${caller.toString()}, '
@@ -317,10 +317,11 @@ class ZegoCallManager
         if (currentCallStatus == ZegoCallStatus.wait) {
           //
         } else if (currentCallStatus == ZegoCallStatus.waitAccept) {
-          //
+          //  mini update text, missed
         }
         break;
       case ZegoCallTimeoutType.calling:
+        //  mini update text, ended
         break;
     }
 
@@ -337,12 +338,20 @@ class ZegoCallManager
 
   @override
   void onNetworkQuality(String userID, ZegoStreamQualityLevel level) {
-    log('[call manager] network quality, user id:$userID, level:$level');
+    //
+    // log('[call manager] network quality, user id:$userID, level:$level');
   }
 
   @override
   void onUserInfoUpdate(ZegoUserInfo info) {
     log('[call manager] user info update, user:${info.toString()}');
+    if (ZegoServiceManager.shared.userService.localUserInfo.userID !=
+        info.userID) {
+      log('[call manager] user info update, is not current user');
+      return;
+    }
+
+    // miniOverlayMachine.voiceCallingOverlayMachine.stateCalling.enter();
   }
 }
 

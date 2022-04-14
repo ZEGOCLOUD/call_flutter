@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import '../zego_call_defines.dart';
 import './../../../zegocall/core/commands/zego_init_command.dart';
 import './../interface/zego_call_service.dart';
 import './../interface/zego_device_service.dart';
@@ -26,6 +27,8 @@ import './../interface_imp/zego_user_service_impl.dart';
 class ZegoServiceManager extends ChangeNotifier {
   static var shared = ZegoServiceManager();
 
+  bool isSDKInit = false;
+
   late IZegoRoomService roomService;
   late IZegoUserService userService;
   late IZegoCallService callService;
@@ -34,9 +37,21 @@ class ZegoServiceManager extends ChangeNotifier {
 
   List<ZegoEventHandler> rtcEventDelegates = [];
 
-  void init() {
+  Future<void> initWithAPPID(int appID) async {
     initServices();
     registerExpressEventHandle();
+
+    ZegoEngineProfile profile = ZegoEngineProfile(appID, ZegoScenario.General);
+    profile.enablePlatformView = true; //  for play stream with platformView
+    profile.scenario = ZegoScenario.Communication;
+    await ZegoExpressEngine.createEngineWithProfile(profile).then((value) {});
+
+    deviceService.setBestConfig();
+
+    isSDKInit = true;
+
+    var initCommand = ZegoInitCommand();
+    initCommand.execute();
   }
 
   void initServices() {
@@ -63,34 +78,34 @@ class ZegoServiceManager extends ChangeNotifier {
     ZegoExpressEngine.onRoomUserUpdate = onRoomUserUpdate;
     ZegoExpressEngine.onRoomTokenWillExpire = onRoomTokenWillExpire;
     ZegoExpressEngine.onPlayerStateUpdate = onPlayerStateUpdate;
+    ZegoExpressEngine.onPlayerRenderVideoFirstFrame =
+        onPlayerRenderVideoFirstFrame;
     ZegoExpressEngine.onPublisherStateUpdate = onPublisherStateUpdate;
+    ZegoExpressEngine.onPublisherCapturedVideoFirstFrame =
+        onPublisherCapturedVideoFirstFrame;
     ZegoExpressEngine.onNetworkQuality = onNetworkQuality;
     ZegoExpressEngine.onAudioRouteChange = onAudioRouteChange;
     ZegoExpressEngine.onRemoteCameraStateUpdate = onRemoteCameraStateUpdate;
     ZegoExpressEngine.onRemoteMicStateUpdate = onRemoteMicStateUpdate;
-    ZegoExpressEngine.onPublisherCapturedVideoFirstFrame =
-        onPublisherCapturedVideoFirstFrame;
     ZegoExpressEngine.onApiCalledResult = onApiCalledResult;
   }
 
-  Future<void> initWithAPPID(int appID) async {
-    ZegoEngineProfile profile = ZegoEngineProfile(appID, ZegoScenario.General);
-    profile.enablePlatformView = true; //  for play stream with platformView
-    profile.scenario = ZegoScenario.Communication;
-    await ZegoExpressEngine.createEngineWithProfile(profile).then((value) {});
-
-    deviceService.setBestConfig();
-
-    var initCommand = ZegoInitCommand();
-    initCommand.execute();
-  }
-
   Future<void> uninit() async {
-    return ZegoExpressEngine.destroyEngine();
+    isSDKInit = false;
+
+    return await ZegoExpressEngine.destroyEngine();
   }
 
-  Future<void> uploadLog() async {
-    return ZegoExpressEngine.instance.uploadLog();
+  Future<int> uploadLog() async {
+    assert(isSDKInit, "The SDK must be initialised first.");
+
+    if (!isSDKInit) {
+      return ZegoError.notInit.id;
+    }
+
+    ZegoExpressEngine.instance.uploadLog();
+
+    return ZegoError.success.id;
   }
 
   void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
@@ -118,6 +133,12 @@ class ZegoServiceManager extends ChangeNotifier {
       int errorCode, Map<String, dynamic> extendedData) {
     for (var delegate in rtcEventDelegates) {
       delegate.onPlayerStateUpdate(streamID, state, errorCode, extendedData);
+    }
+  }
+
+  void onPlayerRenderVideoFirstFrame(String streamID) {
+    for (var delegate in rtcEventDelegates) {
+      delegate.onPlayerRenderVideoFirstFrame(streamID);
     }
   }
 

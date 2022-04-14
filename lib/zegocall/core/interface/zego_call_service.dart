@@ -19,11 +19,11 @@ abstract class IZegoCallService extends ChangeNotifier with ZegoService {
   ZegoError callUser(ZegoUserInfo callee, String token, ZegoCallType type,
       CommandCallback callback);
 
-  Future<int> cancelCall();
+  Future<ZegoError> cancelCall();
 
   ZegoError acceptCall(String token, CommandCallback callback);
 
-  Future<int> declineCall();
+  Future<ZegoError> declineCall();
 
-  Future<int> endCall();
+  Future<ZegoError> endCall();
 }
