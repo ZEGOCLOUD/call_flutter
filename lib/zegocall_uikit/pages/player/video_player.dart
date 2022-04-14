@@ -32,7 +32,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
         Center(child: createPlayingView(context)),
         ValueListenableBuilder<bool>(
           valueListenable: ZegoServiceManager.shared.streamService
-              .getStreamStateNotifier(widget.userID),
+              .getCameraStateNotifier(widget.userID),
           builder: (context, isStreamReady, _) {
             return Visibility(
                 visible: !isStreamReady,

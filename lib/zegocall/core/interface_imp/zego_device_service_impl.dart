@@ -18,7 +18,9 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
 
   @override
   void enableCamera(bool enable) {
-    ZegoExpressEngine.instance.enableCamera(enable);
+    ZegoExpressEngine.instance.enableCamera(enable).then((value) {
+      ZegoServiceManager.shared.streamService.onLocalCameraEnabled(enable);
+    });
   }
 
   @override
