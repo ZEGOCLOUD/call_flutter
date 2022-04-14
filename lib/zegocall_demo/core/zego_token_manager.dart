@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
-import './../../zegocall_uikit/core/zego_call_manager.dart';
+import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 
 const storeKeyToken = "zego_token_key";
 const storeKeyExpirySeconds = "zego_token_expiry_time_key";

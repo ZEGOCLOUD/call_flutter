@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
+import '../zego_call_defines.dart';
 import './../delegate/zego_room_service_delegate.dart';
 import './../model/zego_room_info.dart';
 import 'zego_service.dart';
@@ -22,7 +23,7 @@ abstract class IZegoRoomService extends ChangeNotifier with ZegoService {
   /// @param roomID   refers to the ID of the room you want to join, and cannot be null.
   /// @param token    token refers to the authentication token. To get this, see the documentation:
   ///                 https://doc-en.zego.im/article/11648
-  Future<int> joinRoom(String roomID, String token);
+  Future<ZegoError> joinRoom(String roomID, String token);
 
   /// Leave the room.
   /// <p>Description: This method can be used to leave the room you joined. The room will be ended when the Host

@@ -6,10 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall_demo/pages/zego_navigation_service.dart';
 import 'zegocall_demo/core/zego_login_manager.dart';
 import 'zegocall_demo/secret/zego_secret_reader.dart';
 import 'zegocall_demo/zegocall_demo_app.dart';
-import 'zegocall_uikit/core/zego_call_manager.dart';
+import 'zegocall_uikit/core/manager/zego_call_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,14 +20,16 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
+    NavigationService().setupLocator();
+
     runApp(const ZegoApp());
   });
 }
 
-void initManagers() {
+void initManagers() async {
   ZegoLoginManager.shared.init();
 
-  ZegoSecretReader.instance.loadKeyCenterData().then((_) {
+  await ZegoSecretReader.instance.loadKeyCenterData().then((_) {
     // WARNING: DO NOT USE APPID AND APPSIGN IN PRODUCTION CODE!!!GET IT FROM SERVER INSTEAD!!!
     ZegoCallManager.shared.initWithAppID(ZegoSecretReader.instance.appID);
   });

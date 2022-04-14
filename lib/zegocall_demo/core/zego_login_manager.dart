@@ -12,7 +12,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
-import './../../zegocall_uikit/core/zego_call_manager.dart';
 import 'zego_token_manager.dart';
 import 'zego_user_list_manager.dart';
 
@@ -29,7 +28,6 @@ class ZegoLoginManager extends ChangeNotifier {
   String fcmToken = "";
   ZegoLoginManagerDelegate? delegate;
 
-  StreamSubscription<DatabaseEvent>? connectedListenerSubscription;
   StreamSubscription<DatabaseEvent>? fcmTokenListenerSubscription;
 
   void init() {
@@ -64,7 +62,9 @@ class ZegoLoginManager extends ChangeNotifier {
   void logout() async {
     await FirebaseAuth.instance.signOut();
 
-    ZegoCallManager.shared.resetCallData();
+    fcmTokenListenerSubscription?.cancel();
+
+    resetData(removeUserData: true);
 
     user = null;
   }
@@ -105,12 +105,12 @@ class ZegoLoginManager extends ChangeNotifier {
       var snapshotValue = event.snapshot.value;
       log('[firebase] fcm token onValue: $snapshotValue');
 
-      var token = snapshotValue ?? "";
+      var token = snapshotValue ?? "";  //  todo 一段时间后退出，处理
       if (token == fcmToken) {
         return;
       }
 
-      resetData(false);
+      resetData(removeUserData: false);
 
       logout();
 
@@ -118,7 +118,7 @@ class ZegoLoginManager extends ChangeNotifier {
     });
   }
 
-  void resetData(bool removeUserData) {
+  void resetData({bool removeUserData = true}) {
     if (user != null) {
       FirebaseDatabase.instance
           .ref('push_token')
@@ -133,9 +133,9 @@ class ZegoLoginManager extends ChangeNotifier {
       if (removeUserData) {
         FirebaseDatabase.instance.ref('online_user').child(user!.uid).remove();
       }
-
-      user = null;
-      ZegoTokenManager.shared.saveToken("", 0);
     }
+
+    user = null;
+    ZegoTokenManager.shared.saveToken("", 0);
   }
 }

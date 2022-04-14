@@ -5,27 +5,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../core/manager/zego_call_manager.dart';
 import './../../../utils/styles.dart';
 import './../../../utils/user_avatar.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 
 class MiniOverlayBeInvite extends StatefulWidget {
   const MiniOverlayBeInvite({
     Key? key,
-    required this.callerName,
-    required this.callerID,
+    required this.caller,
     required this.callType,
-    required this.onDecline,
-    required this.onAccept,
-    required this.onEmptyClick,
   }) : super(key: key);
 
-  final String callerID;
-  final String callerName;
+  final ZegoUserInfo caller;
   final ZegoCallType callType;
-  final VoidCallback onDecline;
-  final VoidCallback onAccept;
-  final VoidCallback onEmptyClick;
 
   @override
   _MiniOverlayBeInvite createState() => _MiniOverlayBeInvite();
@@ -34,60 +28,51 @@ class MiniOverlayBeInvite extends StatefulWidget {
 class _MiniOverlayBeInvite extends State<MiniOverlayBeInvite> {
   @override
   Widget build(BuildContext context) {
-    var avatarIndex = getUserAvatarIndex(widget.callerName);
+    var avatarIndex = getUserAvatarIndex(widget.caller.userName);
 
     return GestureDetector(
         onTap: () {
-          widget.onEmptyClick();
+          ZegoCallManager.shared.onMiniOverlayBeInvitePageEmptyClicked();
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              maxRadius: 84.w,
-              backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
-            ),
-            SizedBox(
-              width: 26.w,
-            ),
+                maxRadius: 84.w,
+                backgroundImage:
+                    AssetImage(getUserAvatarURLByIndex(avatarIndex))),
+            SizedBox(width: 26.w),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.callerName,
-                  style: StyleConstant.inviteUserName,
-                  textAlign: TextAlign.left,
-                ),
-                SizedBox(
-                  height: 7.h,
-                ),
+                Text(widget.caller.userName,
+                    style: StyleConstant.inviteUserName,
+                    textAlign: TextAlign.left),
+                SizedBox(height: 7.h),
                 Text(callTypeString(widget.callType),
-                    style: StyleConstant.inviteCallType),
+                    style: StyleConstant.inviteCallType)
               ],
             ),
             const Expanded(child: Text("")),
             GestureDetector(
-              onTap: () {
-                widget.onDecline();
-              },
-              child: SizedBox(
-                width: 74.w,
-                child: Image.asset(StyleIconUrls.inviteReject),
-              ),
-            ),
+                onTap: () {
+                  ZegoCallManager.shared.declineCall();
+                },
+                child: SizedBox(
+                    width: 74.w,
+                    child: Image.asset(StyleIconUrls.inviteReject))),
             SizedBox(
               width: 40.w,
             ),
             GestureDetector(
-              onTap: () {
-                widget.onAccept();
-              },
-              child: SizedBox(
-                width: 74.w,
-                child: Image.asset(imageURLByCallType(widget.callType)),
-              ),
-            ),
+                onTap: () {
+                  ZegoCallManager.shared
+                      .acceptCall(widget.caller, widget.callType);
+                },
+                child: SizedBox(
+                    width: 74.w,
+                    child: Image.asset(imageURLByCallType(widget.callType)))),
           ],
         ));
   }

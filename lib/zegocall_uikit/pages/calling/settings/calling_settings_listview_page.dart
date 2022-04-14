@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
 // Project imports:
+import '../../../../zegocall/core/manager/zego_service_manager.dart';
 import './../../../../utils/styles.dart';
-import './../../../../zegocall/core/interface/zego_device_service.dart';
 import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
 import 'calling_settings_defines.dart';
@@ -114,8 +113,8 @@ class CallingVideoResolutionSettingsPage extends StatelessWidget {
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,
         onSelected: (ZegoVideoResolution selectedValue) {
-          var deviceService = context.read<IZegoDeviceService>();
-          deviceService.setVideoResolution(selectedValue);
+          ZegoServiceManager.shared.deviceService
+              .setVideoResolution(selectedValue);
 
           valueChanged(getResolutionString(selectedValue));
         });
@@ -160,8 +159,8 @@ class CallingAudioBitrateSettingsPage extends StatelessWidget {
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,
         onSelected: (ZegoAudioBitrate selectedValue) {
-          var deviceService = context.read<IZegoDeviceService>();
-          deviceService.setAudioBitrate(selectedValue);
+          ZegoServiceManager.shared.deviceService
+              .setAudioBitrate(selectedValue);
 
           valueChanged(getBitrateString(selectedValue));
         });

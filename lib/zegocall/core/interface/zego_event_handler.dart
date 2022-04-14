@@ -16,6 +16,8 @@ mixin ZegoEventHandler {
   void onPlayerStateUpdate(String streamID, ZegoPlayerState state,
       int errorCode, Map<String, dynamic> extendedData) {}
 
+  void onPlayerRenderVideoFirstFrame(String streamID) {}
+
   void onPublisherStateUpdate(String streamID, ZegoPublisherState state,
       int errorCode, Map<String, dynamic> extendedData) {}
 

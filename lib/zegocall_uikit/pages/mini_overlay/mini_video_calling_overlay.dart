@@ -39,7 +39,19 @@ class _MiniVideoCallingOverlayState extends State<MiniVideoCallingOverlay> {
       widget.machine.onStateChanged = (MiniVideoCallingOverlayState state) {
         setState(() => currentState = state);
       };
+
+      if (null != widget.machine.machine.current) {
+        widget.machine
+            .onStateChanged!(widget.machine.machine.current!.identifier);
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.machine.onStateChanged = null;
   }
 
   @override

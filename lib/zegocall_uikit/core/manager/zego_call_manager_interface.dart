@@ -1,6 +1,6 @@
 // Project imports:
-import './../../zegocall/core/model/zego_user_info.dart';
-import './../../zegocall/core/zego_call_defines.dart';
+import './../../../zegocall/core/model/zego_user_info.dart';
+import './../../../zegocall/core/zego_call_defines.dart';
 
 /// The call status
 enum ZegoCallStatus {
@@ -87,6 +87,5 @@ mixin ZegoCallManagerInterface {
   /// - Parameter callee: The information of the user you want to call, including the userID and userName.
   /// - Parameter type: refers to the call type.  ZegoCallTypeVoice: Voice call.  ZegoCallTypeVideo: Video call.
   /// - Parameter callback: refers to the callback for make a outbound call.
-  Future<ZegoError> callUser(
-      ZegoUserInfo callee, ZegoCallType callType);
+  Future<ZegoError> callUser(ZegoUserInfo callee, ZegoCallType callType);
 }

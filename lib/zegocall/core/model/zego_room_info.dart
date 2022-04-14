@@ -7,6 +7,8 @@ class ZegoRoomInfo {
   /// Room name, refers to the room title, can be used for display.
   String roomName = "";
 
+  ZegoRoomInfo.empty();
+
   ZegoRoomInfo(this.roomID, this.roomName);
 
   ZegoRoomInfo.fromJson(Map<String, dynamic> json)

@@ -2,10 +2,10 @@
 import '../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../zegocall/core/model/zego_user_info.dart';
 import '../../zegocall/core/zego_call_defines.dart';
-import 'zego_call_manager.dart';
-import 'zego_call_manager_interface.dart';
-import './machine/calling_machine.dart';
-import './machine/mini_overlay_machine.dart';
+import 'machine/calling_machine.dart';
+import 'machine/mini_overlay_machine.dart';
+import 'manager/zego_call_manager.dart';
+import 'manager/zego_call_manager_interface.dart';
 import 'zego_call_page_defines.dart';
 
 class ZegoCallPageHandler with ZegoCallServiceDelegate {
@@ -21,9 +21,77 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
     miniOverlayMachine.init();
   }
 
-  void toIdle() {
+  void restoreToIdle() {
     callingMachine.stateIdle.enter();
     miniOverlayMachine.stateIdle.enter();
+
+    currentPageType = ZegoCallPageType.none;
+  }
+
+  void onCallUserExecuted(int errorCode) {
+    var callType = ZegoCallManager.shared.currentCallType;
+
+    if (ZegoError.success.id == errorCode) {
+      if (ZegoCallType.kZegoCallTypeVoice == callType) {
+        callingMachine.stateCallingWithVoice.enter();
+      } else {
+        callingMachine.stateCallingWithVideo.enter();
+      }
+
+      currentPageType = ZegoCallPageType.callingPage;
+    } else {
+      restoreToIdle();
+    }
+  }
+
+  void onAcceptCallWillExecute() {
+    var callType = ZegoCallManager.shared.currentCallType;
+
+    if (ZegoCallType.kZegoCallTypeVoice == callType) {
+      callingMachine.stateCallingWithVoice.enter();
+    } else {
+      callingMachine.stateCallingWithVideo.enter();
+    }
+
+    currentPageType = ZegoCallPageType.callingPage;
+  }
+
+  void onAcceptCallExecuted(int errorCode) {
+    var callType = ZegoCallManager.shared.currentCallType;
+
+    if (ZegoError.success.id == errorCode) {
+      if (ZegoCallType.kZegoCallTypeVoice == callType) {
+        callingMachine.stateOnlineVoice.enter();
+      } else {
+        callingMachine.stateOnlineVideo.enter();
+      }
+
+      currentPageType = ZegoCallPageType.callingPage;
+    } else {
+      restoreToIdle();
+    }
+  }
+
+  void onDeclineCallExecuted() {
+    var callType = ZegoCallManager.shared.currentCallType;
+
+    // miniOverlayMachine.voiceCallingOverlayMachine.stateDeclined.enter();
+
+    restoreToIdle();
+  }
+
+  void onEndCallExecuted() {
+    var callType = ZegoCallManager.shared.currentCallType;
+
+    miniOverlayMachine.voiceCallingOverlayMachine.stateEnded.enter();
+
+    restoreToIdle();
+  }
+
+  void onCancelCallExecuted() {
+    var callType = ZegoCallManager.shared.currentCallType;
+
+    restoreToIdle();
   }
 
   @override
@@ -81,7 +149,6 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
     switch (currentPageType) {
       case ZegoCallPageType.callingPage:
         callingMachine.stateIdle.enter();
-
         break;
       case ZegoCallPageType.invitePage:
         break;
@@ -99,13 +166,11 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
     switch (currentPageType) {
       case ZegoCallPageType.callingPage:
         callingMachine.stateIdle.enter();
-
         break;
       case ZegoCallPageType.invitePage:
         break;
       case ZegoCallPageType.miniPage:
-        miniOverlayMachine.stateIdle.enter();
-
+        miniOverlayMachine.voiceCallingOverlayMachine.stateEnded.enter();
         break;
       default:
         break;
@@ -120,10 +185,35 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
       case ZegoCallPageType.invitePage:
         break;
       case ZegoCallPageType.miniPage:
+        break;
+      case ZegoCallPageType.none:
+        currentPageType = ZegoCallPageType.invitePage;
         miniOverlayMachine.stateBeInvite.enter();
-
         break;
       default:
+        break;
+    }
+  }
+
+  void onMiniOverlayBeInvitePageEmptyClicked() {
+    switch (currentPageType) {
+      case ZegoCallPageType.none:
+        break;
+      case ZegoCallPageType.callingPage:
+        break;
+      case ZegoCallPageType.invitePage:
+        miniOverlayMachine.stateIdle.enter();
+
+        var callType = ZegoCallManager.shared.currentCallType;
+        if (ZegoCallType.kZegoCallTypeVoice == callType) {
+          callingMachine.stateCallingWithVoice.enter();
+        } else {
+          callingMachine.stateCallingWithVideo.enter();
+        }
+
+        currentPageType = ZegoCallPageType.callingPage;
+        break;
+      case ZegoCallPageType.miniPage:
         break;
     }
   }
@@ -135,24 +225,22 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
     switch (currentPageType) {
       case ZegoCallPageType.callingPage:
         callingMachine.stateIdle.enter();
-
         break;
       case ZegoCallPageType.invitePage:
         break;
       case ZegoCallPageType.miniPage:
-        miniOverlayMachine.stateIdle.enter();
-
         switch (type) {
           case ZegoCallTimeoutType.connecting:
-            if (callStatus == ZegoCallStatus.wait) {
-              //  todo mini miss text, ios changeCallStatusText code
-            } else if (callStatus == ZegoCallStatus.waitAccept) {
-              //
+            if (callStatus == ZegoCallStatus.wait ||
+                callStatus == ZegoCallStatus.waitAccept) {
+              miniOverlayMachine.voiceCallingOverlayMachine.stateMissed.enter();
             }
             break;
           case ZegoCallTimeoutType.calling:
+            miniOverlayMachine.voiceCallingOverlayMachine.stateEnded.enter();
             break;
         }
+
         break;
       default:
         break;

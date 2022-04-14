@@ -13,7 +13,5 @@ abstract class IZegoStreamService extends ChangeNotifier with ZegoService {
   void startPlaying(String userID, int viewID);
 
   //  stream state notifier
-  void addStreamStateNotifier(String userID, ValueChanged<bool> notifier);
-
-  void removeStreamStateNotifier(String userID);
+  ValueNotifier<bool> getStreamStateNotifier(String userID);
 }

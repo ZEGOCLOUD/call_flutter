@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:developer';
+
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
@@ -11,7 +14,7 @@ import './../manager/zego_service_manager.dart';
 
 class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   bool isCameraPublishing = false;
-  Map<String, ValueChanged<bool>> userStreamReadyNotifiers = {};
+  Map<String, ValueNotifier<bool>> userStreamReadyNotifiers = {};
 
   @override
   void init() {
@@ -20,6 +23,11 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
 
   @override
   void startPreview(int viewID) {
+    assert(ZegoServiceManager.shared.isSDKInit,
+        "The SDK must be initialised first.");
+    assert(!ZegoServiceManager.shared.userService.localUserInfo.isEmpty(),
+        "Must be logged in first.");
+
     ZegoCanvas canvas = ZegoCanvas.view(viewID);
     canvas.viewMode = ZegoViewMode.AspectFill;
 
@@ -30,6 +38,12 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
 
   @override
   void startPlaying(String userID, int viewID) {
+    assert(ZegoServiceManager.shared.isSDKInit,
+        "The SDK must be initialised first.");
+    assert(!ZegoServiceManager.shared.userService.localUserInfo.isEmpty(),
+        "Must be logged in first.");
+    assert(userID.isNotEmpty, "The user ID can not be nil.");
+
     ZegoCanvas canvas = ZegoCanvas.view(viewID);
     canvas.viewMode = ZegoViewMode.AspectFill;
 
@@ -39,29 +53,36 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   }
 
   @override
-  void addStreamStateNotifier(String userID, ValueChanged<bool> notifier) {
+  ValueNotifier<bool> getStreamStateNotifier(String userID) {
     var streamID = generateStreamIDByUserID(userID);
 
-    if (userStreamReadyNotifiers.containsKey(streamID)) {
-      return;
-    }
-
-    userStreamReadyNotifiers[streamID] = notifier;
+    return getStreamStateNotifierByStreamID(streamID);
   }
 
-  @override
-  void removeStreamStateNotifier(String userID) {
-    var streamID = generateStreamIDByUserID(userID);
-    userStreamReadyNotifiers.remove(streamID);
+  ValueNotifier<bool> getStreamStateNotifierByStreamID(String streamID) {
+    if (!userStreamReadyNotifiers.containsKey(streamID)) {
+      log('[stream service] add stream state notifier, stream id:$streamID');
+
+      userStreamReadyNotifiers[streamID] = ValueNotifier<bool>(false);
+      return userStreamReadyNotifiers[streamID]!;
+    }
+
+    return userStreamReadyNotifiers[streamID]!;
   }
 
   @override
   void onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
       List<ZegoStream> streamList, Map<String, dynamic> extendedData) {
+    log('[stream service] onRoomStreamUpdate, room id:$roomID, '
+        'update type:$updateType, stream list:${streamList.toString()}, extended '
+        'data:$extendedData');
+
     for (final stream in streamList) {
       if (updateType == ZegoUpdateType.Add) {
         // ZegoExpressEngine.instance.startPlayingStream(stream.streamID);
       } else {
+        log('[stream service] onRoomStreamUpdate, stop play '
+            '${stream.streamID}');
         ZegoExpressEngine.instance.stopPlayingStream(stream.streamID);
       }
     }
@@ -73,18 +94,16 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
         ZegoServiceManager.shared.userService.localUserInfo.userID);
     isCameraPublishing = true;
 
-    if (userStreamReadyNotifiers.containsKey(streamID)) {
-      userStreamReadyNotifiers[streamID]!(true);
-    }
+    log('[stream service] onPublisherCapturedVideoFirstFrame, stream id:$streamID');
+
+    getStreamStateNotifierByStreamID(streamID).value = true;
   }
 
   @override
-  void onPlayerStateUpdate(String streamID, ZegoPlayerState state,
-      int errorCode, Map<String, dynamic> extendedData) {
-    if (userStreamReadyNotifiers.containsKey(streamID)) {
-      final isReady = ZegoPlayerState.Playing == state;
-      userStreamReadyNotifiers[streamID]!(isReady);
-    }
+  void onPlayerRenderVideoFirstFrame(String streamID) {
+    log('[stream service] onPlayerRenderVideoFirstFrame, stream id:$streamID');
+
+    getStreamStateNotifierByStreamID(streamID).value = true;
   }
 
   @override
@@ -95,9 +114,10 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
           ZegoServiceManager.shared.userService.localUserInfo.userID);
       isCameraPublishing = false;
 
-      if (userStreamReadyNotifiers.containsKey(streamID)) {
-        userStreamReadyNotifiers[streamID]!(false);
-      }
+      log('[stream service] onApiCalledResult enable camera, stream'
+          ' id:$streamID');
+
+      getStreamStateNotifierByStreamID(streamID).value = false;
     }
   }
 }

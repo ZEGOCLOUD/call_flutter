@@ -36,7 +36,19 @@ class _MiniVoiceCallingOverlayState extends State<MiniVoiceCallingOverlay> {
       widget.machine.onStateChanged = (MiniVoiceCallingOverlayState state) {
         setState(() => currentState = state);
       };
+
+      if (null != widget.machine.machine.current) {
+        widget.machine
+            .onStateChanged!(widget.machine.machine.current!.identifier);
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    widget.machine.onStateChanged = null;
   }
 
   @override

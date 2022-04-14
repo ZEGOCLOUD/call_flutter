@@ -3,10 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:provider/provider.dart';
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 
 // Project imports:
-import './../../../../zegocall/core/interface/zego_device_service.dart';
 import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
 import 'calling_settings_defines.dart';
@@ -34,7 +33,7 @@ class CallingSettingsViewState extends State<CallingSettingsView> {
   void initState() {
     pageIndex = CallingSettingPageIndex.mainPageIndex.id;
 
-    var deviceService = context.read<IZegoDeviceService>();
+    var deviceService = ZegoServiceManager.shared.deviceService;
     deviceService.getAudioBitrate().then((value) {
       updateAudioBitrate(getBitrateString(value));
     });

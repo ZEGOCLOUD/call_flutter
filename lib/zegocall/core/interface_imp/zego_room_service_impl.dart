@@ -2,6 +2,7 @@
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 import './../../../zegocall/core/interface/zego_event_handler.dart';
 import './../../../zegocall/core/interface_imp/zego_stream_service_impl.dart';
 import './../../../zegocall/core/manager/zego_service_manager.dart';
@@ -15,10 +16,15 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
   }
 
   @override
-  Future<int> joinRoom(String roomID, String token) async {
+  Future<ZegoError> joinRoom(String roomID, String token) async {
+    assert(ZegoServiceManager.shared.isSDKInit,
+        "The SDK must be initialised first.");
+    assert(!ZegoServiceManager.shared.userService.localUserInfo.isEmpty(),
+        "Must be logged in first.");
+
     var localUserInfo = ZegoServiceManager.shared.userService.localUserInfo;
     if (localUserInfo.userID.isEmpty) {
-      return ZegoError.failed.id;
+      return ZegoError.failed;
     }
 
     roomInfo.roomID = roomID;
@@ -39,11 +45,19 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
           generateStreamIDByUserID(localUserInfo.userID));
     });
 
-    return ZegoError.success.id;
+    return ZegoError.success;
   }
 
   @override
   void leaveRoom() async {
+    assert(ZegoServiceManager.shared.isSDKInit,
+        "The SDK must be initialised first.");
+    assert(!ZegoServiceManager.shared.userService.localUserInfo.isEmpty(),
+        "Must be logged in first.");
+
+    roomInfo = ZegoRoomInfo.empty();
+
+    ZegoExpressEngine.instance.stopPublishingStream();
     ZegoExpressEngine.instance.logoutRoom();
   }
 

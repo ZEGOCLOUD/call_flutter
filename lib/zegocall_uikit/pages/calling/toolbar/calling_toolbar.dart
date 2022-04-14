@@ -4,15 +4,14 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 
 // Project imports:
+import '../../../core/manager/zego_call_manager.dart';
 import './../../../../utils/styles.dart';
 import './../../../../utils/widgets/show_bottom_sheet.dart';
-import './../../../../zegocall/core/interface/zego_device_service.dart';
 import './../../../../zegocall/core/model/zego_user_info.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
-import './../../../../zegocall_uikit/core/zego_call_manager.dart';
 import './../settings/calling_settings.dart';
 import 'calling_bottom_toolbar_button.dart';
 
@@ -41,8 +40,8 @@ class CallingCallerVideoTopToolBar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var deviceService = context.read<IZegoDeviceService>();
-    var isFrontCameraUsed = useState(deviceService.isFrontCamera);
+    var isFrontCameraUsed =
+        useState(ZegoServiceManager.shared.deviceService.isFrontCamera);
 
     return SafeArea(
         child: Container(
@@ -59,8 +58,8 @@ class CallingCallerVideoTopToolBar extends HookWidget {
           CallingCallerVideoTopToolBarButton(
             iconURL: StyleIconUrls.toolbarTopSwitchCamera,
             onTap: () {
-              var deviceDevice = context.read<IZegoDeviceService>();
-              deviceDevice.useFrontCamera(!isFrontCameraUsed.value);
+              ZegoServiceManager.shared.deviceService
+                  .useFrontCamera(!isFrontCameraUsed.value);
 
               isFrontCameraUsed.value = !isFrontCameraUsed.value;
             },

@@ -25,6 +25,11 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
 
   @override
   void setLocalUser(String userID, String userName) {
+    assert(
+        userID.length <= 64,
+        " The User ID length must be less than or equal to"
+        " 64.");
+
     localUserInfo = ZegoUserInfo(userID, userName);
 
     if (!userDic.containsKey(userID)) {
@@ -36,6 +41,21 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   @override
   Future<RequestResult> getToken(
       String userID, int effectiveTimeInSeconds) async {
+    if (!ZegoServiceManager.shared.isSDKInit) {
+      assert(false, "The SDK must be initialised first.");
+      return Failure(ZegoError.notInit);
+    }
+
+    if (localUserInfo.isEmpty()) {
+      assert(false, "Must be logged in first.");
+      return Failure(ZegoError.notLogin);
+    }
+
+    if(effectiveTimeInSeconds < 0 || userID.isEmpty) {
+      assert(false, "Must be logged in first.");
+      return Failure(ZegoError.paramInvalid);
+    }
+
     var command = ZegoTokenCommand(userID, effectiveTimeInSeconds);
 
     var result = await command.execute();
