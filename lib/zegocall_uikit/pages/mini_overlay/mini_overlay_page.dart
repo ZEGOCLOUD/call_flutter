@@ -48,16 +48,18 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   void initState() {
     super.initState();
 
-    var userService = ZegoServiceManager.shared.userService;
-    caller = userService.getUserInfoByID(ZegoCallManager.shared.callerID);
-    callee = userService.getUserInfoByID(ZegoCallManager.shared.calleeID);
+    caller =
+        ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.caller);
+    callee =
+        ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.callee);
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.onStateChanged = (MiniOverlayPageState state) {
         setState(() {
-          var userService = ZegoServiceManager.shared.userService;
-          caller = userService.getUserInfoByID(ZegoCallManager.shared.callerID);
-          callee = userService.getUserInfoByID(ZegoCallManager.shared.calleeID);
+          caller = ZegoCallManager.shared
+              .getLatestUser(ZegoCallManager.shared.caller);
+          callee = ZegoCallManager.shared
+              .getLatestUser(ZegoCallManager.shared.callee);
           callType = ZegoCallManager.shared.currentCallType;
 
           currentState = state;

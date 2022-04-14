@@ -25,8 +25,8 @@ class ZegoCallManager
         ZegoDeviceServiceDelegate {
   static var shared = ZegoCallManager();
 
-  String callerID = "";
-  String calleeID = "";
+  ZegoUserInfo caller = ZegoUserInfo.empty();
+  ZegoUserInfo callee = ZegoUserInfo.empty();
   ZegoCallManagerDelegate? delegate;
 
   late ZegoCallPageHandler pageHandler;
@@ -103,8 +103,8 @@ class ZegoCallManager
   }
 
   void resetCallUserInfo() {
-    callerID = "";
-    calleeID = "";
+    caller = ZegoUserInfo.empty();
+    callee = ZegoUserInfo.empty();
   }
 
   @override
@@ -132,8 +132,8 @@ class ZegoCallManager
     currentCallType = callType;
     currentCallStatus = ZegoCallStatus.waitAccept;
 
-    callerID = ZegoServiceManager.shared.userService.localUserInfo.userID;
-    calleeID = callee.userID;
+    caller = ZegoServiceManager.shared.userService.localUserInfo;
+    this.callee = callee;
 
     resetDeviceConfig();
 
@@ -157,8 +157,8 @@ class ZegoCallManager
     currentCallType = callType;
     currentCallStatus = ZegoCallStatus.calling;
 
-    callerID = caller.userID;
-    calleeID = ZegoServiceManager.shared.userService.localUserInfo.userID;
+    this.caller = caller;
+    callee = ZegoServiceManager.shared.userService.localUserInfo;
 
     resetDeviceConfig();
 
@@ -234,8 +234,8 @@ class ZegoCallManager
   void onReceiveCallAccepted(ZegoUserInfo callee) {
     log('[call manager] receive call accept, callee:${callee.toString()}');
 
-    callerID = ZegoServiceManager.shared.userService.localUserInfo.userID;
-    calleeID = callee.userID;
+    caller = ZegoServiceManager.shared.userService.localUserInfo;
+    callee = callee;
 
     currentCallStatus = ZegoCallStatus.calling;
 
@@ -248,9 +248,9 @@ class ZegoCallManager
 
     if ((currentCallStatus == ZegoCallStatus.calling ||
             currentCallStatus == ZegoCallStatus.wait) &&
-        callerID != caller.userID) {
+        this.caller.userID != caller.userID) {
       log('[call manager] receive call canceled, call status is not '
-          'right:$currentCallStatus, and user id is different:[$callerID, ${caller.userID}]');
+          'right:$currentCallStatus, and user id is different:[${this.caller.userID}, ${caller.userID}]');
       return;
     }
 
@@ -294,8 +294,8 @@ class ZegoCallManager
       return;
     }
 
-    callerID = caller.userID;
-    calleeID = ZegoServiceManager.shared.userService.localUserInfo.userID;
+    this.caller = caller;
+    callee = ZegoServiceManager.shared.userService.localUserInfo;
 
     currentCallStatus = ZegoCallStatus.wait;
     currentCallType = type;
@@ -359,5 +359,14 @@ class ZegoCallManager
     log('[call manager] user info update, user:${info.toString()}');
 
     pageHandler.onUserInfoUpdate(info);
+  }
+
+  ZegoUserInfo getLatestUser(ZegoUserInfo user) {
+    var queryUser =
+        ZegoServiceManager.shared.userService.getUserInfoByID(user.userID);
+    if (queryUser.isEmpty()) {
+      return user;
+    }
+    return queryUser;
   }
 }

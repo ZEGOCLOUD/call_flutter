@@ -294,9 +294,10 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     var userService = ZegoServiceManager.shared.userService;
     var localUser = userService.localUserInfo;
-    var remoteUser = localUser.userID == ZegoCallManager.shared.callerID
-        ? userService.getUserInfoByID(ZegoCallManager.shared.calleeID)
-        : userService.getUserInfoByID(ZegoCallManager.shared.callerID);
+    var remoteUser = localUser.userID == ZegoCallManager.shared.caller.userID
+        ? ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.callee)
+        : ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.caller);
+
     if (remoteUser.camera) {
       miniOverlayMachine.videoCallingOverlayMachine.stateRemoteUserWithVideo
           .enter();
