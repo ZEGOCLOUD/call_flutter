@@ -53,8 +53,11 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
 
   @override
   ValueNotifier<bool> getCameraStateNotifier(String userID) {
-    var streamID = generateStreamIDByUserID(userID);
+    if (userID.isEmpty) {
+      assert(false, "user id is empty");
+    }
 
+    var streamID = generateStreamIDByUserID(userID);
     return getCameraStateNotifierByStreamID(streamID);
   }
 

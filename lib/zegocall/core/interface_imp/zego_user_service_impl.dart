@@ -51,7 +51,7 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
       return Failure(ZegoError.notLogin);
     }
 
-    if(effectiveTimeInSeconds < 0 || userID.isEmpty) {
+    if (effectiveTimeInSeconds < 0 || userID.isEmpty) {
       assert(false, "Must be logged in first.");
       return Failure(ZegoError.paramInvalid);
     }

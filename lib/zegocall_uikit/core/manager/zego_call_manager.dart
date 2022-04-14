@@ -13,7 +13,7 @@ import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../../zegocall/request/zego_firebase_manager.dart';
-import '../zego_call_page_handler.dart';
+import '../page/zego_call_page_handler.dart';
 import 'zego_call_manager_delegate.dart';
 import 'zego_call_manager_interface.dart';
 
@@ -25,8 +25,8 @@ class ZegoCallManager
         ZegoDeviceServiceDelegate {
   static var shared = ZegoCallManager();
 
-  ZegoUserInfo? caller;
-  ZegoUserInfo? callee;
+  String callerID = "";
+  String calleeID = "";
   ZegoCallManagerDelegate? delegate;
 
   late ZegoCallPageHandler pageHandler;
@@ -103,8 +103,8 @@ class ZegoCallManager
   }
 
   void resetCallUserInfo() {
-    caller = ZegoUserInfo.empty();
-    callee = ZegoUserInfo.empty();
+    callerID = "";
+    calleeID = "";
   }
 
   @override
@@ -132,8 +132,8 @@ class ZegoCallManager
     currentCallType = callType;
     currentCallStatus = ZegoCallStatus.waitAccept;
 
-    caller = ZegoServiceManager.shared.userService.localUserInfo;
-    this.callee = callee;
+    callerID = ZegoServiceManager.shared.userService.localUserInfo.userID;
+    calleeID = callee.userID;
 
     resetDeviceConfig();
 
@@ -157,8 +157,8 @@ class ZegoCallManager
     currentCallType = callType;
     currentCallStatus = ZegoCallStatus.calling;
 
-    this.caller = caller;
-    callee = ZegoServiceManager.shared.userService.localUserInfo;
+    callerID = caller.userID;
+    calleeID = ZegoServiceManager.shared.userService.localUserInfo.userID;
 
     resetDeviceConfig();
 
@@ -234,8 +234,8 @@ class ZegoCallManager
   void onReceiveCallAccepted(ZegoUserInfo callee) {
     log('[call manager] receive call accept, callee:${callee.toString()}');
 
-    caller = ZegoServiceManager.shared.userService.localUserInfo;
-    this.callee = callee;
+    callerID = ZegoServiceManager.shared.userService.localUserInfo.userID;
+    calleeID = callee.userID;
 
     currentCallStatus = ZegoCallStatus.calling;
 
@@ -248,9 +248,9 @@ class ZegoCallManager
 
     if ((currentCallStatus == ZegoCallStatus.calling ||
             currentCallStatus == ZegoCallStatus.wait) &&
-        this.caller?.userID != caller.userID) {
+        callerID != caller.userID) {
       log('[call manager] receive call canceled, call status is not '
-          'right:$currentCallStatus, and user id is different:[${this.caller?.userID}, ${caller.userID}]');
+          'right:$currentCallStatus, and user id is different:[$callerID, ${caller.userID}]');
       return;
     }
 
@@ -294,8 +294,8 @@ class ZegoCallManager
       return;
     }
 
-    this.caller = caller;
-    callee = ZegoServiceManager.shared.userService.localUserInfo;
+    callerID = caller.userID;
+    calleeID = ZegoServiceManager.shared.userService.localUserInfo.userID;
 
     currentCallStatus = ZegoCallStatus.wait;
     currentCallType = type;
@@ -305,6 +305,18 @@ class ZegoCallManager
 
   void onMiniOverlayBeInvitePageEmptyClicked() {
     pageHandler.onMiniOverlayBeInvitePageEmptyClicked();
+  }
+
+  void onMiniOverlayRequest() {
+    log('[call manager] mini overlay request');
+
+    pageHandler.onMiniOverlayRequest();
+  }
+
+  void onMiniOverlayRestore() {
+    log('[call manager] mini overlay restore');
+
+    pageHandler.onMiniOverlayRestore();
   }
 
   @override
@@ -345,56 +357,7 @@ class ZegoCallManager
   @override
   void onUserInfoUpdate(ZegoUserInfo info) {
     log('[call manager] user info update, user:${info.toString()}');
-    if (ZegoServiceManager.shared.userService.localUserInfo.userID !=
-        info.userID) {
-      log('[call manager] user info update, is not current user');
-      return;
-    }
 
-    // miniOverlayMachine.voiceCallingOverlayMachine.stateCalling.enter();
+    pageHandler.onUserInfoUpdate(info);
   }
 }
-
-//--------------------
-//  Mini Overlay Voice Page
-//
-// @override
-// void onReceiveCallAccept(ZegoUserInfo info) {
-//   stateOnline.enter();
-// }
-//
-// @override
-// void onReceiveCallCanceled(ZegoUserInfo info) {
-//   stateDeclined.enter();
-// }
-// @override
-// void onReceiveCallEnded() {
-//   stateEnded.enter();
-// }
-//
-// @override
-// void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {
-//   stateMissed.enter();
-// }
-
-//--------------------
-//  Mini Overlay Video Page
-// @override
-// void onReceiveCallAccept(ZegoUserInfo info) {
-//   stateOnlyCallerWithVideo.enter();
-// }
-//
-// @override
-// void onReceiveCallCanceled(ZegoUserInfo info) {
-//   stateIdle.enter();
-// }
-//
-// @override
-// void onReceiveCallEnded() {
-//   stateIdle.enter();
-// }
-//
-// @override
-// void onReceiveCallTimeout(ZegoUserInfo info, ZegoCallTimeoutType type) {
-//   stateIdle.enter();
-// }

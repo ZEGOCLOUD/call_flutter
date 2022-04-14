@@ -3,6 +3,7 @@ import 'dart:developer';
 
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
+import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
 
 // Project imports:
 import 'mini_video_calling_overlay_machine.dart';
@@ -38,9 +39,34 @@ class MiniOverlayMachine {
       }
     });
 
-    stateIdle = machine.newState(MiniOverlayPageState.kIdle); //  default state;
-    stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling);
-    stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling);
+    stateIdle = machine.newState(MiniOverlayPageState.kIdle)
+      ..onEntry(() {
+        MiniVoiceCallingOverlayState voiceState =
+            voiceCallingOverlayMachine.machine.current?.identifier ??
+                MiniVoiceCallingOverlayState.kIdle;
+        if (voiceState != MiniVoiceCallingOverlayState.kIdle) {
+          voiceCallingOverlayMachine.stateIdle.enter();
+        }
+
+        MiniVideoCallingOverlayState videoState =
+            videoCallingOverlayMachine.machine.current?.identifier ??
+                MiniVideoCallingOverlayState.kIdle;
+        if (videoState != MiniVideoCallingOverlayState.kIdle) {
+          videoCallingOverlayMachine.stateIdle.enter();
+        }
+      }); //  default state;
+    stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling)
+      ..onEntry(() {
+        ZegoPageRoute.shared.navigatePopCalling();
+
+        // sync current voice state
+      });
+    stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling)
+      ..onEntry(() {
+        ZegoPageRoute.shared.navigatePopCalling();
+
+        // sync current video state
+      });
     stateBeInvite = machine.newState(MiniOverlayPageState.kBeInvite);
 
     initVoiceCallingOverlayMachine();
@@ -64,7 +90,23 @@ class MiniOverlayMachine {
       stateIdle.enter();
     });
     videoCallingOverlayMachine.stateBothWithoutVideo.onEntry(() {
-      stateVoiceCalling.enter();
+      stateVoiceCalling.enter(); //  check voice state?
     });
+  }
+
+  void checkEnterVoiceState() {
+    if (MiniOverlayPageState.kVoiceCalling != getPageState()) {
+      stateVoiceCalling.enter();
+    }
+  }
+
+  void checkEnterVideoState() {
+    if (MiniOverlayPageState.kVideoCalling != getPageState()) {
+      stateVideoCalling.enter();
+    }
+  }
+
+  MiniOverlayPageState getPageState() {
+    return machine.current?.identifier ?? MiniOverlayPageState.kIdle;
   }
 }

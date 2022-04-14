@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 
 // Project imports:
 import './../../../../utils/styles.dart';
@@ -48,7 +49,7 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
         children: [
           GestureDetector(
             onTap: () {
-              //  todo
+              ZegoCallManager.shared.onMiniOverlayRequest();
             },
             child: SizedBox(
               width: 44.w,

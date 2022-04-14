@@ -10,6 +10,7 @@ import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 
 // Project imports:
 import '../../core/manager/zego_call_manager.dart';
@@ -39,19 +40,24 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   Offset overlayTopLeftPos = const Offset(0, 0);
   bool overlayVisibility = true;
 
-  ZegoUserInfo caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-  ZegoUserInfo callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+  late ZegoUserInfo caller;
+  late ZegoUserInfo callee;
   ZegoCallType callType = ZegoCallManager.shared.currentCallType;
 
   @override
   void initState() {
     super.initState();
 
+    var userService = ZegoServiceManager.shared.userService;
+    caller = userService.getUserInfoByID(ZegoCallManager.shared.callerID);
+    callee = userService.getUserInfoByID(ZegoCallManager.shared.calleeID);
+
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.onStateChanged = (MiniOverlayPageState state) {
         setState(() {
-          caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-          callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+          var userService = ZegoServiceManager.shared.userService;
+          caller = userService.getUserInfoByID(ZegoCallManager.shared.callerID);
+          callee = userService.getUserInfoByID(ZegoCallManager.shared.calleeID);
           callType = ZegoCallManager.shared.currentCallType;
 
           currentState = state;
@@ -109,8 +115,13 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                     topLeft: Radius.circular(100.0.w),
                     bottomLeft: Radius.circular(100.0.w)),
               ),
-              child: MiniVoiceCallingOverlay(
-                machine: machine.voiceCallingOverlayMachine,
+              child: GestureDetector(
+                onTap: () {
+                  ZegoCallManager.shared.onMiniOverlayRestore();
+                },
+                child: MiniVoiceCallingOverlay(
+                  machine: machine.voiceCallingOverlayMachine,
+                ),
               ),
             ),
             SizedBox(
@@ -120,29 +131,39 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           ],
         );
       case MiniOverlayPageState.kVideoCalling:
-        return Container(
-            width: 200.w,
-            height: 300.h,
-            padding: EdgeInsets.all(12.0.w),
-            decoration: BoxDecoration(
-                color: const Color(0xffF3F4F7),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0.w),
-                    bottomLeft: Radius.circular(20.0.w))),
-            child: MiniVideoCallingOverlay(
-                machine: machine.videoCallingOverlayMachine,
-                caller: caller,
-                callee: callee));
+        return GestureDetector(
+          onTap: () {
+            ZegoCallManager.shared.onMiniOverlayRestore();
+          },
+          child: Container(
+              width: 200.w,
+              height: 300.h,
+              padding: EdgeInsets.all(12.0.w),
+              decoration: BoxDecoration(
+                  color: const Color(0xffF3F4F7),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0.w),
+                      bottomLeft: Radius.circular(20.0.w))),
+              child: MiniVideoCallingOverlay(
+                  machine: machine.videoCallingOverlayMachine,
+                  caller: caller,
+                  callee: callee)),
+        );
       case MiniOverlayPageState.kBeInvite:
-        return Container(
-            width: 718.w,
-            height: 160.h,
-            padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
-            decoration: BoxDecoration(
-              color: const Color(0xff333333).withOpacity(0.8),
-              borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
-            ),
-            child: MiniOverlayBeInvite(caller: caller, callType: callType));
+        return GestureDetector(
+            onTap: () {
+              ZegoCallManager.shared.onMiniOverlayBeInvitePageEmptyClicked();
+            },
+            child: Container(
+                width: 718.w,
+                height: 160.h,
+                padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xff333333).withOpacity(0.8),
+                  borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
+                ),
+                child:
+                    MiniOverlayBeInvite(caller: caller, callType: callType)));
     }
   }
 

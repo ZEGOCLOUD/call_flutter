@@ -3,6 +3,9 @@ import 'dart:developer';
 
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
+import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
+
+import '../../../zegocall_demo/constants/zego_page_constant.dart';
 
 enum MiniVoiceCallingOverlayState {
   kIdle,
@@ -39,11 +42,11 @@ class MiniVoiceCallingOverlayMachine {
     });
 
     // Config state
-    var toIdleDuration = const Duration(seconds: 2);
     stateIdle = machine.newState(MiniVoiceCallingOverlayState.kIdle);
     stateWaiting = machine.newState(MiniVoiceCallingOverlayState.kWaiting);
     stateOnline = machine.newState(MiniVoiceCallingOverlayState.kOnline);
 
+    var toIdleDuration = const Duration(seconds: 2);
     stateDeclined = machine.newState(MiniVoiceCallingOverlayState.kDeclined)
       ..onTimeout(toIdleDuration, () => stateIdle.enter());
     stateMissed = machine.newState(MiniVoiceCallingOverlayState.kMissed)

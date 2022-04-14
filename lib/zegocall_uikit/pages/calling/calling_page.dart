@@ -29,19 +29,25 @@ class _CallingPageState extends State<CallingPage> {
   final CallingMachine machine =
       ZegoCallManager.shared.pageHandler.callingMachine;
 
-  ZegoUserInfo caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-  ZegoUserInfo callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+  late ZegoUserInfo caller;
+  late ZegoUserInfo callee;
   ZegoCallType callType = ZegoCallManager.shared.currentCallType;
 
   @override
   void initState() {
     super.initState();
 
+    var userService = ZegoServiceManager.shared.userService;
+    caller = userService.getUserInfoByID(ZegoCallManager.shared.callerID);
+    callee = userService.getUserInfoByID(ZegoCallManager.shared.calleeID);
+
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.onStateChanged = (CallingState state) {
         setState(() {
-          caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-          callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+          var userService = ZegoServiceManager.shared.userService;
+          caller = userService.getUserInfoByID(ZegoCallManager.shared.callerID);
+          callee = userService.getUserInfoByID(ZegoCallManager.shared.calleeID);
+
           callType = ZegoCallManager.shared.currentCallType;
 
           currentState = state;

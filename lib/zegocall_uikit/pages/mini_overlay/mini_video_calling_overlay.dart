@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../../zegocall/core/manager/zego_service_manager.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../core/machine/mini_video_calling_overlay_machine.dart';
 import './../player/video_player.dart';
@@ -56,22 +57,23 @@ class _MiniVideoCallingOverlayState extends State<MiniVideoCallingOverlay> {
 
   @override
   Widget build(BuildContext context) {
+    var localUser = ZegoServiceManager.shared.userService.localUserInfo;
+    var remoteUser = localUser.userID == widget.callee.userID
+        ? widget.caller
+        : widget.callee;
+
     switch (currentState) {
       case MiniVideoCallingOverlayState.kIdle:
       case MiniVideoCallingOverlayState.kWaiting:
         return const SizedBox();
       case MiniVideoCallingOverlayState.kBothWithoutVideo:
         return const SizedBox();
-      case MiniVideoCallingOverlayState.kCalleeWithVideo:
+      case MiniVideoCallingOverlayState.kLocalUserWithVideo:
         return createVideoView(VideoPlayerView(
-          userID: widget.callee.userID,
-          userName: widget.callee.userName,
-        ));
-      case MiniVideoCallingOverlayState.kOnlyCallerWithVideo:
+            userID: localUser.userID, userName: localUser.userName));
+      case MiniVideoCallingOverlayState.kRemoteUserWithVideo:
         return createVideoView(VideoPlayerView(
-          userID: widget.caller.userID,
-          userName: widget.caller.userName,
-        ));
+            userID: remoteUser.userID, userName: remoteUser.userName));
     }
   }
 

@@ -34,9 +34,6 @@ class SettingsLogoutBlock extends StatelessWidget {
   }
 
   Future<void> logout(BuildContext context) async {
-    await GoogleSignIn().signOut();
     ZegoLoginManager.shared.logout();
-
-    Navigator.pushReplacementNamed(context, PageRouteNames.login);
   }
 }
