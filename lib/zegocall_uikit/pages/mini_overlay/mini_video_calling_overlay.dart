@@ -69,10 +69,10 @@ class _MiniVideoCallingOverlayState extends State<MiniVideoCallingOverlay> {
       case MiniVideoCallingOverlayState.kBothWithoutVideo:
         return const SizedBox();
       case MiniVideoCallingOverlayState.kLocalUserWithVideo:
-        return createVideoView(VideoPlayerView(
+        return createVideoView(VideoPlayer(
             userID: localUser.userID, userName: localUser.userName));
       case MiniVideoCallingOverlayState.kRemoteUserWithVideo:
-        return createVideoView(VideoPlayerView(
+        return createVideoView(VideoPlayer(
             userID: remoteUser.userID, userName: remoteUser.userName));
     }
   }

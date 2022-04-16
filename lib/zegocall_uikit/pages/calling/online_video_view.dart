@@ -30,7 +30,7 @@ class OnlineVideoView extends StatelessWidget {
             child: SizedBox(
                 width: 190.w,
                 height: 338.h,
-                child: VideoPlayerView(
+                child: VideoPlayer(
                   userID: targetUser.userID,
                   userName: targetUser.userName,
                 ))),
@@ -60,7 +60,7 @@ class OnlineVideoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        VideoPlayerView(
+        VideoPlayer(
           userID: localUser.userID,
           userName: localUser.userName,
         ),

@@ -1,4 +1,5 @@
 // Project imports:
+import 'dart:async';
 import 'dart:math';
 import 'dart:developer' as developer;
 
@@ -11,6 +12,7 @@ import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import '../machine/calling_machine.dart';
 import '../machine/mini_overlay_machine.dart';
+import '../machine/mini_video_calling_overlay_machine.dart';
 import '../manager/zego_call_manager.dart';
 import '../manager/zego_call_manager_interface.dart';
 
@@ -365,7 +367,20 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     var callType = ZegoCallManager.shared.currentCallType;
     if (isMiniOnline && ZegoCallType.kZegoCallTypeVideo == callType) {
-      enterMiniVideoMachine();
+      if (MiniOverlayPageState.kVideoCalling == miniPageState) {
+        //  video switch to other user
+        miniOverlayMachine.stateIdle.enter();
+
+        Timer(const Duration(milliseconds: 100), () {
+          //  todo,  need to wait for a while; otherwise, the view is not
+          //   match the state
+          enterMiniVideoMachine();
+        });
+      } else {
+        //  voice restore to video, because current voice state is switched from
+        //  video before
+        enterMiniVideoMachine();
+      }
     }
   }
 }

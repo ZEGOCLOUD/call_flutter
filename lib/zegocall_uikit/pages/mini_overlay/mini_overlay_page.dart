@@ -63,8 +63,9 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           callType = ZegoCallManager.shared.currentCallType;
 
           currentState = state;
+
+          updatePageState();
         });
-        updatePage();
       };
 
       if (null != machine.machine.current) {
@@ -169,24 +170,24 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
     }
   }
 
-  void updatePage() {
+  void updatePageState() {
     switch (currentState) {
       case MiniOverlayPageState.kIdle:
-        updatePageDetails(false, const Point(0, 0), const Size(0, 0));
+        updatePagePropsState(false, const Point(0, 0), const Size(0, 0));
         break;
       case MiniOverlayPageState.kVoiceCalling:
-        updatePageDetails(true, Point(594.w, 950.h), Size(156.w, 156.h));
+        updatePagePropsState(true, Point(594.w, 950.h), Size(156.w, 156.h));
         break;
       case MiniOverlayPageState.kVideoCalling:
-        updatePageDetails(true, Point(593.w, 903.h), Size(157.w, 261.h));
+        updatePagePropsState(true, Point(593.w, 903.h), Size(157.w, 261.h));
         break;
       case MiniOverlayPageState.kBeInvite:
-        updatePageDetails(true, Point(16.w, 60.h), Size(718.w, 160.h));
+        updatePagePropsState(true, Point(16.w, 60.h), Size(718.w, 160.h));
         break;
     }
   }
 
-  void updatePageDetails(bool visibility, Point<double> topLeft, Size size) {
+  void updatePagePropsState(bool visibility, Point<double> topLeft, Size size) {
     setState(() {
       overlayVisibility = visibility;
       overlayTopLeftPos = Offset(topLeft.x, topLeft.y);

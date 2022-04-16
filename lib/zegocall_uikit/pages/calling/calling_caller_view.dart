@@ -37,7 +37,7 @@ class CallingCallerView extends StatelessWidget {
 
   Widget backgroundView() {
     if (ZegoCallType.kZegoCallTypeVideo == callType) {
-      return VideoPlayerView(
+      return VideoPlayer(
         userID: caller.userID,
         userName: caller.userName,
       );

@@ -42,4 +42,8 @@ class MiniVideoCallingOverlayMachine {
     stateBothWithoutVideo = machine.newState(MiniVideoCallingOverlayState
         .kBothWithoutVideo); //  todo page handle 监听处理
   }
+
+  MiniVideoCallingOverlayState getPageState() {
+    return machine.current?.identifier ?? MiniVideoCallingOverlayState.kIdle;
+  }
 }

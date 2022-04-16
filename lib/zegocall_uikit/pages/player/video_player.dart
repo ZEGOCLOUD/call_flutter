@@ -8,21 +8,21 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 // Project imports:
 import 'avatar_background.dart';
 
-class VideoPlayerView extends StatefulWidget {
+class VideoPlayer extends StatefulWidget {
   final String userID;
   final String userName;
 
-  const VideoPlayerView(
+  const VideoPlayer(
       {required this.userID, required this.userName, Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return VideoPlayerViewState();
+    return VideoPlayerState();
   }
 }
 
-class VideoPlayerViewState extends State<VideoPlayerView> {
+class VideoPlayerState extends State<VideoPlayer> {
   int playingViewID = 0;
 
   @override
@@ -45,7 +45,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
 
   Widget? createPlayingView(BuildContext context) {
     return ZegoExpressEngine.instance.createPlatformView((int playingViewID) {
-      playingViewID = playingViewID;
+      this.playingViewID = playingViewID;
 
       var localUserInfo = ZegoServiceManager.shared.userService.localUserInfo;
       if (localUserInfo.userID == widget.userID) {

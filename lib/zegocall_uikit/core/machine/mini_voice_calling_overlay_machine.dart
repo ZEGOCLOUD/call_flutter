@@ -56,4 +56,8 @@ class MiniVoiceCallingOverlayMachine {
 
     // machine.current = widget.defaultState;
   }
+
+  MiniVoiceCallingOverlayState getPageState() {
+    return machine.current?.identifier ?? MiniVoiceCallingOverlayState.kIdle;
+  }
 }
