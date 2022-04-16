@@ -575,14 +575,14 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       log('[call service] end notify, the user ended call is not caller or callees');
       return;
     }
-
-    status = LocalUserStatus.free;
-    callInfo = ZegoCallInfo.empty();
     stopHeartbeatTimer();
 
     ZegoServiceManager.shared.roomService.leaveRoom();
 
     delegate?.onReceiveCallEnded();
+
+    status = LocalUserStatus.free;
+    callInfo = ZegoCallInfo.empty();
   }
 
   void onCallTimeoutNotify(ZegoNotifyListenerParameter parameter) {

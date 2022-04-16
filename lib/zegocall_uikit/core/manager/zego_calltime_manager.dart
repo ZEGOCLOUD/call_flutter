@@ -12,15 +12,15 @@ class ZegoCallingTimer {
   ValueNotifier<String> formatCallTimeNotifier = ValueNotifier<String>("");
 
   void startTimer() {
-    log('[calling time manager] start timer, isCalling:$isCalling');
+    log('[calling timer] start timer, isCalling:$isCalling');
 
     isCalling = true;
     startTime = DateTime.now().millisecondsSinceEpoch;
 
     Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      log('[calling time manager] calling timer periodic');
+      log('[calling timer] calling timer periodic');
       if (!isCalling) {
-        log('[calling time manager] calling timer ended');
+        log('[calling timer] calling timer ended');
 
         timer.cancel();
       } else {
@@ -37,7 +37,7 @@ class ZegoCallingTimer {
   }
 
   void stopTimer() {
-    log('[calling time manager] stop timer');
+    log('[calling timer] stop timer');
 
     isCalling = false;
 
@@ -54,12 +54,15 @@ class ZegoCallingTimeManager {
 
   ZegoCallingTimer startTimer(String key) {
     if (timers.containsKey(key)) {
+      log('[calling timer manager] start timer, existed, return $key');
       return timers[key]!;
     }
 
+    log('[calling timer manager] start timer, create and start $key');
     var timer = ZegoCallingTimer();
     timer.startTimer();
     timers[key] = timer;
+
     return timer;
   }
 
@@ -68,14 +71,17 @@ class ZegoCallingTimeManager {
       return timers[key]!;
     }
 
+    log('[calling timer manager] get timer, has not $key, return empty timer');
     return ZegoCallingTimer();
   }
 
   void stopTimer(String key) {
     if (!timers.containsKey(key)) {
+      log('[calling timer manager] stop timer, has not $key');
       return;
     }
 
+    log('[calling timer manager] stop timer, stop and remove $key');
     timers[key]!.stopTimer();
     timers.remove(key);
   }
