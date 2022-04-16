@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -41,15 +42,14 @@ class WelcomeOneOnOneBg extends StatelessWidget {
                         height: 67.h,
                       ),
                       Text(
-                        'One-On-One Call',
+                        AppLocalizations.of(context)!.bannerCallTitle,
                         style: TextStyle(fontSize: 36.sp, color: Colors.white),
                       ),
                       Flexible(
                         child: Text(
-                          'Deliver exceptional real-time voice and video communications regardless of distance',
-                          style:
-                              TextStyle(fontSize: 20.sp, color: Colors.white),
-                        ),
+                            AppLocalizations.of(context)!.bannerCallDesc,
+                            style: TextStyle(
+                                fontSize: 20.sp, color: Colors.white)),
                       ),
                     ],
                   ),

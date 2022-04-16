@@ -14,9 +14,14 @@ import 'toolbar/online_bottom_toolbar.dart';
 import 'toolbar/online_top_toolbar.dart';
 
 class OnlineVideoView extends StatelessWidget {
-  const OnlineVideoView({required this.localUser, required this.remoteUser, Key? key})
+  const OnlineVideoView(
+      {required this.callID,
+      required this.localUser,
+      required this.remoteUser,
+      Key? key})
       : super(key: key);
 
+  final String callID;
   final ZegoUserInfo localUser;
   final ZegoUserInfo remoteUser;
 
@@ -30,10 +35,8 @@ class OnlineVideoView extends StatelessWidget {
             child: SizedBox(
                 width: 190.w,
                 height: 338.h,
-                child: VideoPlayerView(
-                  userID: targetUser.userID,
-                  userName: targetUser.userName,
-                ))),
+                child: VideoPlayer(
+                    userID: targetUser.userID, userName: targetUser.userName))),
       ),
     );
   }
@@ -44,14 +47,13 @@ class OnlineVideoView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         OnlineTopToolBar(
+            callID: callID,
             settingWidgetHeight: 763.h,
             settingWidget: const CallingSettingsView(
                 callType: ZegoCallType.kZegoCallTypeVideo)),
         const Expanded(child: SizedBox()),
         const OnlineVideoBottomToolBar(),
-        SizedBox(
-          height: 105.h,
-        ),
+        SizedBox(height: 105.h),
       ],
     );
   }
@@ -60,7 +62,7 @@ class OnlineVideoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        VideoPlayerView(
+        VideoPlayer(
           userID: localUser.userID,
           userName: localUser.userName,
         ),

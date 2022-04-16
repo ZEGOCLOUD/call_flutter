@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -108,7 +109,7 @@ class CallingVideoResolutionSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CallingSettingsListViewPage<ZegoVideoResolution>(
-        title: 'Resolution Settings',
+        title: AppLocalizations.of(context)!.roomSettingsPageVideoResolution,
         selectedValue: selectedValue,
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,
@@ -154,7 +155,7 @@ class CallingAudioBitrateSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CallingSettingsListViewPage<ZegoAudioBitrate>(
-        title: 'Audio Bitrate Settings',
+        title: AppLocalizations.of(context)!.roomSettingsPageAudioBitrate,
         selectedValue: selectedValue,
         model: listModel(context),
         pageIndexChanged: pageIndexChanged,

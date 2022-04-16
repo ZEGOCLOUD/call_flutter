@@ -5,15 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../../../../utils/styles.dart';
 import './../../../../utils/widgets/show_bottom_sheet.dart';
 
 class OnlineTopToolBar extends StatefulWidget {
+  final String callID;
   final Widget settingWidget;
   final double settingWidgetHeight;
 
   const OnlineTopToolBar(
-      {required this.settingWidget,
+      {required this.callID,
+      required this.settingWidget,
       required this.settingWidgetHeight,
       Key? key})
       : super(key: key);
@@ -25,14 +28,6 @@ class OnlineTopToolBar extends StatefulWidget {
 }
 
 class OnlineTopToolBarState extends State<OnlineTopToolBar> {
-  final Stream<String> timerStream =
-      Stream.periodic(const Duration(seconds: 1), (int count) {
-    var duration = Duration(seconds: count);
-    var minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-    var seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return minutes + ":" + seconds;
-  });
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -48,7 +43,7 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
         children: [
           GestureDetector(
             onTap: () {
-              //  todo
+              ZegoCallManager.shared.onMiniOverlayRequest();
             },
             child: SizedBox(
               width: 44.w,
@@ -57,20 +52,14 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
           ),
           SizedBox(width: 8.w),
           Expanded(
-              child: StreamBuilder<String>(
-                  stream: timerStream, //
-                  //initialData: ,// a Stream<int> or null
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    if (snapshot.hasError) return const Text('');
-                    if (ConnectionState.active == snapshot.connectionState) {
-                      return Text(
-                        snapshot.data!,
+              child: ValueListenableBuilder<String>(
+                  valueListenable: ZegoCallManager.shared.callTimeManager
+                      .startTimer(widget.callID)
+                      .displayValueNotifier,
+                  builder: (context, formatCallingTime, _) {
+                    return Text(formatCallingTime,
                         textAlign: TextAlign.center,
-                        style: StyleConstant.onlineCountDown,
-                      );
-                    }
-                    return const Text('');
+                        style: StyleConstant.onlineCountDown);
                   })),
           SizedBox(width: 8.w),
           GestureDetector(

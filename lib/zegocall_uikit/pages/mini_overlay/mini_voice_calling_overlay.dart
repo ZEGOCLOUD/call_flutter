@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../core/manager/zego_call_manager.dart';
 import './../../../utils/styles.dart';
 import './../../core/machine/mini_voice_calling_overlay_machine.dart';
 
@@ -67,20 +69,41 @@ class _MiniVoiceCallingOverlayState extends State<MiniVoiceCallingOverlay> {
               image: const AssetImage(StyleIconUrls.roomOverlayVoiceCalling),
               width: 56.w,
             ),
-            Text(getStateText(currentState),
-                style: StyleConstant.voiceCallingText),
+            getStateTextWidget(context, currentState),
           ],
         ));
+  }
+
+  Widget getStateTextWidget(
+      BuildContext context, MiniVoiceCallingOverlayState state) {
+    var callID = ZegoCallManager.shared.currentCallID();
+    if (MiniVoiceCallingOverlayState.kOnline == state) {
+      return ValueListenableBuilder<String>(
+          valueListenable: ZegoCallManager.shared.callTimeManager
+              .getTimer(callID)
+              .displayValueNotifier,
+          builder: (context, formatCallingTime, _) {
+            return Text(formatCallingTime,
+                textAlign: TextAlign.center,
+                style: StyleConstant.onlineCountDown);
+          });
+    }
+    return Text(getStateText(currentState),
+        style: StyleConstant.voiceCallingText);
   }
 
   String getStateText(MiniVoiceCallingOverlayState state) {
     var stateTextMap = {
       MiniVoiceCallingOverlayState.kIdle: "",
-      MiniVoiceCallingOverlayState.kWaiting: "Waiting...",
-      MiniVoiceCallingOverlayState.kOnline: "00:01 todo",
-      MiniVoiceCallingOverlayState.kDeclined: "Declined",
-      MiniVoiceCallingOverlayState.kMissed: "Missed",
-      MiniVoiceCallingOverlayState.kEnded: "Ended",
+      MiniVoiceCallingOverlayState.kWaiting:
+          AppLocalizations.of(context)!.callPageStatusCalling,
+      MiniVoiceCallingOverlayState.kOnline: "00:01",
+      MiniVoiceCallingOverlayState.kDeclined:
+          AppLocalizations.of(context)!.callPageStatusDeclined,
+      MiniVoiceCallingOverlayState.kMissed:
+          AppLocalizations.of(context)!.callPageStatusMissed,
+      MiniVoiceCallingOverlayState.kEnded:
+          AppLocalizations.of(context)!.callPageStatusEnded,
     };
 
     return stateTextMap[state]!;

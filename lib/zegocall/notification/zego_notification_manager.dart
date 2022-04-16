@@ -63,10 +63,10 @@ class ZegoNotificationManager {
     );
   }
 
-  void uninit() {
+  void uninit() async {
     stopRing();
 
-    audioCache.clearAll();
+    await audioCache.clearAll();
   }
 
   void onInitFinished(bool initResult) async {
@@ -78,10 +78,39 @@ class ZegoNotificationManager {
     listenAwesomeNotification();
   }
 
+  void startRing() async {
+    if (isRingTimerRunning) {
+      developer.log('[notification manager] ring is running');
+      return;
+    }
+
+    developer.log('[notification manager] start ring');
+
+    isRingTimerRunning = true;
+
+    await audioCache.loop(callRingName).then((player) => audioPlayer = player);
+    Vibrate.vibrate();
+
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
+      developer.log('[notification manager] ring timer periodic');
+      if (!isRingTimerRunning) {
+        developer.log('[notification manager] ring timer ended');
+
+        audioPlayer?.stop();
+
+        timer.cancel();
+      } else {
+        Vibrate.vibrate();
+      }
+    });
+  }
+
   void stopRing() async {
+    developer.log('[notification manager] stop ring');
+
     isRingTimerRunning = false;
 
-    await audioPlayer?.release();
+    audioPlayer?.stop();
   }
 
   void requestFirebaseMessagePermission() async {
@@ -160,18 +189,7 @@ class ZegoNotificationManager {
       return;
     }
 
-    isRingTimerRunning = true;
-    audioCache.loop(callRingName).then((player) => audioPlayer = player);
-
-    Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
-      if (!isRingTimerRunning) {
-        audioPlayer?.stop();
-
-        timer.cancel();
-      }
-
-      Vibrate.vibrate();
-    });
+    startRing();
 
     developer.log('[firebase] remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);

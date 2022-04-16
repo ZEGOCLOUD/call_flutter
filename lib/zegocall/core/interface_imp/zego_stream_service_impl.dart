@@ -13,8 +13,7 @@ import './../interface/zego_stream_service.dart';
 import './../manager/zego_service_manager.dart';
 
 class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
-  bool isCameraPublishing = false;
-  Map<String, ValueNotifier<bool>> userStreamReadyNotifiers = {};
+  Map<String, ValueNotifier<bool>> streamCameraStateNotifiers = {};
 
   @override
   void init() {
@@ -37,15 +36,18 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   }
 
   @override
-  void startPlaying(String userID, int viewID) {
+  void startPlaying(String userID, {int viewID = -1}) {
     assert(ZegoServiceManager.shared.isSDKInit,
         "The SDK must be initialised first.");
     assert(!ZegoServiceManager.shared.userService.localUserInfo.isEmpty(),
         "Must be logged in first.");
     assert(userID.isNotEmpty, "The user ID can not be nil.");
 
-    ZegoCanvas canvas = ZegoCanvas.view(viewID);
-    canvas.viewMode = ZegoViewMode.AspectFill;
+    ZegoCanvas? canvas;
+    if (viewID >= 0) {
+      canvas = ZegoCanvas.view(viewID);
+      canvas.viewMode = ZegoViewMode.AspectFill;
+    }
 
     //  bind stream to view, by stream id and view id
     var streamID = generateStreamIDByUserID(userID);
@@ -53,21 +55,24 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   }
 
   @override
-  ValueNotifier<bool> getStreamStateNotifier(String userID) {
-    var streamID = generateStreamIDByUserID(userID);
-
-    return getStreamStateNotifierByStreamID(streamID);
-  }
-
-  ValueNotifier<bool> getStreamStateNotifierByStreamID(String streamID) {
-    if (!userStreamReadyNotifiers.containsKey(streamID)) {
-      log('[stream service] add stream state notifier, stream id:$streamID');
-
-      userStreamReadyNotifiers[streamID] = ValueNotifier<bool>(false);
-      return userStreamReadyNotifiers[streamID]!;
+  ValueNotifier<bool> getCameraStateNotifier(String userID) {
+    if (userID.isEmpty) {
+      assert(false, "user id is empty");
     }
 
-    return userStreamReadyNotifiers[streamID]!;
+    var streamID = generateStreamIDByUserID(userID);
+    return getCameraStateNotifierByStreamID(streamID);
+  }
+
+  ValueNotifier<bool> getCameraStateNotifierByStreamID(String streamID) {
+    if (!streamCameraStateNotifiers.containsKey(streamID)) {
+      log('[stream service] add stream state notifier, stream id:$streamID');
+
+      streamCameraStateNotifiers[streamID] = ValueNotifier<bool>(false);
+      return streamCameraStateNotifiers[streamID]!;
+    }
+
+    return streamCameraStateNotifiers[streamID]!;
   }
 
   @override
@@ -92,33 +97,37 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   void onPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel) {
     var streamID = generateStreamIDByUserID(
         ZegoServiceManager.shared.userService.localUserInfo.userID);
-    isCameraPublishing = true;
 
     log('[stream service] onPublisherCapturedVideoFirstFrame, stream id:$streamID');
 
-    getStreamStateNotifierByStreamID(streamID).value = true;
+    getCameraStateNotifierByStreamID(streamID).value = true;
   }
 
   @override
   void onPlayerRenderVideoFirstFrame(String streamID) {
     log('[stream service] onPlayerRenderVideoFirstFrame, stream id:$streamID');
 
-    getStreamStateNotifierByStreamID(streamID).value = true;
+    getCameraStateNotifierByStreamID(streamID).value = true;
   }
 
   @override
-  void onApiCalledResult(int errorCode, String funcName, String info) {
-    if ("enableCamera" == funcName && isCameraPublishing) {
-      // close local camera
-      var streamID = generateStreamIDByUserID(
-          ZegoServiceManager.shared.userService.localUserInfo.userID);
-      isCameraPublishing = false;
+  void onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
+    log('[stream service] onRemoteCameraStateUpdate, stream id:$streamID,'
+        ' state:$state');
 
-      log('[stream service] onApiCalledResult enable camera, stream'
-          ' id:$streamID');
+    var isRemoteCameraPublishing = ZegoRemoteDeviceState.Open == state;
+    getCameraStateNotifierByStreamID(streamID).value = isRemoteCameraPublishing;
+  }
 
-      getStreamStateNotifierByStreamID(streamID).value = false;
-    }
+  @override
+  void onLocalCameraEnabled(bool enabled) {
+    var streamID = generateStreamIDByUserID(
+        ZegoServiceManager.shared.userService.localUserInfo.userID);
+
+    log('[stream service] onLocalCameraEnabled enable:$enabled, stream'
+        ' id:$streamID');
+
+    getCameraStateNotifierByStreamID(streamID).value = enabled;
   }
 }
 

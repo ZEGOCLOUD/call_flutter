@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -29,23 +30,17 @@ class CallingCallerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      backgroundView(),
-      surface(),
-    ]);
+    return Stack(children: [backgroundView(), surface(context)]);
   }
 
   Widget backgroundView() {
     if (ZegoCallType.kZegoCallTypeVideo == callType) {
-      return VideoPlayerView(
-        userID: caller.userID,
-        userName: caller.userName,
-      );
+      return VideoPlayer(userID: caller.userID, userName: caller.userName);
     }
     return AvatarBackgroundView(userName: callee.userName);
   }
 
-  Widget surface() {
+  Widget surface(BuildContext context) {
     var isVideo = ZegoCallType.kZegoCallTypeVideo == callType;
     var avatarIndex = getUserAvatarIndex(callee.userName);
 
@@ -54,11 +49,7 @@ class CallingCallerView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         isVideo ? const CallingCallerVideoTopToolBar() : const SizedBox(),
-        isVideo
-            ? SizedBox(
-                height: 140.h,
-              )
-            : SizedBox(height: 228.h),
+        isVideo ? SizedBox(height: 140.h) : SizedBox(height: 228.h),
         SizedBox(
           width: 200.w,
           height: 200.h,
@@ -67,23 +58,17 @@ class CallingCallerView extends StatelessWidget {
             backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
           ),
         ),
+        SizedBox(height: 10.h),
         SizedBox(
-          height: 10.h,
-        ),
-        SizedBox(
-          height: 59.h,
-          child:
-              Text(callee.userName, style: StyleConstant.callingCenterUserName),
-        ),
-        SizedBox(
-          height: 47.h,
-        ),
-        const Text('Calling...', style: StyleConstant.callingCenterStatus),
+            height: 59.h,
+            child: Text(callee.userName,
+                style: StyleConstant.callingCenterUserName)),
+        SizedBox(height: 47.h),
+        Text(AppLocalizations.of(context)!.callPageStatusCalling,
+            style: StyleConstant.callingCenterStatus),
         const Expanded(child: SizedBox()),
         const CallingCallerBottomToolBar(),
-        SizedBox(
-          height: 105.h,
-        ),
+        SizedBox(height: 105.h),
       ],
     );
   }

@@ -16,12 +16,10 @@ class OnlineVoiceBottomToolBar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isMicEnabled = useState(true);
-    ZegoServiceManager.shared.deviceService
-        .isMicEnabled()
-        .then((value) => {isMicEnabled.value = value});
+    var isMicEnabled =
+        useState(ZegoServiceManager.shared.userService.localUserInfo.mic);
 
-    var isSpeakerEnabled = useState(false);
+    var isSpeakerEnabled = useState(true);
     ZegoServiceManager.shared.deviceService
         .isSpeakerEnabled()
         .then((value) => {isSpeakerEnabled.value = value});
@@ -42,9 +40,13 @@ class OnlineVoiceBottomToolBar extends HookWidget {
                   : StyleIconUrls.toolbarBottomMicClosed,
               onTap: () async {
                 ZegoServiceManager.shared.deviceService
-                    .enableMic(isMicEnabled.value);
+                    .enableMic(!isMicEnabled.value);
 
-                isMicEnabled.value = !isMicEnabled.value;
+                var userService = ZegoServiceManager.shared.userService;
+                userService.localUserInfo.mic =
+                    isMicEnabled.value = !isMicEnabled.value;
+                ZegoServiceManager.shared.userService.delegate
+                    ?.onUserInfoUpdate(userService.localUserInfo);
               },
             ),
             CallingCalleeBottomToolBarButton(
@@ -83,12 +85,11 @@ class OnlineVideoBottomToolBar extends HookWidget {
     var userService = ZegoServiceManager.shared.userService;
     var deviceService = ZegoServiceManager.shared.deviceService;
 
-    var isCameraEnabled = useState(userService.localUserInfo.camera);
     var isFrontCameraUsed = useState(deviceService.isFrontCamera);
-    var isMicEnabled = useState(true);
-    var isSpeakerEnabled = useState(true);
+    var isCameraEnabled = useState(userService.localUserInfo.camera);
+    var isMicEnabled = useState(userService.localUserInfo.mic);
 
-    deviceService.isMicEnabled().then((value) => {isMicEnabled.value = value});
+    var isSpeakerEnabled = useState(true);
     deviceService
         .isSpeakerEnabled()
         .then((value) => {isSpeakerEnabled.value = value});
@@ -111,7 +112,11 @@ class OnlineVideoBottomToolBar extends HookWidget {
                 ZegoServiceManager.shared.deviceService
                     .enableCamera(!isCameraEnabled.value);
 
-                isCameraEnabled.value = !isCameraEnabled.value;
+                var userService = ZegoServiceManager.shared.userService;
+                userService.localUserInfo.camera =
+                    isCameraEnabled.value = !isCameraEnabled.value;
+                ZegoServiceManager.shared.userService.delegate
+                    ?.onUserInfoUpdate(userService.localUserInfo);
               },
             ),
             CallingCalleeBottomToolBarButton(
@@ -124,7 +129,11 @@ class OnlineVideoBottomToolBar extends HookWidget {
                 ZegoServiceManager.shared.deviceService
                     .enableMic(!isMicEnabled.value);
 
-                isMicEnabled.value = !isMicEnabled.value;
+                var userService = ZegoServiceManager.shared.userService;
+                userService.localUserInfo.mic =
+                    isMicEnabled.value = !isMicEnabled.value;
+                ZegoServiceManager.shared.userService.delegate
+                    ?.onUserInfoUpdate(userService.localUserInfo);
               },
             ),
             CallingCalleeBottomToolBarButton(

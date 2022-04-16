@@ -2,27 +2,26 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'avatar_background.dart';
 
-class VideoPlayerView extends StatefulWidget {
+class VideoPlayer extends StatefulWidget {
   final String userID;
   final String userName;
 
-  const VideoPlayerView(
-      {required this.userID, required this.userName, Key? key})
+  const VideoPlayer({required this.userID, required this.userName, Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return VideoPlayerViewState();
+    return VideoPlayerState();
   }
 }
 
-class VideoPlayerViewState extends State<VideoPlayerView> {
+class VideoPlayerState extends State<VideoPlayer> {
   int playingViewID = 0;
 
   @override
@@ -32,7 +31,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
         Center(child: createPlayingView(context)),
         ValueListenableBuilder<bool>(
           valueListenable: ZegoServiceManager.shared.streamService
-              .getStreamStateNotifier(widget.userID),
+              .getCameraStateNotifier(widget.userID),
           builder: (context, isStreamReady, _) {
             return Visibility(
                 visible: !isStreamReady,
@@ -45,7 +44,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
 
   Widget? createPlayingView(BuildContext context) {
     return ZegoExpressEngine.instance.createPlatformView((int playingViewID) {
-      playingViewID = playingViewID;
+      this.playingViewID = playingViewID;
 
       var localUserInfo = ZegoServiceManager.shared.userService.localUserInfo;
       if (localUserInfo.userID == widget.userID) {
@@ -57,7 +56,7 @@ class VideoPlayerViewState extends State<VideoPlayerView> {
         ZegoServiceManager.shared.streamService.startPreview(playingViewID);
       } else {
         ZegoServiceManager.shared.streamService
-            .startPlaying(widget.userID, playingViewID);
+            .startPlaying(widget.userID, viewID: playingViewID);
       }
     });
   }

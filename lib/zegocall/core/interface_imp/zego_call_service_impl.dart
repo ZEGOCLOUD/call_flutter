@@ -138,8 +138,10 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     }
 
     var calleeID = callInfo.callees.first.userID;
-    log('[call service] cancel call, callID:${callInfo.callID}, '
-        'calleeID:$calleeID, status:$status');
+    var callID = callInfo.callID;
+    var callerUserID =
+        ZegoServiceManager.shared.userService.localUserInfo.userID;
+    log('[call service] cancel call, callID:$callID, calleeID:$calleeID, callerUserID:$callerUserID, status:$status');
 
     ZegoServiceManager.shared.roomService.leaveRoom();
 
@@ -147,10 +149,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     callInfo = ZegoCallInfo.empty();
     cancelCallTimer();
 
-    var callerUserID =
-        ZegoServiceManager.shared.userService.localUserInfo.userID;
-    var command =
-        ZegoCancelCallCommand(callerUserID, callInfo.callID, calleeID);
+    var command = ZegoCancelCallCommand(callerUserID, callID, calleeID);
     var result = await command.execute();
     return result.isSuccess ? ZegoError.success : result.failure;
   }
@@ -293,6 +292,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   @override
   void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
       Map<String, dynamic> extendedData) {
+    log('[call service] onRoomStateUpdate, roomID:$roomID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
+
     if (currentRoomID != roomID) {
       log('[call service] room state update, room id is not equal');
       return;
@@ -576,14 +577,14 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       log('[call service] end notify, the user ended call is not caller or callees');
       return;
     }
-
-    status = LocalUserStatus.free;
-    callInfo = ZegoCallInfo.empty();
     stopHeartbeatTimer();
 
     ZegoServiceManager.shared.roomService.leaveRoom();
 
     delegate?.onReceiveCallEnded();
+
+    status = LocalUserStatus.free;
+    callInfo = ZegoCallInfo.empty();
   }
 
   void onCallTimeoutNotify(ZegoNotifyListenerParameter parameter) {

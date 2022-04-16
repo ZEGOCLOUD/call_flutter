@@ -1,9 +1,13 @@
+// Dart imports:
+import 'dart:async';
+
 // Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -31,6 +35,8 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
   bool isLoading = false;
   bool isPolicyCheck = false;
 
+  StreamSubscription<User?>? authStateChangesSubscription;
+
   void setIsLoading() {
     setState(() {
       isLoading = !isLoading;
@@ -44,12 +50,20 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       checkPermission();
 
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      authStateChangesSubscription =
+          FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
           Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    authStateChangesSubscription?.cancel();
   }
 
   @override
@@ -80,9 +94,10 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
                       const SizedBox(
                         height: 58 / 2,
                       ),
-                      const Text(
-                        "ZEGO Call",
-                        style: TextStyle(fontSize: 24, color: Colors.black),
+                      Text(
+                        AppLocalizations.of(context)!.appName,
+                        style:
+                            const TextStyle(fontSize: 24, color: Colors.black),
                       ),
                       Expanded(
                           child: Column(
@@ -103,8 +118,8 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
-                                    SizedBox(
+                                  children: [
+                                    const SizedBox(
                                       width: 84,
                                       height: 84,
                                       child: CircularProgressIndicator(
@@ -113,8 +128,10 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
                                       ),
                                     ),
                                     Text(
-                                      "Loging in ...",
-                                      style: TextStyle(color: Colors.white),
+                                      AppLocalizations.of(context)!
+                                          .loginPageLogin,
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     )
                                   ],
                                 )),
@@ -142,7 +159,8 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
                                         image: const AssetImage(
                                             StyleIconUrls.authIconGoogle),
                                         height: 45.h),
-                                    const Text('Log in with Google')
+                                    Text(AppLocalizations.of(context)!
+                                        .loginPageGoogleLogin)
                                   ]),
                               onPressed: isLoading
                                   ? null //  disable button is loading

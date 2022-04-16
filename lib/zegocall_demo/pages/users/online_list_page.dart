@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +26,9 @@ class OnlineListPage extends HookWidget {
             child: Container(
       padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 5.h),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        const NavigationBackBar(
+        NavigationBackBar(
             targetBackUrl: PageRouteNames.welcome,
-            title: "Back",
+            title: AppLocalizations.of(context)!.back,
             titleStyle: StyleConstant.backText),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
@@ -36,14 +37,14 @@ class OnlineListPage extends HookWidget {
                   width: double.infinity,
                   height: 1080.h,
                   child: userListManager.userList.isEmpty
-                      ? emptyTips()
+                      ? emptyTips(context)
                       : userListView(userListManager),
                 )),
       ]),
     )));
   }
 
-  Widget emptyTips() {
+  Widget emptyTips(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -53,7 +54,8 @@ class OnlineListPage extends HookWidget {
             height: 100.h,
             child: Image.asset(StyleIconUrls.userListDefault)),
         SizedBox(height: 16.h),
-        const Text("No Online User", style: StyleConstant.userListEmptyText),
+        Text(AppLocalizations.of(context)!.noOnlineUser,
+            style: StyleConstant.userListEmptyText),
       ],
     );
   }

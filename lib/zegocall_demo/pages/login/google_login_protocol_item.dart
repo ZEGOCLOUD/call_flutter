@@ -2,6 +2,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+// Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
+
 // Project imports:
 import './../../../utils/widgets/browser.dart';
 import './../../constants/zego_page_constant.dart';
@@ -48,11 +51,11 @@ class GoogleLoginProtocolItemState extends State<GoogleLoginProtocolItem> {
             text: TextSpan(
               style: Theme.of(context).textTheme.bodyText1,
               children: [
-                const TextSpan(
-                  text: "I have read and agree to ZEGO Call's ",
+                TextSpan(
+                  text: AppLocalizations.of(context)!.loginPageServicePrivacy,
                 ),
                 TextSpan(
-                  text: 'Terms of Service',
+                  text: AppLocalizations.of(context)!.settingPageTermsOfService,
                   style: const TextStyle(color: Colors.blue),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
@@ -61,7 +64,7 @@ class GoogleLoginProtocolItemState extends State<GoogleLoginProtocolItem> {
                 ),
                 const TextSpan(text: ' & '),
                 TextSpan(
-                  text: 'Privacy Policy',
+                  text: AppLocalizations.of(context)!.settingPagePrivacyPolicy,
                   style: const TextStyle(color: Colors.blue),
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {

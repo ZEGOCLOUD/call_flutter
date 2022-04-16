@@ -77,7 +77,7 @@ mixin ZegoCallManagerInterface {
   ///
   /// - Parameter fileName: refers to the name of the file you upload. We recommend you name the file in the format of "appid_platform_timestamp".
   /// - Parameter callback: refers to the callback that be triggered when the logs are upload successfully or failed to upload logs.
-  void uploadLog();
+  Future<int> uploadLog();
 
   /// Make an outbound call
   ///

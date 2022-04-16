@@ -17,6 +17,7 @@ import 'package:wakelock/wakelock.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall_demo/pages/zego_navigation_service.dart';
+import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
 import '../zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
 import 'constants/zego_page_constant.dart';
@@ -65,6 +66,8 @@ class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+
+    ZegoPageRoute.shared.callingBackRouteName = PageRouteNames.onlineList;
 
     WidgetsBinding.instance?.addObserver(this);
   }

@@ -29,19 +29,27 @@ class _CallingPageState extends State<CallingPage> {
   final CallingMachine machine =
       ZegoCallManager.shared.pageHandler.callingMachine;
 
-  ZegoUserInfo caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-  ZegoUserInfo callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+  late ZegoUserInfo caller;
+  late ZegoUserInfo callee;
   ZegoCallType callType = ZegoCallManager.shared.currentCallType;
 
   @override
   void initState() {
     super.initState();
 
+    caller =
+        ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.caller);
+    callee =
+        ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.callee);
+
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.onStateChanged = (CallingState state) {
         setState(() {
-          caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-          callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+          caller = ZegoCallManager.shared
+              .getLatestUser(ZegoCallManager.shared.caller);
+          callee = ZegoCallManager.shared
+              .getLatestUser(ZegoCallManager.shared.callee);
+
           callType = ZegoCallManager.shared.currentCallType;
 
           currentState = state;
@@ -63,6 +71,7 @@ class _CallingPageState extends State<CallingPage> {
 
   @override
   Widget build(BuildContext context) {
+    var callID = ZegoCallManager.shared.currentCallID();
     var localUserInfo = ZegoServiceManager.shared.userService.localUserInfo;
     var localUser = caller.userID == localUserInfo.userID ? caller : callee;
     var remoteUser = caller.userID != localUserInfo.userID ? caller : callee;
@@ -82,9 +91,11 @@ class _CallingPageState extends State<CallingPage> {
             : CallingCalleeView(
                 caller: caller, callee: callee, callType: callType);
       case CallingState.kOnlineVoice:
-        return OnlineVoiceView(localUser: localUser, remoteUser: remoteUser);
+        return OnlineVoiceView(
+            callID: callID, localUser: localUser, remoteUser: remoteUser);
       case CallingState.kOnlineVideo:
-        return OnlineVideoView(localUser: localUser, remoteUser: remoteUser);
+        return OnlineVideoView(
+            callID: callID, localUser: localUser, remoteUser: remoteUser);
     }
   }
 }

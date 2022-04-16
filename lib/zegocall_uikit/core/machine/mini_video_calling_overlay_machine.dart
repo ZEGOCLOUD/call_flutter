@@ -7,8 +7,8 @@ import 'package:statemachine/statemachine.dart' as sm;
 enum MiniVideoCallingOverlayState {
   kIdle,
   kWaiting,
-  kCalleeWithVideo,
-  kOnlyCallerWithVideo,
+  kRemoteUserWithVideo,
+  kLocalUserWithVideo,
   kBothWithoutVideo,
 }
 
@@ -20,13 +20,8 @@ class MiniVideoCallingOverlayMachine {
   MiniVideoCallingOverlayMachineStateChanged? onStateChanged;
 
   late sm.State<MiniVideoCallingOverlayState> stateIdle;
-  late sm.State<MiniVideoCallingOverlayState> stateWaiting;
-  late sm.State<MiniVideoCallingOverlayState> stateCalleeWithVideo;
-  late sm.State<MiniVideoCallingOverlayState> stateOnlyCallerWithVideo;
-  late sm.State<MiniVideoCallingOverlayState> stateBothWithoutVideo;
-
-  // The duration may change on full screen calling page
-  final int waitingDuration = 60;
+  late sm.State<MiniVideoCallingOverlayState> stateRemoteUserWithVideo;
+  late sm.State<MiniVideoCallingOverlayState> stateLocalUserWithVideo;
 
   void init() {
     machine.onAfterTransition.listen((event) {
@@ -39,13 +34,13 @@ class MiniVideoCallingOverlayMachine {
 
     // Config state
     stateIdle = machine.newState(MiniVideoCallingOverlayState.kIdle);
-    stateWaiting = machine.newState(MiniVideoCallingOverlayState.kWaiting)
-      ..onTimeout(Duration(seconds: waitingDuration), () => stateIdle.enter());
-    stateCalleeWithVideo =
-        machine.newState(MiniVideoCallingOverlayState.kCalleeWithVideo);
-    stateOnlyCallerWithVideo =
-        machine.newState(MiniVideoCallingOverlayState.kOnlyCallerWithVideo);
-    stateBothWithoutVideo = machine.newState(MiniVideoCallingOverlayState
-        .kBothWithoutVideo); //  todo page handle 监听处理
+    stateRemoteUserWithVideo =
+        machine.newState(MiniVideoCallingOverlayState.kRemoteUserWithVideo);
+    stateLocalUserWithVideo =
+        machine.newState(MiniVideoCallingOverlayState.kLocalUserWithVideo);
+  }
+
+  MiniVideoCallingOverlayState getPageState() {
+    return machine.current?.identifier ?? MiniVideoCallingOverlayState.kIdle;
   }
 }

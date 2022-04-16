@@ -9,9 +9,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
+import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
+import '../constants/zego_page_constant.dart';
+import '../pages/zego_navigation_service.dart';
 import 'zego_token_manager.dart';
 import 'zego_user_list_manager.dart';
 
@@ -60,6 +64,8 @@ class ZegoLoginManager extends ChangeNotifier {
   }
 
   void logout() async {
+    await GoogleSignIn().signOut();
+
     await FirebaseAuth.instance.signOut();
 
     fcmTokenListenerSubscription?.cancel();
@@ -67,6 +73,10 @@ class ZegoLoginManager extends ChangeNotifier {
     resetData(removeUserData: true);
 
     user = null;
+
+    final NavigationService _navigationService = locator<NavigationService>();
+    var context = _navigationService.navigatorKey.currentContext!;
+    Navigator.pushReplacementNamed(context, PageRouteNames.login);
   }
 
   void addUserToDatabase(User user) {
@@ -105,7 +115,7 @@ class ZegoLoginManager extends ChangeNotifier {
       var snapshotValue = event.snapshot.value;
       log('[firebase] fcm token onValue: $snapshotValue');
 
-      var token = snapshotValue ?? "";  //  todo 一段时间后退出，处理
+      var token = snapshotValue ?? "";
       if (token == fcmToken) {
         return;
       }
@@ -113,6 +123,8 @@ class ZegoLoginManager extends ChangeNotifier {
       resetData(removeUserData: false);
 
       logout();
+
+      ZegoCallManager.shared.resetCallData();
 
       delegate?.onReceiveUserKickOut();
     });

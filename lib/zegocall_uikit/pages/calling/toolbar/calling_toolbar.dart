@@ -2,11 +2,12 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import '../../../core/manager/zego_call_manager.dart';
 import './../../../../utils/styles.dart';
 import './../../../../utils/widgets/show_bottom_sheet.dart';
@@ -124,7 +125,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CallingCalleeBottomToolBarButton(
-                text: "Decline",
+                text: AppLocalizations.of(context)!.callPageActionDecline,
                 iconWidth: 120.w,
                 iconHeight: 120.h,
                 iconURL: StyleIconUrls.toolbarBottomDecline,
@@ -135,7 +136,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
               width: 230.w,
             ),
             CallingCalleeBottomToolBarButton(
-                text: "Accept",
+                text: AppLocalizations.of(context)!.callPageActionAccept,
                 iconWidth: 120.w,
                 iconHeight: 120.h,
                 iconURL: imageURLByCallType(callType),

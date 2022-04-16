@@ -35,7 +35,7 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
     var config = ZegoRoomConfig.defaultConfig();
     config.token = token;
     config.isUserStatusNotify = true;
-    ZegoExpressEngine.instance
+    await ZegoExpressEngine.instance
         .loginRoom(roomInfo.roomID,
             ZegoUser(localUserInfo.userID, localUserInfo.userName),
             config: config)

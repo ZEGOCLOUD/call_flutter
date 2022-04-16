@@ -39,24 +39,32 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
   Offset overlayTopLeftPos = const Offset(0, 0);
   bool overlayVisibility = true;
 
-  ZegoUserInfo caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-  ZegoUserInfo callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+  late ZegoUserInfo caller;
+  late ZegoUserInfo callee;
   ZegoCallType callType = ZegoCallManager.shared.currentCallType;
 
   @override
   void initState() {
     super.initState();
 
+    caller =
+        ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.caller);
+    callee =
+        ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.callee);
+
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       machine.onStateChanged = (MiniOverlayPageState state) {
         setState(() {
-          caller = ZegoCallManager.shared.caller ?? ZegoUserInfo.empty();
-          callee = ZegoCallManager.shared.callee ?? ZegoUserInfo.empty();
+          caller = ZegoCallManager.shared
+              .getLatestUser(ZegoCallManager.shared.caller);
+          callee = ZegoCallManager.shared
+              .getLatestUser(ZegoCallManager.shared.callee);
           callType = ZegoCallManager.shared.currentCallType;
 
           currentState = state;
+
+          updatePageState();
         });
-        updatePage();
       };
 
       if (null != machine.machine.current) {
@@ -109,8 +117,13 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                     topLeft: Radius.circular(100.0.w),
                     bottomLeft: Radius.circular(100.0.w)),
               ),
-              child: MiniVoiceCallingOverlay(
-                machine: machine.voiceCallingOverlayMachine,
+              child: GestureDetector(
+                onTap: () {
+                  ZegoCallManager.shared.onMiniOverlayRestore();
+                },
+                child: MiniVoiceCallingOverlay(
+                  machine: machine.voiceCallingOverlayMachine,
+                ),
               ),
             ),
             SizedBox(
@@ -120,50 +133,60 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           ],
         );
       case MiniOverlayPageState.kVideoCalling:
-        return Container(
-            width: 200.w,
-            height: 300.h,
-            padding: EdgeInsets.all(12.0.w),
-            decoration: BoxDecoration(
-                color: const Color(0xffF3F4F7),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.0.w),
-                    bottomLeft: Radius.circular(20.0.w))),
-            child: MiniVideoCallingOverlay(
-                machine: machine.videoCallingOverlayMachine,
-                caller: caller,
-                callee: callee));
+        return GestureDetector(
+          onTap: () {
+            ZegoCallManager.shared.onMiniOverlayRestore();
+          },
+          child: Container(
+              width: 200.w,
+              height: 300.h,
+              padding: EdgeInsets.all(12.0.w),
+              decoration: BoxDecoration(
+                  color: const Color(0xffF3F4F7),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0.w),
+                      bottomLeft: Radius.circular(20.0.w))),
+              child: MiniVideoCallingOverlay(
+                  machine: machine.videoCallingOverlayMachine,
+                  caller: caller,
+                  callee: callee)),
+        );
       case MiniOverlayPageState.kBeInvite:
-        return Container(
-            width: 718.w,
-            height: 160.h,
-            padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
-            decoration: BoxDecoration(
-              color: const Color(0xff333333).withOpacity(0.8),
-              borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
-            ),
-            child: MiniOverlayBeInvite(caller: caller, callType: callType));
+        return GestureDetector(
+            onTap: () {
+              ZegoCallManager.shared.onMiniOverlayBeInvitePageEmptyClicked();
+            },
+            child: Container(
+                width: 718.w,
+                height: 160.h,
+                padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xff333333).withOpacity(0.8),
+                  borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
+                ),
+                child:
+                    MiniOverlayBeInvite(caller: caller, callType: callType)));
     }
   }
 
-  void updatePage() {
+  void updatePageState() {
     switch (currentState) {
       case MiniOverlayPageState.kIdle:
-        updatePageDetails(false, const Point(0, 0), const Size(0, 0));
+        updatePagePropsState(false, const Point(0, 0), const Size(0, 0));
         break;
       case MiniOverlayPageState.kVoiceCalling:
-        updatePageDetails(true, Point(594.w, 950.h), Size(156.w, 156.h));
+        updatePagePropsState(true, Point(594.w, 950.h), Size(156.w, 300.h));
         break;
       case MiniOverlayPageState.kVideoCalling:
-        updatePageDetails(true, Point(593.w, 903.h), Size(157.w, 261.h));
+        updatePagePropsState(true, Point(593.w, 903.h), Size(157.w, 261.h));
         break;
       case MiniOverlayPageState.kBeInvite:
-        updatePageDetails(true, Point(16.w, 60.h), Size(718.w, 160.h));
+        updatePagePropsState(true, Point(16.w, 60.h), Size(718.w, 160.h));
         break;
     }
   }
 
-  void updatePageDetails(bool visibility, Point<double> topLeft, Size size) {
+  void updatePagePropsState(bool visibility, Point<double> topLeft, Size size) {
     setState(() {
       overlayVisibility = visibility;
       overlayTopLeftPos = Offset(topLeft.x, topLeft.y);

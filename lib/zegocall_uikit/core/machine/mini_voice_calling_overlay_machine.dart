@@ -39,18 +39,22 @@ class MiniVoiceCallingOverlayMachine {
     });
 
     // Config state
-    var toIdleDuration = const Duration(seconds: 2);
     stateIdle = machine.newState(MiniVoiceCallingOverlayState.kIdle);
     stateWaiting = machine.newState(MiniVoiceCallingOverlayState.kWaiting);
     stateOnline = machine.newState(MiniVoiceCallingOverlayState.kOnline);
 
+    var displayDuration = const Duration(seconds: 2);
     stateDeclined = machine.newState(MiniVoiceCallingOverlayState.kDeclined)
-      ..onTimeout(toIdleDuration, () => stateIdle.enter());
+      ..onTimeout(displayDuration, () => stateIdle.enter());
     stateMissed = machine.newState(MiniVoiceCallingOverlayState.kMissed)
-      ..onTimeout(toIdleDuration, () => stateIdle.enter());
+      ..onTimeout(displayDuration, () => stateIdle.enter());
     stateEnded = machine.newState(MiniVoiceCallingOverlayState.kEnded)
-      ..onTimeout(toIdleDuration, () => stateIdle.enter());
+      ..onTimeout(displayDuration, () => stateIdle.enter());
 
     // machine.current = widget.defaultState;
+  }
+
+  MiniVoiceCallingOverlayState getPageState() {
+    return machine.current?.identifier ?? MiniVoiceCallingOverlayState.kIdle;
   }
 }

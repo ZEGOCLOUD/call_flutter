@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -17,8 +18,9 @@ class OnlineListTitleBar extends StatelessWidget {
         padding: EdgeInsets.only(left: 32.w),
         height: 78.h,
         width: double.infinity,
-        child: Row(children: const [
-          Text('Online', style: StyleConstant.userListTitle),
+        child: Row(children: [
+          Text(AppLocalizations.of(context)!.online,
+              style: StyleConstant.userListTitle),
         ]));
   }
 }
