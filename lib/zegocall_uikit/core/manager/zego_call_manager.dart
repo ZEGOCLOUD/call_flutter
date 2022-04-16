@@ -172,8 +172,11 @@ class ZegoCallManager
     ZegoServiceManager.shared.callService.acceptCall(token, (int errorCode) {
       if (ZegoError.success.id == errorCode) {
         callTimeManager.startTimer(currentCallID());
-
         ZegoNotificationManager.shared.stopRing();
+
+        if (ZegoCallType.kZegoCallTypeVoice == currentCallType) {
+          ZegoServiceManager.shared.streamService.startPlaying(caller.userID);
+        }
       } else {
         currentCallStatus = ZegoCallStatus.free;
 

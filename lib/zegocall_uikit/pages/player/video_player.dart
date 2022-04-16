@@ -12,8 +12,7 @@ class VideoPlayer extends StatefulWidget {
   final String userID;
   final String userName;
 
-  const VideoPlayer(
-      {required this.userID, required this.userName, Key? key})
+  const VideoPlayer({required this.userID, required this.userName, Key? key})
       : super(key: key);
 
   @override
@@ -57,7 +56,7 @@ class VideoPlayerState extends State<VideoPlayer> {
         ZegoServiceManager.shared.streamService.startPreview(playingViewID);
       } else {
         ZegoServiceManager.shared.streamService
-            .startPlaying(widget.userID, playingViewID);
+            .startPlaying(widget.userID, viewID: playingViewID);
       }
     });
   }

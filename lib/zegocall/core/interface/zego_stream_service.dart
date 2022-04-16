@@ -10,7 +10,7 @@ abstract class IZegoStreamService extends ChangeNotifier with ZegoService {
 
   void startPreview(int viewID);
 
-  void startPlaying(String userID, int viewID);
+  void startPlaying(String userID, {int viewID = -1});
 
   //  stream state notifier
   ValueNotifier<bool> getCameraStateNotifier(String userID);
