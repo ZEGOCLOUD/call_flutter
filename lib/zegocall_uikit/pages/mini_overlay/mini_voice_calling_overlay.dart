@@ -82,7 +82,7 @@ class _MiniVoiceCallingOverlayState extends State<MiniVoiceCallingOverlay> {
       return ValueListenableBuilder<String>(
           valueListenable: ZegoCallManager.shared.callTimeManager
               .getTimer(callID)
-              .formatCallTimeNotifier,
+              .displayValueNotifier,
           builder: (context, formatCallingTime, _) {
             return Text(formatCallingTime,
                 textAlign: TextAlign.center,

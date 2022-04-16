@@ -55,7 +55,7 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
               child: ValueListenableBuilder<String>(
                   valueListenable: ZegoCallManager.shared.callTimeManager
                       .startTimer(widget.callID)
-                      .formatCallTimeNotifier,
+                      .displayValueNotifier,
                   builder: (context, formatCallingTime, _) {
                     return Text(formatCallingTime,
                         textAlign: TextAlign.center,

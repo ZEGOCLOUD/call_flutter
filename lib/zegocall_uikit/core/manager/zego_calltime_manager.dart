@@ -8,8 +8,7 @@ class ZegoCallingTimer {
   bool isCalling = false;
 
   int startTime = 0;
-  int callDuration = 0;
-  ValueNotifier<String> formatCallTimeNotifier = ValueNotifier<String>("");
+  ValueNotifier<String> displayValueNotifier = ValueNotifier<String>("");
 
   void startTimer() {
     log('[calling timer] start timer, isCalling:$isCalling');
@@ -24,14 +23,13 @@ class ZegoCallingTimer {
 
         timer.cancel();
       } else {
-        callDuration = DateTime.now().millisecondsSinceEpoch - startTime;
-
-        var duration = Duration(seconds: callDuration ~/ 1000);
-        var minutes =
-            duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-        var seconds =
-            duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-        formatCallTimeNotifier.value = minutes + ":" + seconds;
+        var callSeconds =
+            (DateTime.now().millisecondsSinceEpoch - startTime) ~/ 1000;
+        var minutes = callSeconds ~/ 60;
+        var seconds = (callSeconds - 60 * minutes).toInt();
+        var minutesString = minutes.toString().padLeft(2, '0');
+        var secondsString = seconds.toString().padLeft(2, '0');
+        displayValueNotifier.value = minutesString + ":" + secondsString;
       }
     });
   }
@@ -42,8 +40,7 @@ class ZegoCallingTimer {
     isCalling = false;
 
     startTime = 0;
-    callDuration = 0;
-    formatCallTimeNotifier = ValueNotifier<String>("");
+    displayValueNotifier = ValueNotifier<String>("");
   }
 }
 
