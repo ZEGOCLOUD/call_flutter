@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 // Package imports:
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
@@ -29,6 +30,7 @@ class ZegoCallManager
   ZegoUserInfo callee = ZegoUserInfo.empty();
   ZegoCallManagerDelegate? delegate;
 
+  ZegoCallTimeManager callTimeManager = ZegoCallTimeManager.empty();
   late ZegoCallPageHandler pageHandler;
 
   @override
@@ -88,6 +90,9 @@ class ZegoCallManager
         break;
       case ZegoCallStatus.wait:
         currentCallStatus = ZegoCallStatus.free;
+
+        callTimeManager.stopTimer();
+        ZegoNotificationManager.shared.stopRing();
         break;
       case ZegoCallStatus.waitAccept:
         cancelCall();
@@ -166,6 +171,9 @@ class ZegoCallManager
 
     ZegoServiceManager.shared.callService.acceptCall(token, (int errorCode) {
       if (ZegoError.success.id == errorCode) {
+        callTimeManager.startTimer();
+
+        ZegoNotificationManager.shared.stopRing();
       } else {
         currentCallStatus = ZegoCallStatus.free;
 
@@ -184,6 +192,9 @@ class ZegoCallManager
 
     pageHandler.onDeclineCallExecuted();
 
+    callTimeManager.stopTimer();
+    ZegoNotificationManager.shared.stopRing();
+
     ZegoServiceManager.shared.callService.declineCall();
   }
 
@@ -194,6 +205,9 @@ class ZegoCallManager
         LocalUserStatus.calling) {
       currentCallStatus = ZegoCallStatus.free;
       resetCallUserInfo();
+
+      callTimeManager.stopTimer();
+      ZegoNotificationManager.shared.stopRing();
 
       pageHandler.onEndCallExecuted();
 
@@ -210,6 +224,9 @@ class ZegoCallManager
     resetCallUserInfo();
 
     pageHandler.onCancelCallExecuted();
+
+    callTimeManager.stopTimer();
+    ZegoNotificationManager.shared.stopRing();
 
     ZegoServiceManager.shared.callService.cancelCall();
   }
@@ -237,6 +254,8 @@ class ZegoCallManager
     caller = ZegoServiceManager.shared.userService.localUserInfo;
     callee = callee;
 
+    callTimeManager.startTimer();
+
     currentCallStatus = ZegoCallStatus.calling;
 
     pageHandler.onReceiveCallAccepted(callee);
@@ -254,6 +273,8 @@ class ZegoCallManager
       return;
     }
 
+    ZegoNotificationManager.shared.stopRing();
+
     pageHandler.onReceiveCallCanceled(caller);
 
     currentCallStatus = ZegoCallStatus.free;
@@ -265,6 +286,8 @@ class ZegoCallManager
     log('[call manager] receive call decline, user:${callee.toString()}, '
         'type:${type.string}');
 
+    ZegoNotificationManager.shared.stopRing();
+
     pageHandler.onReceiveCallDecline(callee, type);
 
     currentCallStatus = ZegoCallStatus.free;
@@ -274,6 +297,8 @@ class ZegoCallManager
   @override
   void onReceiveCallEnded() {
     log('[call manager] receive call ended');
+
+    ZegoNotificationManager.shared.stopRing();
 
     pageHandler.onReceiveCallEnded();
 
@@ -293,6 +318,9 @@ class ZegoCallManager
           'right:$currentCallStatus');
       return;
     }
+
+    callTimeManager.stopTimer();
+    ZegoNotificationManager.shared.startRing();
 
     this.caller = caller;
     callee = ZegoServiceManager.shared.userService.localUserInfo;
