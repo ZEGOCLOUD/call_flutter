@@ -176,8 +176,8 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onNetworkQuality(String userID, ZegoStreamQualityLevel upstreamQuality,
       ZegoStreamQualityLevel downstreamQuality) {
-    log('[service manager] onNetworkQuality, userID:$userID, '
-        'upstreamQuality:$upstreamQuality, downstreamQuality:$downstreamQuality');
+    // log('[service manager] onNetworkQuality, userID:$userID, '
+    //     'upstreamQuality:$upstreamQuality, downstreamQuality:$downstreamQuality');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onNetworkQuality(userID, upstreamQuality, downstreamQuality);

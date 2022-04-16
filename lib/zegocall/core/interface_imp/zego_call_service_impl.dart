@@ -292,6 +292,8 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   @override
   void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
       Map<String, dynamic> extendedData) {
+    log('[call service] onRoomStateUpdate, roomID:$roomID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
+
     if (currentRoomID != roomID) {
       log('[call service] room state update, room id is not equal');
       return;
