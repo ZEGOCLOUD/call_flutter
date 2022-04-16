@@ -2,10 +2,10 @@
 import 'dart:developer';
 
 // Package imports:
-import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_user_service_delegate.dart';
@@ -120,8 +120,8 @@ class ZegoCallManager
   }
 
   @override
-  void uploadLog() {
-    ZegoServiceManager.shared.uploadLog();
+  Future<int> uploadLog() async {
+    return ZegoServiceManager.shared.uploadLog();
   }
 
   @override

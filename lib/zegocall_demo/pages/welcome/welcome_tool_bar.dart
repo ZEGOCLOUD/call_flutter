@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -56,9 +57,9 @@ class WelcomeToolBar extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
           child: GestureDetector(
-            child: const WelcomeToolBarButton(
+            child: WelcomeToolBarButton(
                 iconAssetName: StyleIconUrls.welcomeContactUs,
-                text: 'Contact us'),
+                text: AppLocalizations.of(context)!.welcomePageContactUs),
             onTap: () {
               launchURL(context, contactUSURL);
             },
@@ -76,8 +77,9 @@ class WelcomeToolBar extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(20)),
           ),
           child: GestureDetector(
-            child: const WelcomeToolBarButton(
-                iconAssetName: StyleIconUrls.welcomeGetMore, text: 'Get more'),
+            child: WelcomeToolBarButton(
+                iconAssetName: StyleIconUrls.welcomeGetMore,
+                text: AppLocalizations.of(context)!.welcomePageGetMore),
             onTap: () {
               launchURL(context, getMoreURL);
             },

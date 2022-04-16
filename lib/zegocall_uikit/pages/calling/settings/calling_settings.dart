@@ -2,10 +2,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// Package imports:
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
 import 'calling_settings_defines.dart';

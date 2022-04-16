@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -30,46 +31,37 @@ class CallingCalleeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       AvatarBackgroundView(userName: caller.userName),
-      surface(),
+      surface(context),
     ]);
   }
 
-  Widget surface() {
+  Widget surface(BuildContext context) {
     var avatarIndex = getUserAvatarIndex(callee.userName);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        SizedBox(height: 280.h),
         SizedBox(
-          height: 280.h,
-        ),
+            width: 200.w,
+            height: 200.h,
+            child: CircleAvatar(
+              maxRadius: 200.w,
+              backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
+            )),
+        SizedBox(height: 10.h),
         SizedBox(
-          width: 200.w,
-          height: 200.h,
-          child: CircleAvatar(
-            maxRadius: 200.w,
-            backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
-          ),
-        ),
-        SizedBox(
-          height: 10.h,
-        ),
-        SizedBox(
-          height: 59.h,
-          child:
-              Text(callee.userName, style: StyleConstant.callingCenterUserName),
-        ),
-        SizedBox(
-          height: 47.h,
-        ),
-        const Text('Calling...', style: StyleConstant.callingCenterStatus),
+            height: 59.h,
+            child: Text(callee.userName,
+                style: StyleConstant.callingCenterUserName)),
+        SizedBox(height: 47.h),
+        Text(AppLocalizations.of(context)!.callPageStatusCalling,
+            style: StyleConstant.callingCenterStatus),
         const Expanded(child: SizedBox()),
         CallingCalleeBottomToolBar(
             caller: caller, callee: callee, callType: callType),
-        SizedBox(
-          height: 105.h,
-        ),
+        SizedBox(height: 105.h),
       ],
     );
   }

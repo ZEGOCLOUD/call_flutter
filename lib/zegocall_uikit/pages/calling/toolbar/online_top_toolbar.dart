@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../../../../utils/styles.dart';
 import './../../../../utils/widgets/show_bottom_sheet.dart';
 
@@ -26,14 +26,6 @@ class OnlineTopToolBar extends StatefulWidget {
 }
 
 class OnlineTopToolBarState extends State<OnlineTopToolBar> {
-  final Stream<String> timerStream =
-      Stream.periodic(const Duration(seconds: 1), (int count) {
-    var duration = Duration(seconds: count);
-    var minutes = duration.inMinutes.remainder(60).toString().padLeft(2, '0');
-    var seconds = duration.inSeconds.remainder(60).toString().padLeft(2, '0');
-    return minutes + ":" + seconds;
-  });
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -59,7 +51,7 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
           SizedBox(width: 8.w),
           Expanded(
               child: StreamBuilder<String>(
-                  stream: timerStream, //
+                  stream: ZegoCallManager.shared.callTimeManager.timerStream,
                   //initialData: ,// a Stream<int> or null
                   builder:
                       (BuildContext context, AsyncSnapshot<String> snapshot) {

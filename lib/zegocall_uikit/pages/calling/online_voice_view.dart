@@ -35,29 +35,22 @@ class OnlineVoiceView extends StatelessWidget {
             settingWidgetHeight: 563.h,
             settingWidget: const CallingSettingsView(
                 callType: ZegoCallType.kZegoCallTypeVoice)),
+        SizedBox(height: 140.h),
         SizedBox(
-          height: 140.h,
-        ),
-        SizedBox(
-          width: 200.w,
-          height: 200.h,
-          child: CircleAvatar(
-            maxRadius: 200.w,
-            backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
-          ),
-        ),
-        SizedBox(
-          height: 10.h,
-        ),
+            width: 200.w,
+            height: 200.h,
+            child: CircleAvatar(
+              maxRadius: 200.w,
+              backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
+            )),
+        SizedBox(height: 10.h),
         Text(
           remoteUser.userName,
           style: StyleConstant.callingCenterUserName,
         ),
         const Expanded(child: SizedBox()),
         const OnlineVoiceBottomToolBar(),
-        SizedBox(
-          height: 105.h,
-        ),
+        SizedBox(height: 105.h),
       ],
     );
   }

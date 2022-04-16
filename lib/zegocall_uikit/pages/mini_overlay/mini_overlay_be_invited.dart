@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -55,9 +56,7 @@ class _MiniOverlayBeInvite extends State<MiniOverlayBeInvite> {
             },
             child: SizedBox(
                 width: 74.w, child: Image.asset(StyleIconUrls.inviteReject))),
-        SizedBox(
-          width: 40.w,
-        ),
+        SizedBox(width: 40.w),
         GestureDetector(
             onTap: () {
               ZegoCallManager.shared.acceptCall(widget.caller, widget.callType);
@@ -81,9 +80,9 @@ class _MiniOverlayBeInvite extends State<MiniOverlayBeInvite> {
   String callTypeString(ZegoCallType callType) {
     switch (callType) {
       case ZegoCallType.kZegoCallTypeVoice:
-        return "Zego Voice Call";
+        return AppLocalizations.of(context)!.zegoVoiceCall;
       case ZegoCallType.kZegoCallTypeVideo:
-        return "Zego Video Call";
+        return AppLocalizations.of(context)!.zegoVideoCall;
     }
   }
 }

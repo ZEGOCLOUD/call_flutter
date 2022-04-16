@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
@@ -76,11 +77,15 @@ class _MiniVoiceCallingOverlayState extends State<MiniVoiceCallingOverlay> {
   String getStateText(MiniVoiceCallingOverlayState state) {
     var stateTextMap = {
       MiniVoiceCallingOverlayState.kIdle: "",
-      MiniVoiceCallingOverlayState.kWaiting: "Waiting...",
+      MiniVoiceCallingOverlayState.kWaiting:
+          AppLocalizations.of(context)!.callPageStatusCalling,
       MiniVoiceCallingOverlayState.kOnline: "00:01 todo",
-      MiniVoiceCallingOverlayState.kDeclined: "Declined",
-      MiniVoiceCallingOverlayState.kMissed: "Missed",
-      MiniVoiceCallingOverlayState.kEnded: "Ended",
+      MiniVoiceCallingOverlayState.kDeclined:
+          AppLocalizations.of(context)!.callPageStatusDeclined,
+      MiniVoiceCallingOverlayState.kMissed:
+          AppLocalizations.of(context)!.callPageStatusMissed,
+      MiniVoiceCallingOverlayState.kEnded:
+          AppLocalizations.of(context)!.callPageStatusEnded,
     };
 
     return stateTextMap[state]!;

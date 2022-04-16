@@ -3,9 +3,6 @@ import 'dart:developer';
 
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
-import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
-
-import '../../../zegocall_demo/constants/zego_page_constant.dart';
 
 enum MiniVoiceCallingOverlayState {
   kIdle,

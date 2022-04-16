@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -64,7 +65,7 @@ class CallingSettingsPage extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CallingSettingsSwitchItem(
-          title: 'Noise suppression',
+          title: AppLocalizations.of(context)!.roomSettingsPageNoiseSuppression,
           defaultValue: noiseSlimming.value,
           onTap: () {
             var deviceService = ZegoServiceManager.shared.deviceService;
@@ -74,7 +75,7 @@ class CallingSettingsPage extends HookWidget {
           },
         ),
         CallingSettingsSwitchItem(
-          title: 'Echo cancellation',
+          title: AppLocalizations.of(context)!.roomSettingsPageEchoCancellation,
           defaultValue: echoCancellation.value,
           onTap: () {
             var deviceService = ZegoServiceManager.shared.deviceService;
@@ -84,7 +85,7 @@ class CallingSettingsPage extends HookWidget {
           },
         ),
         CallingSettingsSwitchItem(
-          title: 'Mic Volume auto-adjustment',
+          title: AppLocalizations.of(context)!.roomSettingsPageMicVolume,
           defaultValue: volumeAdjustment.value,
           onTap: () {
             var deviceService = ZegoServiceManager.shared.deviceService;
@@ -95,7 +96,7 @@ class CallingSettingsPage extends HookWidget {
         ),
         isVideo
             ? CallingSettingsSwitchItem(
-                title: 'Mirroring',
+                title: AppLocalizations.of(context)!.roomSettingsPageMinoring,
                 defaultValue: isMirroring.value,
                 onTap: () {
                   var deviceService = ZegoServiceManager.shared.deviceService;
@@ -107,7 +108,8 @@ class CallingSettingsPage extends HookWidget {
             : const SizedBox(),
         isVideo
             ? CallingSettingsPageItem(
-                title: 'Resolution',
+                title: AppLocalizations.of(context)!
+                    .roomSettingsPageVideoResolution,
                 subTitle: videoResolutionSubTitle,
                 onTap: () {
                   pageIndexChanged(
@@ -116,7 +118,7 @@ class CallingSettingsPage extends HookWidget {
               )
             : const SizedBox(),
         CallingSettingsPageItem(
-          title: 'Audio bitrate',
+          title: AppLocalizations.of(context)!.roomSettingsPageAudioBitrate,
           subTitle: audioBitrateSubTitle,
           onTap: () {
             pageIndexChanged(CallingSettingPageIndex.audioBitratePageIndex.id);

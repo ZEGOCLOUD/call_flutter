@@ -2,10 +2,10 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import 'avatar_background.dart';
 
 class VideoPlayer extends StatefulWidget {

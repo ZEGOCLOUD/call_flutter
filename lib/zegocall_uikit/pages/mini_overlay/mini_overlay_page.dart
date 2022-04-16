@@ -10,7 +10,6 @@ import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 
 // Project imports:
 import '../../core/manager/zego_call_manager.dart';
