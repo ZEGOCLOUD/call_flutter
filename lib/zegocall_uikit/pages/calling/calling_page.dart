@@ -71,6 +71,7 @@ class _CallingPageState extends State<CallingPage> {
 
   @override
   Widget build(BuildContext context) {
+    var callID = ZegoCallManager.shared.currentCallID();
     var localUserInfo = ZegoServiceManager.shared.userService.localUserInfo;
     var localUser = caller.userID == localUserInfo.userID ? caller : callee;
     var remoteUser = caller.userID != localUserInfo.userID ? caller : callee;
@@ -90,9 +91,11 @@ class _CallingPageState extends State<CallingPage> {
             : CallingCalleeView(
                 caller: caller, callee: callee, callType: callType);
       case CallingState.kOnlineVoice:
-        return OnlineVoiceView(localUser: localUser, remoteUser: remoteUser);
+        return OnlineVoiceView(
+            callID: callID, localUser: localUser, remoteUser: remoteUser);
       case CallingState.kOnlineVideo:
-        return OnlineVideoView(localUser: localUser, remoteUser: remoteUser);
+        return OnlineVideoView(
+            callID: callID, localUser: localUser, remoteUser: remoteUser);
     }
   }
 }

@@ -267,23 +267,26 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
     developer.log('[page handler] mini overlay request');
 
     var callType = ZegoCallManager.shared.currentCallType;
-
     if (ZegoCallType.kZegoCallTypeVoice == callType) {
-      miniOverlayMachine.stateVoiceCalling.enter();
-
-      var voiceMachine = miniOverlayMachine.voiceCallingOverlayMachine;
-      switch (ZegoCallManager.shared.currentCallStatus) {
-        case ZegoCallStatus.free:
-        case ZegoCallStatus.wait:
-          voiceMachine.stateWaiting.enter();
-          break;
-        case ZegoCallStatus.waitAccept:
-        case ZegoCallStatus.calling:
-          voiceMachine.stateOnline.enter();
-          break;
-      }
+      enterMiniVoiceMachine();
     } else {
       enterMiniVideoMachine();
+    }
+  }
+
+  void enterMiniVoiceMachine() {
+    miniOverlayMachine.stateVoiceCalling.enter();
+
+    var voiceMachine = miniOverlayMachine.voiceCallingOverlayMachine;
+    switch (ZegoCallManager.shared.currentCallStatus) {
+      case ZegoCallStatus.free:
+      case ZegoCallStatus.wait:
+        voiceMachine.stateWaiting.enter();
+        break;
+      case ZegoCallStatus.waitAccept:
+      case ZegoCallStatus.calling:
+        voiceMachine.stateOnline.enter();
+        break;
     }
   }
 
@@ -304,8 +307,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
           .enter();
     } else {
       //  turn to mini voice
-      miniOverlayMachine.videoCallingOverlayMachine.stateBothWithoutVideo
-          .enter();
+      enterMiniVoiceMachine();
     }
   }
 

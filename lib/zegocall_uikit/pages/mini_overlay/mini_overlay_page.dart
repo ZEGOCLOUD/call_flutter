@@ -175,7 +175,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
         updatePagePropsState(false, const Point(0, 0), const Size(0, 0));
         break;
       case MiniOverlayPageState.kVoiceCalling:
-        updatePagePropsState(true, Point(594.w, 950.h), Size(156.w, 156.h));
+        updatePagePropsState(true, Point(594.w, 950.h), Size(156.w, 300.h));
         break;
       case MiniOverlayPageState.kVideoCalling:
         updatePagePropsState(true, Point(593.w, 903.h), Size(157.w, 261.h));

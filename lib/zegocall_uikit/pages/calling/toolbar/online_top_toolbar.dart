@@ -10,11 +10,13 @@ import './../../../../utils/styles.dart';
 import './../../../../utils/widgets/show_bottom_sheet.dart';
 
 class OnlineTopToolBar extends StatefulWidget {
+  final String callID;
   final Widget settingWidget;
   final double settingWidgetHeight;
 
   const OnlineTopToolBar(
-      {required this.settingWidget,
+      {required this.callID,
+      required this.settingWidget,
       required this.settingWidgetHeight,
       Key? key})
       : super(key: key);
@@ -50,20 +52,14 @@ class OnlineTopToolBarState extends State<OnlineTopToolBar> {
           ),
           SizedBox(width: 8.w),
           Expanded(
-              child: StreamBuilder<String>(
-                  stream: ZegoCallManager.shared.callTimeManager.timerStream,
-                  //initialData: ,// a Stream<int> or null
-                  builder:
-                      (BuildContext context, AsyncSnapshot<String> snapshot) {
-                    if (snapshot.hasError) return const Text('');
-                    if (ConnectionState.active == snapshot.connectionState) {
-                      return Text(
-                        snapshot.data!,
+              child: ValueListenableBuilder<String>(
+                  valueListenable: ZegoCallManager.shared.callTimeManager
+                      .startTimer(widget.callID)
+                      .formatCallTimeNotifier,
+                  builder: (context, formatCallingTime, _) {
+                    return Text(formatCallingTime,
                         textAlign: TextAlign.center,
-                        style: StyleConstant.onlineCountDown,
-                      );
-                    }
-                    return const Text('');
+                        style: StyleConstant.onlineCountDown);
                   })),
           SizedBox(width: 8.w),
           GestureDetector(

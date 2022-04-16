@@ -18,9 +18,13 @@ import 'toolbar/online_top_toolbar.dart';
 
 class OnlineVoiceView extends StatelessWidget {
   const OnlineVoiceView(
-      {required this.localUser, required this.remoteUser, Key? key})
+      {required this.callID,
+      required this.localUser,
+      required this.remoteUser,
+      Key? key})
       : super(key: key);
 
+  final String callID;
   final ZegoUserInfo localUser;
   final ZegoUserInfo remoteUser;
 
@@ -32,6 +36,7 @@ class OnlineVoiceView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         OnlineTopToolBar(
+            callID: callID,
             settingWidgetHeight: 563.h,
             settingWidget: const CallingSettingsView(
                 callType: ZegoCallType.kZegoCallTypeVoice)),

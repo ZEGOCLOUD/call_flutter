@@ -89,9 +89,6 @@ class MiniOverlayMachine {
     videoCallingOverlayMachine.stateIdle.onEntry(() {
       stateIdle.enter();
     });
-    videoCallingOverlayMachine.stateBothWithoutVideo.onEntry(() {
-      stateVoiceCalling.enter(); //  check voice state?
-    });
   }
 
   void checkEnterVoiceState() {

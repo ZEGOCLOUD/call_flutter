@@ -22,7 +22,6 @@ class MiniVideoCallingOverlayMachine {
   late sm.State<MiniVideoCallingOverlayState> stateIdle;
   late sm.State<MiniVideoCallingOverlayState> stateRemoteUserWithVideo;
   late sm.State<MiniVideoCallingOverlayState> stateLocalUserWithVideo;
-  late sm.State<MiniVideoCallingOverlayState> stateBothWithoutVideo;
 
   void init() {
     machine.onAfterTransition.listen((event) {
@@ -39,8 +38,6 @@ class MiniVideoCallingOverlayMachine {
         machine.newState(MiniVideoCallingOverlayState.kRemoteUserWithVideo);
     stateLocalUserWithVideo =
         machine.newState(MiniVideoCallingOverlayState.kLocalUserWithVideo);
-    stateBothWithoutVideo = machine.newState(MiniVideoCallingOverlayState
-        .kBothWithoutVideo); //  todo page handle 监听处理
   }
 
   MiniVideoCallingOverlayState getPageState() {
