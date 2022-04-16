@@ -1,4 +1,6 @@
 // Flutter imports:
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -32,6 +34,8 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
   bool isLoading = false;
   bool isPolicyCheck = false;
 
+  StreamSubscription<User?>? authStateChangesSubscription;
+
   void setIsLoading() {
     setState(() {
       isLoading = !isLoading;
@@ -45,12 +49,20 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       checkPermission();
 
-      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      authStateChangesSubscription =
+          FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
           Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
         }
       });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    authStateChangesSubscription?.cancel();
   }
 
   @override

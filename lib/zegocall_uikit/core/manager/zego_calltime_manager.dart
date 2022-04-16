@@ -17,7 +17,7 @@ class ZegoCallingTimer {
     startTime = DateTime.now().millisecondsSinceEpoch;
 
     Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      log('[calling timer] calling timer periodic');
+      // log('[calling timer] calling timer periodic');
       if (!isCalling) {
         log('[calling timer] calling timer ended');
 
