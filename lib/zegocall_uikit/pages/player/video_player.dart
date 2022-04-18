@@ -49,6 +49,11 @@ class VideoPlayerState extends State<VideoPlayer> {
     var deviceService = ZegoServiceManager.shared.deviceService;
     deviceService.enableCamera(false);
     deviceService.enableMic(false);
+
+    var localUserInfo = ZegoServiceManager.shared.userService.localUserInfo;
+    if (localUserInfo.userID == widget.userID) {
+      ZegoServiceManager.shared.streamService.stopPreview();
+    }
   }
 
   Widget? createPlayingView(BuildContext context) {

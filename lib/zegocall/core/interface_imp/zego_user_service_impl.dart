@@ -1,18 +1,13 @@
-// Dart imports:
-import 'dart:developer';
 
 // Package imports:
-import 'package:result_type/result_type.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import './../../../zegocall/core/commands/zego_token_command.dart';
 import './../../../zegocall/core/interface/zego_event_handler.dart';
 import './../../../zegocall/core/interface_imp/zego_stream_service_impl.dart';
 import './../interface/zego_user_service.dart';
 import './../manager/zego_service_manager.dart';
 import './../model/zego_user_info.dart';
-import './../zego_call_defines.dart';
 
 class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
   /// In-room user dictionary,  can be used to update user information.¬
@@ -38,34 +33,34 @@ class ZegoUserServiceImpl extends IZegoUserService with ZegoEventHandler {
     }
   }
 
-  @override
-  Future<RequestResult> getToken(
-      String userID, int effectiveTimeInSeconds) async {
-    if (!ZegoServiceManager.shared.isSDKInit) {
-      assert(false, "The SDK must be initialised first.");
-      return Failure(ZegoError.notInit);
-    }
-
-    if (localUserInfo.isEmpty()) {
-      assert(false, "Must be logged in first.");
-      return Failure(ZegoError.notLogin);
-    }
-
-    if (effectiveTimeInSeconds < 0 || userID.isEmpty) {
-      assert(false, "Must be logged in first.");
-      return Failure(ZegoError.paramInvalid);
-    }
-
-    var command = ZegoTokenCommand(userID, effectiveTimeInSeconds);
-
-    var result = await command.execute();
-    if (result.isSuccess) {
-      var dict = result.success as Map<String, dynamic>;
-      log('[user service] get token, $dict');
-      return Success(dict['token'] as String);
-    }
-    return Failure(ZegoError.failed);
-  }
+  // @override
+  // Future<RequestResult> getToken(
+  //     String userID, int effectiveTimeInSeconds) async {
+  //   if (!ZegoServiceManager.shared.isSDKInit) {
+  //     assert(false, "The SDK must be initialised first.");
+  //     return Failure(ZegoError.notInit);
+  //   }
+  //
+  //   if (localUserInfo.isEmpty()) {
+  //     assert(false, "Must be logged in first.");
+  //     return Failure(ZegoError.notLogin);
+  //   }
+  //
+  //   if (effectiveTimeInSeconds < 0 || userID.isEmpty) {
+  //     assert(false, "Must be logged in first.");
+  //     return Failure(ZegoError.paramInvalid);
+  //   }
+  //
+  //   var command = ZegoTokenCommand(userID, effectiveTimeInSeconds);
+  //
+  //   var result = await command.execute();
+  //   if (result.isSuccess) {
+  //     var dict = result.success as Map<String, dynamic>;
+  //     log('[user service] get token, $dict');
+  //     return Success(dict['token'] as String);
+  //   }
+  //   return Failure(ZegoError.failed);
+  // }
 
   @override
   ZegoUserInfo getUserInfoByID(String userID) {

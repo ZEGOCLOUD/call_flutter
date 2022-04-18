@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'dart:io';
 
 // Package imports:
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -62,7 +61,6 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     functionMap[apiDeclineCall] = declineCall;
     functionMap[apiEndCall] = endCall;
     functionMap[apiCallHeartbeat] = heartbeat;
-    functionMap[apiGetToken] = getToken;
   }
 
   void resetData() {
@@ -331,30 +329,6 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .update({'heartbeat_time': user.heartbeatTime});
 
     return Success("");
-  }
-
-  Future<RequestResult> getToken(RequestParameterType parameters) async {
-    var userID = parameters['id'] as String? ?? "";
-    var effectiveTimeInSeconds = parameters['effective_time'] as int? ?? -1;
-    if (userID.isEmpty || effectiveTimeInSeconds < 0) {
-      log('[firebase] get token, parameters is invalid');
-      return Failure(ZegoError.paramInvalid);
-    }
-
-    Map<String, dynamic> data = {
-      'id': userID,
-      'effective_time': effectiveTimeInSeconds
-    };
-    return await FirebaseFunctions.instance
-        .httpsCallable('getToken')
-        .call(data)
-        .then((result) {
-      var dict = result.data as Map<String, dynamic>;
-      var token = dict['token'] as String;
-      return Success({"token": token});
-    }, onError: (error) {
-      return Failure(ZegoError.failed);
-    });
   }
 
   void addFcmTokenToDatabase() {
