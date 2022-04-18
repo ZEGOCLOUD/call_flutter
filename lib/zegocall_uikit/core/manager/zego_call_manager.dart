@@ -140,7 +140,7 @@ class ZegoCallManager
     caller = ZegoServiceManager.shared.userService.localUserInfo;
     this.callee = callee;
 
-    resetDeviceConfig();
+    updateDeviceConfigInCalling();
 
     return ZegoServiceManager.shared.callService
         .callUser(callee, token, callType, (int errorCode) {
@@ -165,7 +165,7 @@ class ZegoCallManager
     this.caller = caller;
     callee = ZegoServiceManager.shared.userService.localUserInfo;
 
-    resetDeviceConfig();
+    updateDeviceConfigInCalling();
 
     pageHandler.onAcceptCallWillExecute();
 
@@ -234,14 +234,20 @@ class ZegoCallManager
     ZegoServiceManager.shared.callService.cancelCall();
   }
 
-  void resetDeviceConfig() {
+  void updateDeviceConfigInCalling() {
     log('[call manager] reset device config');
 
-    ZegoServiceManager.shared.userService.localUserInfo.mic = true;
-    ZegoServiceManager.shared.userService.localUserInfo.camera =
+    var userService = ZegoServiceManager.shared.userService;
+    var deviceService = ZegoServiceManager.shared.deviceService;
+
+    userService.localUserInfo.mic = true;
+    userService.localUserInfo.camera =
         ZegoCallType.kZegoCallTypeVoice != currentCallType;
 
-    ZegoServiceManager.shared.deviceService.resetDeviceConfig();
+    deviceService.enableCamera(userService.localUserInfo.camera);
+    deviceService.enableMic(userService.localUserInfo.mic);
+    deviceService.enableSpeaker(true);
+    deviceService.resetDeviceConfig();
   }
 
   @override

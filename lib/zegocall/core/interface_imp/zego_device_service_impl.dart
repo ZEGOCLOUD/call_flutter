@@ -14,6 +14,43 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
   @override
   void init() {
     ZegoServiceManager.shared.addExpressEventHandler(this);
+
+    ZegoExpressEngine.instance.isMicrophoneMuted().then((value) {
+      isMicEnabled = !value;
+    });
+    ZegoExpressEngine.instance.isSpeakerMuted().then((value) {
+      isSpeakerEnabled = !value;
+    });
+
+    ZegoExpressEngine.instance.getAudioConfig().then((config) {
+      if (config.bitrate < 48) {
+        audioBitrate = ZegoAudioBitrate.b16;
+      } else if (config.bitrate < 56) {
+        audioBitrate = ZegoAudioBitrate.b48;
+      } else if (config.bitrate < 96) {
+        audioBitrate = ZegoAudioBitrate.b56;
+      } else if (config.bitrate < 128) {
+        audioBitrate = ZegoAudioBitrate.b96;
+      } else {
+        audioBitrate = ZegoAudioBitrate.b128;
+      }
+    });
+
+    ZegoExpressEngine.instance.getVideoConfig().then((config) {
+      if (config.captureHeight < 270) {
+        videoResolution = ZegoVideoResolution.p180;
+      } else if (config.captureHeight < 360) {
+        videoResolution = ZegoVideoResolution.p270;
+      } else if (config.captureHeight < 540) {
+        videoResolution = ZegoVideoResolution.p360;
+      } else if (config.captureHeight < 720) {
+        videoResolution = ZegoVideoResolution.p540;
+      } else if (config.captureHeight < 1080) {
+        videoResolution = ZegoVideoResolution.p720;
+      } else {
+        videoResolution = ZegoVideoResolution.p1080;
+      }
+    });
   }
 
   @override
@@ -29,13 +66,6 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
   }
 
   @override
-  Future<bool> isMicEnabled() async {
-    return ZegoExpressEngine.instance.isMicrophoneMuted().then((value) {
-      return !value;
-    });
-  }
-
-  @override
   void useFrontCamera(bool enable, {ZegoPublishChannel? channel}) {
     super.isFrontCamera = enable;
 
@@ -44,12 +74,9 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
 
   @override
   void enableSpeaker(bool enable) {
-    ZegoExpressEngine.instance.muteSpeaker(!enable);
-  }
-
-  @override
-  Future<bool> isSpeakerEnabled() async {
-    return !await ZegoExpressEngine.instance.isSpeakerMuted();
+    //  switch to phone receiver if disable, instead of mute speaker
+    // ZegoExpressEngine.instance.muteSpeaker(!enable);
+    ZegoExpressEngine.instance.setAudioRouteToSpeaker(enable);
   }
 
   @override
@@ -60,23 +87,9 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
   }
 
   @override
-  Future<ZegoAudioBitrate> getAudioBitrate() async {
-    var config = await ZegoExpressEngine.instance.getAudioConfig();
-    if (config.bitrate < 48) {
-      return ZegoAudioBitrate.b16;
-    } else if (config.bitrate < 56) {
-      return ZegoAudioBitrate.b48;
-    } else if (config.bitrate < 96) {
-      return ZegoAudioBitrate.b56;
-    } else if (config.bitrate < 128) {
-      return ZegoAudioBitrate.b96;
-    } else {
-      return ZegoAudioBitrate.b128;
-    }
-  }
-
-  @override
   void setVideoResolution(ZegoVideoResolution videoResolution) async {
+    this.videoResolution = videoResolution;
+
     var config = await ZegoExpressEngine.instance.getVideoConfig();
     switch (videoResolution) {
       case ZegoVideoResolution.p1080:
@@ -117,24 +130,6 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
         break;
     }
     ZegoExpressEngine.instance.setVideoConfig(config);
-  }
-
-  @override
-  Future<ZegoVideoResolution> getVideoResolution() async {
-    var config = await ZegoExpressEngine.instance.getVideoConfig();
-    if (config.captureHeight < 270) {
-      return ZegoVideoResolution.p180;
-    } else if (config.captureHeight < 360) {
-      return ZegoVideoResolution.p270;
-    } else if (config.captureHeight < 540) {
-      return ZegoVideoResolution.p360;
-    } else if (config.captureHeight < 720) {
-      return ZegoVideoResolution.p540;
-    } else if (config.captureHeight < 1080) {
-      return ZegoVideoResolution.p720;
-    } else {
-      return ZegoVideoResolution.p1080;
-    }
   }
 
   @override
@@ -191,6 +186,8 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
 
   @override
   void onAudioRouteChange(ZegoAudioRoute audioRoute) {
+    super.audioRouteNotifier.value = audioRoute;
+
     delegate?.onAudioRouteChange(audioRoute);
   }
 
@@ -203,6 +200,8 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
     setVolumeAdjustment(true);
     setIsMirroring(false);
     useFrontCamera(true);
+
+    super.audioRouteNotifier.value = ZegoAudioRoute.Speaker;
   }
 }
 

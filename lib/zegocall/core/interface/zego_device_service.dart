@@ -10,11 +10,20 @@ import './../delegate/zego_device_service_delegate.dart';
 import 'zego_service.dart';
 
 abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
+  ZegoVideoResolution videoResolution = ZegoVideoResolution.p270;
+  ZegoAudioBitrate audioBitrate = ZegoAudioBitrate.b48;
+  bool isMicEnabled = true;
+  bool isSpeakerEnabled = true;
+
   bool noiseSlimming = true; // sdk default value
   bool echoCancellation = true; // sdk default value
   bool volumeAdjustment = true; // sdk default value
   bool isMirroring = false;
   bool isFrontCamera = true;
+
+  ValueNotifier<ZegoAudioRoute> audioRouteNotifier =
+      ValueNotifier<ZegoAudioRoute>(ZegoAudioRoute.Speaker);
+
   ZegoDeviceServiceDelegate? delegate;
 
   bool get getNoiseSlimming => noiseSlimming;
@@ -42,11 +51,7 @@ abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
 
   set setDelegate(ZegoDeviceServiceDelegate delegate) => delegate = delegate;
 
-  Future<ZegoVideoResolution> getVideoResolution();
-
   void setVideoResolution(ZegoVideoResolution videoResolution);
-
-  Future<ZegoAudioBitrate> getAudioBitrate();
 
   void setAudioBitrate(ZegoAudioBitrate bitrate);
 
@@ -54,13 +59,9 @@ abstract class IZegoDeviceService extends ChangeNotifier with ZegoService {
 
   void enableMic(bool enable);
 
-  Future<bool> isMicEnabled();
-
   void useFrontCamera(bool enable, {ZegoPublishChannel? channel});
 
   void enableSpeaker(bool enable);
-
-  Future<bool> isSpeakerEnabled();
 
   void setBestConfig();
 

@@ -32,12 +32,8 @@ class CallingSettingsViewState extends State<CallingSettingsView> {
     pageIndex = CallingSettingPageIndex.mainPageIndex.id;
 
     var deviceService = ZegoServiceManager.shared.deviceService;
-    deviceService.getAudioBitrate().then((value) {
-      updateAudioBitrate(getBitrateString(value));
-    });
-    deviceService.getVideoResolution().then((value) {
-      updateVideoResolution(getResolutionString(value));
-    });
+    updateAudioBitrate(getBitrateString(deviceService.audioBitrate));
+    updateVideoResolution(getResolutionString(deviceService.videoResolution));
 
     super.initState();
   }

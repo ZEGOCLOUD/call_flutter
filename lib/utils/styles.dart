@@ -63,15 +63,12 @@ class StyleIconUrls {
   static const String settingTick = 'assets/images/settings_tick.png';
 
   static const String roomOverlayVoiceCalling =
-      'assets/images/room_overlay_voice_'
-      'calling.png';
+      'assets/images/room_overlay_voice_calling.png';
 
   static const String toolbarBottomCameraClosed =
-      'assets/images/toolbar_bottom_cam'
-      'era_closed.png';
+      'assets/images/toolbar_bottom_camera_closed.png';
   static const String toolbarBottomCameraOpen =
-      'assets/images/toolbar_bottom_camer'
-      'a_open.png';
+      'assets/images/toolbar_bottom_camera_open.png';
   static const String toolbarBottomCancel =
       'assets/images/toolbar_bottom_cancel.png';
   static const String toolbarBottomEnd =
@@ -79,22 +76,19 @@ class StyleIconUrls {
   static const String toolbarBottomClosed =
       'assets/images/toolbar_bottom_closed.png';
   static const String toolbarBottomDecline =
-      'assets/images/toolbar_bottom_decline'
-      '.png';
+      'assets/images/toolbar_bottom_decline.png';
   static const String toolbarBottomMicClosed =
-      'assets/images/toolbar_bottom_mic_cl'
-      'osed.png';
+      'assets/images/toolbar_bottom_mic_closed.png';
   static const String toolbarBottomMicOpen =
-      'assets/images/toolbar_bottom_mic_open'
-      '.png';
+      'assets/images/toolbar_bottom_mic_open.png';
+  static const String toolbarBottomBlueTooth =
+      'assets/images/toolbar_bottom_bluetooth.png';
   static const String toolbarBottomSpeakerOpen =
       'assets/images/toolbar_bottom_speaker_open.png';
   static const String toolbarBottomSpeakerClosed =
-      'assets/images/toolbar_bottom_speak'
-      'er_closed.png';
+      'assets/images/toolbar_bottom_speaker_closed.png';
   static const String toolbarBottomSwitchCamera =
-      'assets/images/toolbar_bottom_swi'
-      'tch_camera.png';
+      'assets/images/toolbar_bottom_switch_camera.png';
   static const String toolbarBottomVideo =
       'assets/images/toolbar_bottom_video.png';
   static const String toolbarBottomVoice =

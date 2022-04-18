@@ -52,7 +52,7 @@ class OnlineVideoView extends StatelessWidget {
             settingWidget: const CallingSettingsView(
                 callType: ZegoCallType.kZegoCallTypeVideo)),
         const Expanded(child: SizedBox()),
-        const OnlineVideoBottomToolBar(),
+        const OnlineBottomToolBar(callType: ZegoCallType.kZegoCallTypeVideo),
         SizedBox(height: 105.h),
       ],
     );

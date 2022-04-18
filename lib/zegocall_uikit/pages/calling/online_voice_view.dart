@@ -12,7 +12,6 @@ import './../../../utils/styles.dart';
 import './../../../utils/user_avatar.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
-import './../player/avatar_background.dart';
 import 'settings/calling_settings.dart';
 import 'toolbar/online_bottom_toolbar.dart';
 import 'toolbar/online_top_toolbar.dart';
@@ -55,7 +54,7 @@ class OnlineVoiceView extends StatelessWidget {
           style: StyleConstant.callingCenterUserName,
         ),
         const Expanded(child: SizedBox()),
-        const OnlineVoiceBottomToolBar(),
+        const OnlineBottomToolBar(callType: ZegoCallType.kZegoCallTypeVoice),
         SizedBox(height: 105.h),
       ],
     );
