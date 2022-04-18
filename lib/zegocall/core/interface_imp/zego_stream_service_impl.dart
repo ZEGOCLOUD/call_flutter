@@ -36,6 +36,11 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   }
 
   @override
+  void stopPreview() {
+    ZegoExpressEngine.instance.stopPreview();
+  }
+
+  @override
   void startPlaying(String userID, {int viewID = -1}) {
     assert(ZegoServiceManager.shared.isSDKInit,
         "The SDK must be initialised first.");

@@ -9,6 +9,7 @@ abstract class IZegoStreamService extends ChangeNotifier with ZegoService {
   ZegoStreamServiceDelegate? delegate;
 
   void startPreview(int viewID);
+  void stopPreview();
 
   void startPlaying(String userID, {int viewID = -1});
 

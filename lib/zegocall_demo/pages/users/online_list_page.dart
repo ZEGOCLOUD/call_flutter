@@ -61,14 +61,19 @@ class OnlineListPage extends HookWidget {
   }
 
   Widget userListView(ZegoUserListManager userListManager) {
-    return ListView.builder(
-      itemExtent: 148.h,
-      padding: EdgeInsets.only(left: 32.w, right: 32.w),
-      itemCount: userListManager.userList.length,
-      itemBuilder: (_, i) {
-        DemoUserInfo user = userListManager.userList[i];
-        return OnlineListItem(userInfo: user);
+    return RefreshIndicator(
+      onRefresh: () async {
+        ZegoUserListManager.shared.updateUser();
       },
+      child: ListView.builder(
+        itemExtent: 148.h,
+        padding: EdgeInsets.only(left: 32.w, right: 32.w),
+        itemCount: userListManager.userList.length,
+        itemBuilder: (_, i) {
+          DemoUserInfo user = userListManager.userList[i];
+          return OnlineListItem(userInfo: user);
+        },
+      ),
     );
   }
 }

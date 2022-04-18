@@ -24,9 +24,6 @@ mixin ZegoCallManagerInterface {
   ZegoCallStatus currentCallStatus = ZegoCallStatus.free;
   ZegoCallType currentCallType = ZegoCallType.kZegoCallTypeVoice;
 
-  /// The token of use to call
-  String token = "";
-
   /// Initialize the SDK
   ///
   /// Description: This method can be used to initialize the ZIM SDK and the Express-Audio SDK.
@@ -88,4 +85,12 @@ mixin ZegoCallManagerInterface {
   /// - Parameter type: refers to the call type.  ZegoCallTypeVoice: Voice call.  ZegoCallTypeVideo: Video call.
   /// - Parameter callback: refers to the callback for make a outbound call.
   Future<ZegoError> callUser(ZegoUserInfo callee, ZegoCallType callType);
+
+  /// Renew token.
+  ///
+  /// Description: After the developer receives [onRoomTokenWillExpire], they can use this API to update the token to ensure that the subsequent RTC functions are normal.
+  ///
+  /// @param token The token that needs to be renew.
+  /// @param roomID Room ID.
+  renewToken(String token, String roomID);
 }

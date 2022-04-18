@@ -4,7 +4,6 @@
 import 'dart:math';
 
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -133,23 +132,30 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
           ],
         );
       case MiniOverlayPageState.kVideoCalling:
-        return GestureDetector(
-          onTap: () {
-            ZegoCallManager.shared.onMiniOverlayRestore();
-          },
-          child: Container(
-              width: 200.w,
-              height: 300.h,
-              padding: EdgeInsets.all(12.0.w),
-              decoration: BoxDecoration(
-                  color: const Color(0xffF3F4F7),
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0.w),
-                      bottomLeft: Radius.circular(20.0.w))),
-              child: MiniVideoCallingOverlay(
-                  machine: machine.videoCallingOverlayMachine,
-                  caller: caller,
-                  callee: callee)),
+        return Container(
+          width: 200.w,
+          height: 300.h,
+          padding: EdgeInsets.all(12.0.w),
+          decoration: BoxDecoration(
+              color: const Color(0xffF3F4F7),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0.w),
+                  bottomLeft: Radius.circular(20.0.w))),
+          child: Stack(children: [
+            MiniVideoCallingOverlay(
+                machine: machine.videoCallingOverlayMachine,
+                caller: caller,
+                callee: callee),
+            GestureDetector(
+              onTap: () {
+                ZegoCallManager.shared.onMiniOverlayRestore();
+              },
+              child: Container(
+                  color: Colors.transparent,
+                  width: double.infinity,
+                  height: double.infinity),
+            )
+          ]),
         );
       case MiniOverlayPageState.kBeInvite:
         return GestureDetector(

@@ -10,6 +10,7 @@ import './../interface/zego_room_service.dart';
 import './../zego_call_defines.dart';
 
 class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
+
   @override
   void init() {
     ZegoServiceManager.shared.addExpressEventHandler(this);
@@ -63,10 +64,11 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
 
   @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) async {
-    var result = await ZegoServiceManager.shared.userService.getToken(
-        ZegoServiceManager.shared.userService.localUserInfo.userID, 24 * 3600);
-    if (result.isSuccess) {
-      ZegoExpressEngine.instance.renewToken(roomID, result.success as String);
-    }
+    // var result = await ZegoServiceManager.shared.userService.getToken(
+    //     ZegoServiceManager.shared.userService.localUserInfo.userID, 24 * 3600);
+    // if (result.isSuccess) {
+    //   ZegoExpressEngine.instance.renewToken(roomID, result.success as String);
+    // }
+    delegate?.onRoomTokenWillExpire(roomID, remainTimeInSecond);
   }
 }

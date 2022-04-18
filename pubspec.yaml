@@ -161,6 +161,7 @@ flutter:
     - assets/images/toolbar_bottom_decline.png
     - assets/images/toolbar_bottom_mic_closed.png
     - assets/images/toolbar_bottom_mic_open.png
+    - assets/images/toolbar_bottom_bluetooth.png
     - assets/images/toolbar_bottom_speaker_open.png
     - assets/images/toolbar_bottom_speaker_closed.png
     - assets/images/toolbar_bottom_switch_camera.png
@@ -211,6 +212,7 @@ flutter:
     - assets/images/2.0x/toolbar_bottom_decline.png
     - assets/images/2.0x/toolbar_bottom_mic_closed.png
     - assets/images/2.0x/toolbar_bottom_mic_open.png
+    - assets/images/2.0x/toolbar_bottom_bluetooth.png
     - assets/images/2.0x/toolbar_bottom_speaker_open.png
     - assets/images/2.0x/toolbar_bottom_speaker_closed.png
     - assets/images/2.0x/toolbar_bottom_switch_camera.png
@@ -261,6 +263,7 @@ flutter:
     - assets/images/3.0x/toolbar_bottom_decline.png
     - assets/images/3.0x/toolbar_bottom_mic_closed.png
     - assets/images/3.0x/toolbar_bottom_mic_open.png
+    - assets/images/3.0x/toolbar_bottom_bluetooth.png
     - assets/images/3.0x/toolbar_bottom_speaker_open.png
     - assets/images/3.0x/toolbar_bottom_speaker_closed.png
     - assets/images/3.0x/toolbar_bottom_switch_camera.png

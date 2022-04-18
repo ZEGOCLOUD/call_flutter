@@ -2,12 +2,14 @@
 import 'dart:developer';
 
 // Package imports:
+import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
+import '../../../zegocall/core/delegate/zego_room_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_user_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
@@ -23,6 +25,7 @@ class ZegoCallManager
         ZegoCallManagerInterface,
         ZegoCallServiceDelegate,
         ZegoUserServiceDelegate,
+        ZegoRoomServiceDelegate,
         ZegoDeviceServiceDelegate {
   static var shared = ZegoCallManager();
 
@@ -65,21 +68,21 @@ class ZegoCallManager
     ZegoServiceManager.shared.uninit();
   }
 
-  @override
-  Future<String> getToken(String userID, int effectiveTimeInSeconds) async {
-    return ZegoServiceManager.shared.userService
-        .getToken(userID, effectiveTimeInSeconds)
-        .then((result) {
-      if (result.isSuccess) {
-        log('[call manager] get token, token is ${result.success}');
-
-        return result.success as String;
-      }
-
-      log('[call manager] fail to get token');
-      return "";
-    });
-  }
+  // @override
+  // Future<String> getToken(String userID, int effectiveTimeInSeconds) async {
+  //   return ZegoServiceManager.shared.userService
+  //       .getToken(userID, effectiveTimeInSeconds)
+  //       .then((result) {
+  //     if (result.isSuccess) {
+  //       log('[call manager] get token, token is ${result.success}');
+  //
+  //       return result.success as String;
+  //     }
+  //
+  //     log('[call manager] fail to get token');
+  //     return "";
+  //   });
+  // }
 
   @override
   void resetCallData() {
@@ -125,6 +128,13 @@ class ZegoCallManager
   }
 
   @override
+  void renewToken(String token, String roomID) {
+    log('[call manager] renew token, token:$token, room id:$roomID');
+
+    ZegoExpressEngine.instance.renewToken(roomID, token);
+  }
+
+  @override
   Future<ZegoError> callUser(ZegoUserInfo callee, ZegoCallType callType) async {
     log('[call manager] call user, user:${callee.toString()}, call '
         'type:${callType.string}');
@@ -140,22 +150,42 @@ class ZegoCallManager
     caller = ZegoServiceManager.shared.userService.localUserInfo;
     this.callee = callee;
 
-    resetDeviceConfig();
+    updateDeviceConfigInCalling();
 
-    return ZegoServiceManager.shared.callService
-        .callUser(callee, token, callType, (int errorCode) {
-      if (ZegoError.success.id == errorCode) {
-      } else {
+    if (delegate == null) {
+      assert(false, "delegate is null");
+      return ZegoError.failed;
+    }
+
+    return delegate!.getRTCToken().then((String token) {
+      if (currentCallStatus != ZegoCallStatus.waitAccept) {
+        log('[call manager] current call status is not wait accept, '
+            '$currentCallStatus}');
+        return ZegoError.callStatusWrong;
+      }
+      if (token.isEmpty) {
         currentCallStatus = ZegoCallStatus.free;
 
         resetCallUserInfo();
+        return ZegoError.tokenExpired;
       }
 
-      pageHandler.onCallUserExecuted(errorCode);
+      return ZegoServiceManager.shared.callService
+          .callUser(callee, token, callType, (int errorCode) {
+        if (ZegoError.success.id == errorCode) {
+        } else {
+          currentCallStatus = ZegoCallStatus.free;
+
+          resetCallUserInfo();
+        }
+
+        pageHandler.onCallUserExecuted(errorCode);
+      });
     });
   }
 
-  void acceptCall(ZegoUserInfo caller, ZegoCallType callType) {
+  Future<ZegoError> acceptCall(
+      ZegoUserInfo caller, ZegoCallType callType) async {
     log('[call manager] accept call, user:${caller.toString()}, call '
         'type:${callType.string}');
 
@@ -165,25 +195,45 @@ class ZegoCallManager
     this.caller = caller;
     callee = ZegoServiceManager.shared.userService.localUserInfo;
 
-    resetDeviceConfig();
+    updateDeviceConfigInCalling();
 
     pageHandler.onAcceptCallWillExecute();
 
-    ZegoServiceManager.shared.callService.acceptCall(token, (int errorCode) {
-      if (ZegoError.success.id == errorCode) {
-        callTimeManager.startTimer(currentCallID());
-        ZegoNotificationManager.shared.stopRing();
+    if (delegate == null) {
+      assert(false, "delegate is null");
+      return ZegoError.failed;
+    }
 
-        if (ZegoCallType.kZegoCallTypeVoice == currentCallType) {
-          ZegoServiceManager.shared.streamService.startPlaying(caller.userID);
-        }
-      } else {
+    return delegate!.getRTCToken().then((String token) {
+      if (currentCallStatus != ZegoCallStatus.calling) {
+        log('[call manager] current call status is not calling, '
+            '$currentCallStatus}');
+        return ZegoError.callStatusWrong;
+      }
+      if (token.isEmpty) {
         currentCallStatus = ZegoCallStatus.free;
 
         resetCallUserInfo();
+        return ZegoError.tokenExpired;
       }
 
-      pageHandler.onAcceptCallExecuted(errorCode);
+      return ZegoServiceManager.shared.callService.acceptCall(token,
+          (int errorCode) {
+        if (ZegoError.success.id == errorCode) {
+          callTimeManager.startTimer(currentCallID());
+          ZegoNotificationManager.shared.stopRing();
+
+          if (ZegoCallType.kZegoCallTypeVoice == currentCallType) {
+            ZegoServiceManager.shared.streamService.startPlaying(caller.userID);
+          }
+        } else {
+          currentCallStatus = ZegoCallStatus.free;
+
+          resetCallUserInfo();
+        }
+
+        pageHandler.onAcceptCallExecuted(errorCode);
+      });
     });
   }
 
@@ -234,13 +284,20 @@ class ZegoCallManager
     ZegoServiceManager.shared.callService.cancelCall();
   }
 
-  void resetDeviceConfig() {
+  void updateDeviceConfigInCalling() {
     log('[call manager] reset device config');
 
-    ZegoServiceManager.shared.userService.localUserInfo.mic = true;
-    ZegoServiceManager.shared.userService.localUserInfo.camera = true;
+    var userService = ZegoServiceManager.shared.userService;
+    var deviceService = ZegoServiceManager.shared.deviceService;
 
-    ZegoServiceManager.shared.deviceService.resetDeviceConfig();
+    userService.localUserInfo.mic = true;
+    userService.localUserInfo.camera =
+        ZegoCallType.kZegoCallTypeVoice != currentCallType;
+
+    deviceService.enableCamera(userService.localUserInfo.camera);
+    deviceService.enableMic(userService.localUserInfo.mic);
+    deviceService.enableSpeaker(true);
+    deviceService.resetDeviceConfig();
   }
 
   @override
@@ -406,5 +463,19 @@ class ZegoCallManager
 
   String currentCallID() {
     return ZegoServiceManager.shared.callService.callInfo.callID;
+  }
+
+  @override
+  Future<String> getToken(String userID, int effectiveTimeInSeconds) {
+    // TODO: implement getToken
+    throw UnimplementedError();
+  }
+
+  @override
+  void onRoomInfoUpdate(ZegoRoomInfo info) {}
+
+  @override
+  void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
+    delegate?.onRoomTokenWillExpire(roomID, remainTimeInSecond);
   }
 }
