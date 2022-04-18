@@ -238,7 +238,8 @@ class ZegoCallManager
     log('[call manager] reset device config');
 
     ZegoServiceManager.shared.userService.localUserInfo.mic = true;
-    ZegoServiceManager.shared.userService.localUserInfo.camera = true;
+    ZegoServiceManager.shared.userService.localUserInfo.camera =
+        ZegoCallType.kZegoCallTypeVoice != currentCallType;
 
     ZegoServiceManager.shared.deviceService.resetDeviceConfig();
   }

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../player/audio_player.dart';
 import './../../../utils/styles.dart';
 import './../../../utils/user_avatar.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
@@ -63,7 +64,10 @@ class OnlineVoiceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      AvatarBackgroundView(userName: remoteUser.userName),
+      AudioPlayer(
+        remoteUserID: remoteUser.userID,
+        remoteUserName: remoteUser.userName,
+      ),
       surface(context),
     ]);
   }
