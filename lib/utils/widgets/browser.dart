@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/utils/zego_loading_manager.dart';
 import './../styles.dart';
 import 'navigation_back_bar.dart';
 
@@ -23,6 +24,20 @@ class Browser extends StatefulWidget {
 class BrowserState extends State<Browser> {
   String title = "";
   late WebViewController webViewController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    ZegoToastManager.shared.showLoading();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    ZegoToastManager.shared.hide();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +63,8 @@ class BrowserState extends State<Browser> {
                   webViewController
                       .runJavascriptReturningResult(script)
                       .then((value) {
+                    ZegoToastManager.shared.hide();
+
                     setState(() {
                       title = value.replaceAll("\"", "");
                     });

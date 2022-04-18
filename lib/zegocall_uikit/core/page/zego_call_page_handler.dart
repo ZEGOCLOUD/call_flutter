@@ -140,8 +140,6 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   void onCancelCallExecuted() {
-    var callType = ZegoCallManager.shared.currentCallType;
-
     restoreToIdle();
   }
 

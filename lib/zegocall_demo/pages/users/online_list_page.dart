@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
+import '../../../utils/zego_loading_manager.dart';
 import './../../../utils/styles.dart';
 import './../../../utils/widgets/navigation_back_bar.dart';
 import './../../constants/user_info.dart';
@@ -16,8 +16,25 @@ import './../../core/zego_user_list_manager.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 
-class OnlineListPage extends HookWidget {
+class OnlineListPage extends StatefulWidget {
   const OnlineListPage({Key? key}) : super(key: key);
+
+  @override
+  OnlineListPageState createState() => OnlineListPageState();
+}
+
+class OnlineListPageState extends State<OnlineListPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    ZegoToastManager.shared.showLoading();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +49,17 @@ class OnlineListPage extends HookWidget {
             titleStyle: StyleConstant.backText),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
-        Consumer<ZegoUserListManager>(
-            builder: (_, userListManager, child) => SizedBox(
-                  width: double.infinity,
-                  height: 1080.h,
-                  child: userListManager.userList.isEmpty
-                      ? emptyTips(context)
-                      : userListView(userListManager),
-                )),
+        Consumer<ZegoUserListManager>(builder: (_, userListManager, child) {
+          ZegoToastManager.shared.hide();
+
+          return SizedBox(
+            width: double.infinity,
+            height: 1080.h,
+            child: userListManager.userList.isEmpty
+                ? emptyTips(context)
+                : userListView(userListManager),
+          );
+        }),
       ]),
     )));
   }
@@ -63,6 +83,8 @@ class OnlineListPage extends HookWidget {
   Widget userListView(ZegoUserListManager userListManager) {
     return RefreshIndicator(
       onRefresh: () async {
+        ZegoToastManager.shared.showLoading();
+
         ZegoUserListManager.shared.updateUser();
       },
       child: ListView.builder(

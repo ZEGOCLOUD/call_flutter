@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -9,11 +10,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
+import '../../../utils/zego_loading_manager.dart';
 import './../../../utils/styles.dart';
 import './../../constants/zego_page_constant.dart';
 import './../../core/zego_login_manager.dart';
@@ -32,16 +33,9 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
   String error = '';
   String verificationId = '';
 
-  bool isLoading = false;
   bool isPolicyCheck = false;
 
   StreamSubscription<User?>? authStateChangesSubscription;
-
-  void setIsLoading() {
-    setState(() {
-      isLoading = !isLoading;
-    });
-  }
 
   @override
   void initState() {
@@ -99,45 +93,7 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
                         style:
                             const TextStyle(fontSize: 24, color: Colors.black),
                       ),
-                      Expanded(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Visibility(
-                            visible: isLoading,
-                            child: Container(
-                                width: 192,
-                                height: 177,
-                                decoration: const BoxDecoration(
-                                  color: Colors.black54,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20)),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const SizedBox(
-                                      width: 84,
-                                      height: 84,
-                                      child: CircularProgressIndicator(
-                                        value: null,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .loginPageLogin,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    )
-                                  ],
-                                )),
-                          ),
-                        ],
-                      )),
+                      const Expanded(child: SizedBox()),
                       const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5),
@@ -162,9 +118,7 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
                                     Text(AppLocalizations.of(context)!
                                         .loginPageGoogleLogin)
                                   ]),
-                              onPressed: isLoading
-                                  ? null //  disable button is loading
-                                  : onLogInGooglePressed,
+                              onPressed: onLogInGooglePressed,
                             ),
                           ),
                         ),
@@ -192,13 +146,12 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
   }
 
   void onLogInGooglePressed() {
+    log('onLogInGooglePressed');
     if (isPolicyCheck) {
-      _signInWithGoogle();
+      logInWithGoogle();
     } else {
-      Fluttertoast.showToast(
-          msg:
-              'Please tick to agree to the "Terms of Service" and "Privacy Policy"',
-          backgroundColor: Colors.grey);
+      ZegoToastManager.shared
+          .showToast(AppLocalizations.of(context)!.toastLoginServicePrivacy);
     }
   }
 
@@ -207,8 +160,10 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
     await Permission.microphone.request();
   }
 
-  Future<void> _signInWithGoogle() async {
-    setIsLoading();
+  Future<void> logInWithGoogle() async {
+    ZegoToastManager.shared
+        .showLoading(message: AppLocalizations.of(context)!.loginPageLogin);
+
     try {
       // Trigger the authentication flow
       final googleUser = await GoogleSignIn().signIn();
@@ -224,7 +179,7 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
         error = '${e.message}';
       });
     } finally {
-      setIsLoading();
+      ZegoToastManager.shared.hide();
     }
   }
 }

@@ -4,9 +4,9 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:firebase_core/firebase_core.dart';
-import 'package:zego_call_flutter/zegocall_demo/core/zego_uikit_manager.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall_demo/core/zego_uikit_manager.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/zego_navigation_service.dart';
 import 'zegocall_demo/core/zego_login_manager.dart';
 import 'zegocall_demo/secret/zego_secret_reader.dart';

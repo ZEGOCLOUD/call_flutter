@@ -37,11 +37,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   provider: ^6.0.2
-  fluttertoast: ^8.0.9
   flutter_hooks: ^0.18.2
   zego_express_engine: ^2.17.1
   flutter_provider_utilities: ^1.0.4
-  loader_overlay: ^2.0.5
   permission_handler: ^9.2.0
   crypto: ^3.0.1
   wakelock: ^0.6.1+1
@@ -61,6 +59,8 @@ dependencies:
   audioplayers: ^0.20.1
   shared_preferences: ^2.0.13
   get_it: ^7.2.0
+  loader_overlay: ^2.0.5
+  flutter_easyloading: ^3.0.3
 
 dev_dependencies:
   flutter_test:

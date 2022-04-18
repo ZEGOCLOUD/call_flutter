@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 // Package imports:
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_background/flutter_background.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -99,11 +100,11 @@ class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
           ? PageRouteNames.welcome
           : PageRouteNames.login,
       routes: materialRoutes,
-      builder: (context, child) {
+      builder: EasyLoading.init(builder: (context, child) {
         return Stack(
           children: [child!, const MiniOverlayPage()],
         );
-      },
+      }),
     );
   }
 

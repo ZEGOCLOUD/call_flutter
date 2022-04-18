@@ -2,10 +2,10 @@
 import 'dart:developer';
 
 // Package imports:
-import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
@@ -141,7 +141,7 @@ class ZegoCallManager
 
     if (currentCallStatus != ZegoCallStatus.free) {
       log('[call manager] current call status is not free, $currentCallStatus}');
-      return ZegoError.failed;
+      return ZegoError.callStatusWrong;
     }
 
     currentCallType = callType;

@@ -20,19 +20,22 @@ class WelcomeToolBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image(
-          image: AssetImage(iconAssetName),
-        ),
-        const SizedBox(width: 5),
-        Text(
-          text,
-          style: const TextStyle(color: Color(0xff2A2A2A)),
-        ),
-      ],
+    return Container(
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image(
+            image: AssetImage(iconAssetName),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: const TextStyle(color: Color(0xff2A2A2A)),
+          ),
+        ],
+      ),
     );
   }
 }

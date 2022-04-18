@@ -2,9 +2,11 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/utils/zego_loading_manager.dart';
 import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../../../utils/styles.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
@@ -22,7 +24,9 @@ class OnlineListItem extends StatelessWidget {
             ZegoCallType.kZegoCallTypeVoice)
         .then((error) {
       if (ZegoError.success != error) {
-        //  todo show tips
+        ZegoToastManager.shared.showToast(ZegoError.callStatusWrong == error
+            ? AppLocalizations.of(context)!.callPageCallUnableInitiate
+            : error.toString());
       }
     });
   }

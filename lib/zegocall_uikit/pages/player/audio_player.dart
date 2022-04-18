@@ -1,5 +1,7 @@
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
+// Project imports:
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import 'avatar_background.dart';
 

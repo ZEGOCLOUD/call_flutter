@@ -9,8 +9,8 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import '../../../core/manager/zego_call_manager.dart';
 import './../../../../utils/styles.dart';
-import 'calling_bottom_toolbar_button.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
+import 'calling_bottom_toolbar_button.dart';
 
 class OnlineBottomToolBar extends StatefulWidget {
   final ZegoCallType callType;
