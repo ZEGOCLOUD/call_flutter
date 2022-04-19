@@ -6,8 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
-import './../../../../utils/styles.dart';
-import './../../../../utils/widgets/show_bottom_sheet.dart';
+import './../../styles.dart';
+import './../../../utils/show_bottom_sheet.dart';
 
 class OnlineTopToolBar extends StatefulWidget {
   final String callID;

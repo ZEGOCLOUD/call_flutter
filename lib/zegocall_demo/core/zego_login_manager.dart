@@ -123,7 +123,7 @@ class ZegoLoginManager extends ChangeNotifier {
 
       logout();
 
-      ZegoCallManager.shared.resetCallData();
+      ZegoCallManager.interface.resetCallData();
 
       delegate?.onReceiveUserKickOut();
     });

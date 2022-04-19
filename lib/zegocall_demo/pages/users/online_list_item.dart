@@ -6,9 +6,9 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/zego_loading_manager.dart';
+import './../../widgets/toast_manager.dart';
 import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
-import './../../../utils/styles.dart';
+import './../../styles.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 import './../../constants/user_info.dart';
@@ -19,25 +19,27 @@ class OnlineListItem extends StatelessWidget {
   final DemoUserInfo userInfo;
 
   void onAudioCallTap(BuildContext context) async {
-    ZegoCallManager.shared
+    ZegoCallManager.interface
         .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
             ZegoCallType.kZegoCallTypeVoice)
         .then((error) {
       if (ZegoError.success != error) {
-        ZegoToastManager.shared.showToast(ZegoError.callStatusWrong == error
+        ToastManager.shared.showToast(ZegoError.callStatusWrong == error
             ? AppLocalizations.of(context)!.callPageCallUnableInitiate
-            : error.toString());
+            : AppLocalizations.of(context)!.callPageCallFail(error.id));
       }
     });
   }
 
   void onVideoCallTap(BuildContext context) async {
-    ZegoCallManager.shared
+    ZegoCallManager.interface
         .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
             ZegoCallType.kZegoCallTypeVideo)
         .then((error) {
       if (ZegoError.success != error) {
-        //  todo show tips
+        ToastManager.shared.showToast(ZegoError.callStatusWrong == error
+            ? AppLocalizations.of(context)!.callPageCallUnableInitiate
+            : AppLocalizations.of(context)!.callPageCallFail(error.id));
       }
     });
   }

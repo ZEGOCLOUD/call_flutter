@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 // Project imports:
-import './../../../utils/widgets/browser.dart';
+import './../../widgets/browser.dart';
 import './../../constants/zego_page_constant.dart';
 
 class GoogleLoginProtocolItem extends StatefulWidget {

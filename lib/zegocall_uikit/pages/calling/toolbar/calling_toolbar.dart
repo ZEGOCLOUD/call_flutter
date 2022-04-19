@@ -9,8 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import '../../../core/manager/zego_call_manager.dart';
-import './../../../../utils/styles.dart';
-import './../../../../utils/widgets/show_bottom_sheet.dart';
+import './../../styles.dart';
+import './../../../utils/show_bottom_sheet.dart';
 import './../../../../zegocall/core/model/zego_user_info.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
 import './../settings/calling_settings.dart';

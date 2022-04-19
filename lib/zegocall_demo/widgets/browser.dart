@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/utils/zego_loading_manager.dart';
+import 'toast_manager.dart';
 import './../styles.dart';
 import 'navigation_back_bar.dart';
 
@@ -29,14 +29,14 @@ class BrowserState extends State<Browser> {
   void initState() {
     super.initState();
 
-    ZegoToastManager.shared.showLoading();
+    ToastManager.shared.showLoading();
   }
 
   @override
   void dispose() {
     super.dispose();
 
-    ZegoToastManager.shared.hide();
+    ToastManager.shared.hide();
   }
 
   @override
@@ -63,7 +63,7 @@ class BrowserState extends State<Browser> {
                   webViewController
                       .runJavascriptReturningResult(script)
                       .then((value) {
-                    ZegoToastManager.shared.hide();
+                    ToastManager.shared.hide();
 
                     setState(() {
                       title = value.replaceAll("\"", "");

@@ -14,8 +14,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
-import '../../../utils/zego_loading_manager.dart';
-import './../../../utils/styles.dart';
+import '../../widgets/toast_manager.dart';
+import './../../styles.dart';
 import './../../constants/zego_page_constant.dart';
 import './../../core/zego_login_manager.dart';
 import 'google_login_protocol_item.dart';
@@ -25,14 +25,15 @@ class GoogleLoginPage extends StatefulWidget {
   const GoogleLoginPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _GoogleLoginPageState();
+  State<StatefulWidget> createState() => GoogleLoginPageState();
 }
 
-class _GoogleLoginPageState extends State<GoogleLoginPage> {
+class GoogleLoginPageState extends State<GoogleLoginPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String error = '';
   String verificationId = '';
 
+  bool isLoading = false;
   bool isPolicyCheck = false;
 
   StreamSubscription<User?>? authStateChangesSubscription;
@@ -79,60 +80,58 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        height: 159 / 2,
-                      ),
-                      Image(
-                          image: const AssetImage(StyleIconUrls.authLogo),
-                          height: 61.h),
-                      const SizedBox(
-                        height: 58 / 2,
-                      ),
-                      Text(
-                        AppLocalizations.of(context)!.appName,
-                        style:
-                            const TextStyle(fontSize: 24, color: Colors.black),
-                      ),
+                      SizedBox(height: 159.h / 2),
+                      header(),
                       const Expanded(child: SizedBox()),
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 5),
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 200),
-                          child: Container(
-                            width: 602 / 2,
-                            height: 50,
-                            decoration: const BoxDecoration(
-                              color: Color(0xffF3F4F7),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(20)),
-                            ),
-                            child: TextButton(
-                              child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Image(
-                                        image: const AssetImage(
-                                            StyleIconUrls.authIconGoogle),
-                                        height: 45.h),
-                                    Text(AppLocalizations.of(context)!
-                                        .loginPageGoogleLogin)
-                                  ]),
-                              onPressed: onLogInGooglePressed,
-                            ),
-                          ),
-                        ),
-                      ),
+                      body(),
                       SizedBox(height: 48.h),
                       GoogleLoginProtocolItem(updatePolicyCheckState),
-                      SizedBox(
-                        height: 76.h,
-                      ),
+                      SizedBox(height: 76.h),
                     ],
                   ),
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget header() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Image(image: const AssetImage(StyleIconUrls.authLogo), height: 61.h),
+        SizedBox(height: 58.h / 2),
+        Text(
+          AppLocalizations.of(context)!.appName,
+          style: const TextStyle(fontSize: 24, color: Colors.black),
+        )
+      ],
+    );
+  }
+
+  Widget body() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: Container(
+          width: 602.w,
+          height: 100.h,
+          decoration: const BoxDecoration(
+            color: Color(0xffF3F4F7),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+          ),
+          child: TextButton(
+            child: Row(mainAxisSize: MainAxisSize.min, children: [
+              Image(
+                  image: const AssetImage(StyleIconUrls.authIconGoogle),
+                  height: 45.h),
+              Text(AppLocalizations.of(context)!.loginPageGoogleLogin)
+            ]),
+            onPressed: isLoading ? null : onLogInGooglePressed,
           ),
         ),
       ),
@@ -150,7 +149,7 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
     if (isPolicyCheck) {
       logInWithGoogle();
     } else {
-      ZegoToastManager.shared
+      ToastManager.shared
           .showToast(AppLocalizations.of(context)!.toastLoginServicePrivacy);
     }
   }
@@ -161,7 +160,10 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
   }
 
   Future<void> logInWithGoogle() async {
-    ZegoToastManager.shared
+    setState(() {
+      isLoading = true;
+    });
+    ToastManager.shared
         .showLoading(message: AppLocalizations.of(context)!.loginPageLogin);
 
     try {
@@ -179,7 +181,10 @@ class _GoogleLoginPageState extends State<GoogleLoginPage> {
         error = '${e.message}';
       });
     } finally {
-      ZegoToastManager.shared.hide();
+      setState(() {
+        isLoading = false;
+      });
+      ToastManager.shared.hide();
     }
   }
 }

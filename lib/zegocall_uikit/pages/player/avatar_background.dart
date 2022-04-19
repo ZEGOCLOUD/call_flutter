@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import './../../../utils/user_avatar.dart';
+import './../../utils/user_avatar.dart';
 
 class AvatarBackgroundView extends StatelessWidget {
   final String userName;

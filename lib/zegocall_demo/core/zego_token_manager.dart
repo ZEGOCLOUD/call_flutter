@@ -116,7 +116,7 @@ class ZegoTokenManager {
   Future<ZegoToken> getTokenFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
 
-    var localUserID = ZegoCallManager.shared.localUserInfo?.userID ?? "";
+    var localUserID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
     if (localUserID.isEmpty) {
       log('[token manager] get token from disk, local user id is empty');
       return ZegoToken.empty();

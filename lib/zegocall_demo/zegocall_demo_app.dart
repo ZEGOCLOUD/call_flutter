@@ -78,7 +78,7 @@ class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
     if (AppLifecycleState.detached == state) {
       WidgetsBinding.instance?.removeObserver(this);
 
-      ZegoCallManager.shared.uninit();
+      ZegoCallManager.interface.uninit();
     }
   }
 

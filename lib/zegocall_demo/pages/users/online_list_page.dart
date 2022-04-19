@@ -7,9 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
-import '../../../utils/zego_loading_manager.dart';
-import './../../../utils/styles.dart';
-import './../../../utils/widgets/navigation_back_bar.dart';
+import '../../widgets/toast_manager.dart';
+import './../../styles.dart';
+import './../../widgets/navigation_back_bar.dart';
 import './../../constants/user_info.dart';
 import './../../constants/zego_page_constant.dart';
 import './../../core/zego_user_list_manager.dart';
@@ -28,7 +28,7 @@ class OnlineListPageState extends State<OnlineListPage> {
   void initState() {
     super.initState();
 
-    ZegoToastManager.shared.showLoading();
+    ToastManager.shared.showLoading();
   }
 
   @override
@@ -50,7 +50,7 @@ class OnlineListPageState extends State<OnlineListPage> {
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
         Consumer<ZegoUserListManager>(builder: (_, userListManager, child) {
-          ZegoToastManager.shared.hide();
+          ToastManager.shared.hide();
 
           return SizedBox(
             width: double.infinity,
@@ -83,7 +83,7 @@ class OnlineListPageState extends State<OnlineListPage> {
   Widget userListView(ZegoUserListManager userListManager) {
     return RefreshIndicator(
       onRefresh: () async {
-        ZegoToastManager.shared.showLoading();
+        ToastManager.shared.showLoading();
 
         ZegoUserListManager.shared.updateUser();
       },

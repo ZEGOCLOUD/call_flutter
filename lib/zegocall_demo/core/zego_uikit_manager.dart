@@ -15,7 +15,7 @@ class ZegoUIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
   static var shared = ZegoUIKitManager();
 
   void init() {
-    ZegoCallManager.shared.delegate = this;
+    ZegoCallManager.interface.delegate = this;
   }
 
   @override
@@ -38,7 +38,7 @@ class ZegoUIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
 
   @override
   Future<String> getRTCToken() async {
-    var userID = ZegoCallManager.shared.localUserInfo?.userID ?? "";
+    var userID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
     if (userID.isEmpty) {
       log('[uikit manager] get rtc token, user id is empty');
       return "";
@@ -51,7 +51,7 @@ class ZegoUIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
 
   @override
   onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
-    var userID = ZegoCallManager.shared.localUserInfo?.userID ?? "";
+    var userID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
     if (userID.isEmpty) {
       log('[uikit manager] onRoomTokenWillExpire, user id is empty');
       return;
@@ -61,7 +61,7 @@ class ZegoUIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
     ZegoTokenManager.shared.getToken(userID).then((token) {
       log('[uikit manager] onRoomTokenWillExpire, get token, $token');
       if (token.isNotEmpty) {
-        ZegoCallManager.shared.renewToken(token, roomID);
+        ZegoCallManager.interface.renewToken(token, roomID);
       }
     });
   }

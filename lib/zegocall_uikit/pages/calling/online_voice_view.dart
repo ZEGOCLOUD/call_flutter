@@ -8,8 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import '../player/audio_player.dart';
-import './../../../utils/styles.dart';
-import './../../../utils/user_avatar.dart';
+import './../styles.dart';
+import './../../utils/user_avatar.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 import 'settings/calling_settings.dart';

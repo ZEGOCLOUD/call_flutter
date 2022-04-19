@@ -22,7 +22,7 @@ class WelcomePage extends HookWidget {
     useEffect(() {
       var user = FirebaseAuth.instance.currentUser!;
 
-      ZegoCallManager.shared.setLocalUser(user.uid, user.displayName ?? "");
+      ZegoCallManager.interface.setLocalUser(user.uid, user.displayName ?? "");
       // init after set local user
       ZegoTokenManager.shared.init();
 
