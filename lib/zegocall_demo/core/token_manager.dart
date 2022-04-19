@@ -1,12 +1,12 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer';
 
 // Package imports:
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // Project imports:
+import '../../logger.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 
 const storeUserID = "call_user_id_key";
@@ -46,14 +46,14 @@ class TokenManager {
   void init() async {
     token = await getTokenFromDisk();
 
-    log('[token manager] init, token:${token.toString()}');
+    logInfo('token:${token.toString()}');
     onTokenSyncTimeout(null);
     Timer.periodic(const Duration(seconds: 60), onTokenSyncTimeout);
   }
 
   void onTokenSyncTimeout(timer) {
     if (!isNeedUpdate(token.userID)) {
-      log('[token manager] token sync timeout, not need update');
+      logInfo('not need update');
       return;
     }
 
@@ -61,7 +61,7 @@ class TokenManager {
   }
 
   Future<String> updateToken(String userID) async {
-    log('[token manager] update token, user id:$userID');
+    logInfo('user id:$userID');
 
     //  24 hours
     var effectiveTimeInSeconds = 24 * 60 * 60;
@@ -73,8 +73,7 @@ class TokenManager {
 
   void saveToken(
       String userID, String token, int effectiveTimeInSeconds) async {
-    log('[token manager] save token, user id:$userID, token:$token, '
-        'effectiveTimeInSeconds:$effectiveTimeInSeconds');
+    logInfo('user id:$userID, token:$token, effectiveTimeInSeconds:$effectiveTimeInSeconds');
 
     var expirySeconds =
         DateTime.now().millisecondsSinceEpoch ~/ 1000 + effectiveTimeInSeconds;
@@ -118,14 +117,13 @@ class TokenManager {
 
     var localUserID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
     if (localUserID.isEmpty) {
-      log('[token manager] get token from disk, local user id is empty');
+      logInfo('local user id is empty');
       return Token.empty();
     }
 
     var oldUserID = prefs.getString(storeUserID) ?? "";
     if (oldUserID != localUserID) {
-      log('[token manager] get token from disk, local user id:localUserID is different of'
-          ' old user id:$oldUserID');
+      logInfo('local user id:localUserID is different of old user id:$oldUserID');
       return Token.empty();
     }
 
@@ -134,14 +132,15 @@ class TokenManager {
       prefs.getInt(storeKeyExpirySeconds) ?? 0,
       prefs.getString(storeUserID) ?? "",
     );
-    log('[token manager] get token from disk, token:${token.toString()}');
+    logInfo('token:${token.toString()}');
     return token;
   }
 
   Future<String> getTokenFromServer(
       String userID, int effectiveTimeInSeconds) async {
     if (userID.isEmpty || effectiveTimeInSeconds < 0) {
-      log('[token manager] get token from server, parameters is invalid');
+      logInfo('parameters is invalid, '
+          'user id:$userID, effectiveTimeInSeconds:$effectiveTimeInSeconds');
       return "";
     }
 
@@ -155,10 +154,10 @@ class TokenManager {
         .then((result) {
       var dict = result.data as Map<String, dynamic>;
       var token = dict['token'] as String;
-      log('[token manager] get token from server, token:$token');
+      logInfo('token:$token');
       return token;
     }, onError: (error) {
-      log('[token manager] get token from server, error:$error');
+      logInfo('error:$error');
       return "";
     });
   }

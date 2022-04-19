@@ -15,9 +15,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
 import '../../widgets/toast_manager.dart';
-import './../../styles.dart';
 import './../../constants/page_constant.dart';
 import './../../core/login_manager.dart';
+import './../../styles.dart';
 import 'google_login_protocol_item.dart';
 
 class GoogleLoginPage extends StatefulWidget {

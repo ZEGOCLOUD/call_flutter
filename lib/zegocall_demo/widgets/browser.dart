@@ -6,9 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // Project imports:
-import 'toast_manager.dart';
 import './../styles.dart';
 import 'navigation_back_bar.dart';
+import 'toast_manager.dart';
 
 class Browser extends StatefulWidget {
   const Browser({required this.url, required this.backURL, Key? key})

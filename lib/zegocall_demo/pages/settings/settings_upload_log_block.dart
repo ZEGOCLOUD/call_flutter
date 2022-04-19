@@ -6,9 +6,9 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../widgets/toast_manager.dart';
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../../styles.dart';
+import './../../widgets/toast_manager.dart';
 
 class SettingsUploadLogBlock extends StatelessWidget {
   const SettingsUploadLogBlock({Key? key}) : super(key: key);

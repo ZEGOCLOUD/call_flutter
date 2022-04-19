@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -9,18 +8,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../styles.dart';
 import '../../../zegocall_uikit/utils/zego_user_avatar.dart';
 import './../../constants/page_constant.dart';
+import './../../styles.dart';
 
 class WelcomeTitleBar extends StatefulWidget {
   const WelcomeTitleBar({Key? key}) : super(key: key);
 
   @override
-  _WelcomeTitleBarState createState() => _WelcomeTitleBarState();
+  WelcomeTitleBarState createState() => WelcomeTitleBarState();
 }
 
-class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
+class WelcomeTitleBarState extends State<WelcomeTitleBar> {
   late User user;
 
   @override
@@ -33,8 +32,6 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
         });
       }
     });
-
-    log(user.toString());
 
     super.initState();
   }

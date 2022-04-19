@@ -1,11 +1,9 @@
-// Dart imports:
-import 'dart:developer';
-
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
+import '../../../logger.dart';
 import 'zego_mini_video_calling_overlay_machine.dart';
 import 'zego_mini_voice_calling_overlay_machine.dart';
 
@@ -32,7 +30,8 @@ class ZegoMiniOverlayMachine {
 
   void init() {
     machine.onAfterTransition.listen((event) {
-      log('[state machine] mini overlay, from ${event.source} to ${event.target}');
+      logInfo(
+          '[state machine] mini overlay, from ${event.source} to ${event.target}');
 
       if (null != onStateChanged) {
         onStateChanged!(machine.current!.identifier);

@@ -1,10 +1,8 @@
-// Dart imports:
-import 'dart:developer';
-
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
+import '../../../logger.dart';
 import '../../../zegocall_demo/pages/navigation_service.dart';
 
 class ZegoPageRoute {
@@ -15,11 +13,11 @@ class ZegoPageRoute {
 
   void navigatorPush(String routeName, {bool isForce = false}) {
     if (currentRouteName == routeName && !isForce) {
-      log('[page route] $routeName is current route name');
+      logInfo('$routeName is current route name');
       return;
     }
 
-    log('[page route] push $routeName');
+    logInfo('push $routeName');
 
     final NavigationService _navigationService = locator<NavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;

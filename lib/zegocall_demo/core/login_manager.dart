@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
@@ -13,6 +12,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
+import '../../logger.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../constants/page_constant.dart';
 import '../pages/navigation_service.dart';
@@ -112,7 +112,7 @@ class LoginManager extends ChangeNotifier {
         .onValue
         .listen((DatabaseEvent event) async {
       var snapshotValue = event.snapshot.value;
-      log('[firebase] fcm token onValue: $snapshotValue');
+      logInfo('fcm token onValue: $snapshotValue');
 
       var token = snapshotValue ?? "";
       if (token == fcmToken) {

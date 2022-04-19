@@ -8,11 +8,11 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../styles.dart';
-import './../../utils/zego_user_avatar.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
+import './../../utils/zego_user_avatar.dart';
 import './../player/zego_avatar_background.dart';
+import './../styles.dart';
 import 'toolbar/zego_calling_toolbar.dart';
 
 class ZegoCallingCalleeView extends StatelessWidget {

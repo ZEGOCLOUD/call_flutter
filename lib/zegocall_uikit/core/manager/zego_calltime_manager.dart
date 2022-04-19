@@ -1,9 +1,11 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
+
+// Project imports:
+import '../../../logger.dart';
 
 class ZegoCallingTimer {
   bool isCalling = false;
@@ -12,15 +14,15 @@ class ZegoCallingTimer {
   ValueNotifier<String> displayValueNotifier = ValueNotifier<String>("");
 
   void startTimer() {
-    log('[calling timer] start timer, isCalling:$isCalling');
+    logInfo('isCalling:$isCalling');
 
     isCalling = true;
     startTime = DateTime.now().millisecondsSinceEpoch;
 
     Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      // log('[calling timer] calling timer periodic');
+      // logInfo('calling timer periodic');
       if (!isCalling) {
-        log('[calling timer] calling timer ended');
+        logInfo('calling timer ended');
 
         timer.cancel();
       } else {
@@ -36,7 +38,7 @@ class ZegoCallingTimer {
   }
 
   void stopTimer() {
-    log('[calling timer] stop timer');
+    logInfo('stop');
 
     isCalling = false;
 
@@ -52,11 +54,11 @@ class ZegoCallingTimeManager {
 
   ZegoCallingTimer startTimer(String key) {
     if (timers.containsKey(key)) {
-      log('[calling timer manager] start timer, existed, return $key');
+      logInfo('existed, return $key');
       return timers[key]!;
     }
 
-    log('[calling timer manager] start timer, create and start $key');
+    logInfo('create and start $key');
     var timer = ZegoCallingTimer();
     timer.startTimer();
     timers[key] = timer;
@@ -69,17 +71,17 @@ class ZegoCallingTimeManager {
       return timers[key]!;
     }
 
-    log('[calling timer manager] get timer, has not $key, return empty timer');
+    logInfo('has not $key, return empty timer');
     return ZegoCallingTimer();
   }
 
   void stopTimer(String key) {
     if (!timers.containsKey(key)) {
-      log('[calling timer manager] stop timer, has not $key');
+      logInfo('has not $key');
       return;
     }
 
-    log('[calling timer manager] stop timer, stop and remove $key');
+    logInfo('stop and remove $key');
     timers[key]!.stopTimer();
     timers.remove(key);
   }

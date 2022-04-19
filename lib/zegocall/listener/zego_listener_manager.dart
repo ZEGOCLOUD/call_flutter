@@ -1,10 +1,8 @@
-// Dart imports:
-import 'dart:developer';
-
 // Flutter imports:
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
+import '../../logger.dart';
 import 'zego_listener.dart';
 import 'zego_listener_handler.dart';
 import 'zego_listener_updater.dart';
@@ -25,7 +23,7 @@ class ZegoListenerManager with ZegoListener, ZegoListenerUpdater {
     }
     listeners[path]!.add(handler);
 
-    log('[Listener] add listener, path:$path, uuid:${handler.uid}');
+    logInfo('path:$path, uuid:${handler.uid}');
 
     return handler.uid;
   }
@@ -36,13 +34,13 @@ class ZegoListenerManager with ZegoListener, ZegoListenerUpdater {
       return;
     }
 
-    log('[Listener] remove listener, path:$path, uuid:$uuid');
+    logInfo('path:$path, uuid:$uuid');
     listeners[path]!.removeWhere((element) => element.uid == uuid);
   }
 
   @override
   void receiveUpdate(String path, ZegoNotifyListenerParameter parameter) {
-    log('[Listener] receive update, path:$path, parameter:$parameter');
+    logInfo('path:$path, parameter:$parameter');
 
     if (!listeners.containsKey(path)) {
       return;

@@ -1,10 +1,10 @@
-// Dart imports:
-import 'dart:developer';
+
 
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
+import '../../../logger.dart';
 import '../../../zegocall_demo/constants/page_constant.dart';
 import '../page/zego_page_route.dart';
 
@@ -30,7 +30,7 @@ class ZegoCallingMachine {
 
   void init() {
     machine.onAfterTransition.listen((event) {
-      log('[state machine] calling, from ${event.source} to ${event.target}');
+      logInfo('calling, from ${event.source} to ${event.target}');
 
       if (null != onStateChanged) {
         onStateChanged!(machine.current!.identifier);

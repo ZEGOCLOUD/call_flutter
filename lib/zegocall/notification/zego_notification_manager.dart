@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer' as developer;
 import 'dart:math';
 
 // Flutter imports:
@@ -14,6 +13,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 // Project imports:
+import '../../logger.dart';
 import './../core/manager/zego_service_manager.dart';
 import './../core/model/zego_user_info.dart';
 import './../core/zego_call_defines.dart';
@@ -80,11 +80,11 @@ class ZegoNotificationManager {
 
   void startRing() async {
     if (isRingTimerRunning) {
-      developer.log('[notification manager] ring is running');
+      logInfo('ring is running');
       return;
     }
 
-    developer.log('[notification manager] start ring');
+    logInfo('start ring');
 
     isRingTimerRunning = true;
 
@@ -92,9 +92,9 @@ class ZegoNotificationManager {
     Vibrate.vibrate();
 
     Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      developer.log('[notification manager] ring timer periodic');
+      logInfo('ring timer periodic');
       if (!isRingTimerRunning) {
-        developer.log('[notification manager] ring timer ended');
+        logInfo('ring timer ended');
 
         audioPlayer?.stop();
 
@@ -106,7 +106,7 @@ class ZegoNotificationManager {
   }
 
   void stopRing() async {
-    developer.log('[notification manager] stop ring');
+    logInfo('stop ring');
 
     isRingTimerRunning = false;
 
@@ -116,7 +116,7 @@ class ZegoNotificationManager {
   void requestFirebaseMessagePermission() async {
     // 1. Instantiate Firebase Messaging
     String? token = await FirebaseMessaging.instance.getToken();
-    developer.log("FCM Token $token");
+    logInfo("FCM Token $token");
 
     // 2. On iOS, this helps to take the user permissions
     NotificationSettings settings =
@@ -129,26 +129,24 @@ class ZegoNotificationManager {
 
     // 3. Grant permission, for iOS only, Android ignore by default
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      developer.log('User granted permission');
+      logInfo('User granted permission');
 
       // For handling the received notifications
       FirebaseMessaging.onMessage.listen(onFirebaseForegroundMessage);
     } else {
-      developer.log('User declined or has not accepted permission');
+      logInfo('User declined or has not accepted permission');
     }
   }
 
   void requestAwesomeNotificationsPermission() {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
-        developer
-            .log('[AwesomeNotifications] requestPermissionToSendNotifications');
+        logInfo('requestPermissionToSendNotifications');
 
         AwesomeNotifications()
             .requestPermissionToSendNotifications()
             .then((bool hasPermission) {
-          developer.log(
-              '[AwesomeNotifications] User granted permission: $hasPermission');
+          logInfo('User granted permission: $hasPermission');
         });
       }
     });
@@ -157,13 +155,13 @@ class ZegoNotificationManager {
   void listenAwesomeNotification() {
     AwesomeNotifications().actionStream.listen((receivedAction) {
       if (receivedAction.channelKey != firebaseChannelKey) {
-        developer.log('[awesome notification] unknown channel key');
+        logInfo('unknown channel key');
         return;
       }
 
       var model = ZegoNotificationModel.fromMap(
           receivedAction.payload ?? <String, String>{});
-      developer.log('[awesome notification] receive:${model.toMap()}');
+      logInfo('receive:${model.toMap()}');
 
       //  dispatch notification message
       var caller = ZegoUserInfo(model.callerID, model.callerName);
@@ -180,7 +178,7 @@ class ZegoNotificationManager {
     // use listener in firebase manager
     return;
 
-    // developer.log("[firebase] foreground message: $message");
+    // logInfo("[firebase] foreground message: $message");
     // onFirebaseRemoteMessageReceive(message);
   }
 
@@ -191,7 +189,7 @@ class ZegoNotificationManager {
 
     startRing();
 
-    developer.log('[firebase] remote message receive: ${message.data}');
+    logInfo('remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
 
     Map<String, dynamic> notificationAdapter = {
@@ -208,8 +206,7 @@ class ZegoNotificationManager {
         NOTIFICATION_ENABLE_VIBRATION: false,
       }
     };
-    developer.log(
-        '[awesome notification] create notification: $notificationAdapter');
+    logInfo('create notification: $notificationAdapter');
     AwesomeNotifications().createNotificationFromJsonData(notificationAdapter);
   }
 }
@@ -217,6 +214,6 @@ class ZegoNotificationManager {
 Future<void> onFirebaseBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  developer.log("[firebase] background message: $message");
+  logInfo("message: $message");
   ZegoNotificationManager.shared.onFirebaseRemoteMessageReceive(message);
 }

@@ -1,8 +1,8 @@
-// Dart imports:
-import 'dart:developer';
-
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
+
+// Project imports:
+import '../../../logger.dart';
 
 enum MiniVideoCallingOverlayState {
   kIdle,
@@ -25,7 +25,7 @@ class ZegoMiniVideoCallingOverlayMachine {
 
   void init() {
     machine.onAfterTransition.listen((event) {
-      log('[state machine] mini video, from ${event.source} to ${event.target}');
+      logInfo('mini video, from ${event.source} to ${event.target}');
 
       if (null != onStateChanged) {
         onStateChanged!(machine.current!.identifier);

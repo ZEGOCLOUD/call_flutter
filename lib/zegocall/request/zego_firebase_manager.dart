@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 // Package imports:
@@ -10,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
+import '../../logger.dart';
 import './../command/zego_request_protocol.dart';
 import './../core/model/zego_user_info.dart';
 import './../core/zego_call_defines.dart';
@@ -33,7 +33,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
   @override
   Future<RequestResult> request(
       String path, RequestParameterType parameters) async {
-    log('[FireBase call] path:$path, parameters:$parameters');
+    logInfo('path:$path, parameters:$parameters');
 
     if (!functionMap.containsKey(path)) {
       return Failure(ZegoError.firebasePathNotExist);
@@ -91,7 +91,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final callType = FirebaseCallTypeExtension
         .mapValue[parameters["type"] as int? ?? FirebaseCallType.voice.id]!;
     if (callID.isEmpty || caller.isEmpty() || callees.isEmpty) {
-      log('[firebase] call users, parameters is invalid');
+      logInfo('parameters is invalid');
       return Failure(ZegoError.paramInvalid);
     }
 
@@ -116,14 +116,14 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       callModel.users.add(callee);
     }
 
-    log('[firebase] call users, call id:$callID, data:${callModel.toMap()}');
+    logInfo('call id:$callID, data:${callModel.toMap()}');
     await FirebaseDatabase.instance
         .ref('call')
         .child(callID)
         .set(callModel.toMap())
         .then((value) {
       modelDict[callID] = callModel;
-      log('[firebase] call users, model dict add $callID');
+      logInfo('model dict add $callID');
 
       addCallListener(callID);
     });
@@ -136,12 +136,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final callID = parameters["call_id"] as String? ?? "";
     final userID = parameters["id"] as String? ?? "";
     if (calleeID.isEmpty || callID.isEmpty || userID.isEmpty) {
-      log('[firebase] cancel call, parameters is invalid');
+      logInfo('parameters is invalid');
       return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
-      log('[firebase] cancel call, model dict does not contain $callID');
+      logInfo('model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
 
@@ -162,7 +162,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     }).then((TransactionResult result) {
       if (result.committed) {
         modelDict.remove(callID);
-        log('[firebase] cancel call, model dict remove $callID');
+        logInfo('model dict remove $callID');
 
         return Success("");
       } else {
@@ -174,12 +174,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
   Future<RequestResult> acceptCall(RequestParameterType parameters) async {
     final callID = parameters["call_id"] as String? ?? "";
     if (callID.isEmpty) {
-      log('[firebase] accept call, parameters is invalid');
+      logInfo('parameters is invalid');
       return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
-      log('[firebase] accept call, model dict does not contain $callID');
+      logInfo('model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
 
@@ -212,12 +212,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final type = ZegoDeclineTypeExtension.mapValue[
         parameters["type"] as int? ?? ZegoDeclineType.kZegoDeclineTypeDecline];
     if (callID.isEmpty) {
-      log('[firebase] decline call, parameters is invalid');
+      logInfo('parameters is invalid');
       return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
-      log('[firebase] decline call, model dict does not contain $callID');
+      logInfo('model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
 
@@ -246,7 +246,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     }).then((TransactionResult result) {
       if (result.committed) {
         modelDict.remove(callID);
-        log('[firebase] decline call, model dict remove $callID');
+        logInfo('model dict remove $callID');
 
         return Success("");
       } else {
@@ -258,12 +258,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
   Future<RequestResult> endCall(RequestParameterType parameters) async {
     final callID = parameters["call_id"] as String? ?? "";
     if (callID.isEmpty) {
-      log('[firebase] end call, parameters is invalid');
+      logInfo('parameters is invalid');
       return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
-      log('[firebase] end call, model dict does not contain $callID');
+      logInfo('model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
 
@@ -285,7 +285,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     }).then((TransactionResult result) {
       if (result.committed) {
         modelDict.remove(callID);
-        log('[firebase] end call, model dict remove $callID');
+        logInfo('model dict remove $callID');
 
         return Success("");
       } else {
@@ -298,12 +298,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     final userID = parameters["id"] as String? ?? "";
     final callID = parameters["call_id"] as String? ?? "";
     if (userID.isEmpty || callID.isEmpty) {
-      log('[firebase] heartbeat, parameters is invalid');
+      logInfo('parameters is invalid');
       return Failure(ZegoError.paramInvalid);
     }
 
     if (!modelDict.containsKey(callID)) {
-      log('[firebase] heartbeat , model dict does not contain $callID');
+      logInfo('model dict does not contain $callID');
       return Failure(ZegoError.failed);
     }
 
@@ -315,12 +315,12 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
 
     var user = callModel.getUser(userID);
     if (user.isEmpty()) {
-      log('[firebase] heartbeat, user is empty');
+      logInfo('user is empty');
       return Failure(ZegoError.failed);
     }
     user.heartbeatTime = DateTime.now().millisecondsSinceEpoch;
 
-    log('[firebase] heartbeat, update heartbeat:${user.heartbeatTime}');
+    logInfo('update heartbeat:${user.heartbeatTime}');
     await FirebaseDatabase.instance
         .ref('call')
         .child(callID)
@@ -334,11 +334,11 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
   void addFcmTokenToDatabase() {
     addFcmToken(String token) {
       if (null == user) {
-        log('[firebase] add fcm token, user is null');
+        logInfo('user is null');
         return;
       }
       if (token.isEmpty) {
-        log('[firebase] add fcm token, token is empty');
+        logInfo('token is empty');
         return;
       }
 
@@ -363,7 +363,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     if (fcmToken.isEmpty) {
       FirebaseMessaging.instance.getToken().then((token) {
         if (null == token) {
-          log('[firebase] messaging get token is null');
+          logInfo('messaging get token is null');
           return;
         }
         fcmToken = token;
@@ -382,7 +382,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .listen((DatabaseEvent event) async {
       var snapshotValue = event.snapshot.value;
       if (null == snapshotValue) {
-        log('[firebase] incoming call, snapshot value is null');
+        logInfo('snapshot value is null');
         return;
       }
 
@@ -392,29 +392,29 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
               callDict['call_status'] as int? ?? FirebaseCallStatus.unknown.id]
           as FirebaseCallStatus;
       if (callStatus != FirebaseCallStatus.connecting) {
-        log('[firebase] incoming call, call status is not connecting');
+        logInfo('call status is not connecting');
         return;
       }
 
       var model = ZegoFirebaseCallModel.fromMap(callDict);
       if (model.isEmpty()) {
-        log('[firebase] incoming call, model is empty');
+        logInfo('model is empty');
         return;
       }
       var firebaseUser = model.getUser(user?.uid ?? "");
       if (firebaseUser.userID == firebaseUser.callerID) {
-        log('[firebase] incoming call, user id is same as caller id, '
+        logInfo('user id is same as caller id, '
             '$firebaseUser');
         return;
       }
 
-      log('[firebase] incoming call, call dict: $callDict');
+      logInfo('call dict: $callDict');
 
       var caller = model.users.firstWhere(
           (user) => user.callerID == user.userID,
           orElse: () => ZegoFirebaseCallUser.empty());
       if (caller.isEmpty()) {
-        log('[firebase] incoming call, caller is empty');
+        logInfo('caller is empty');
         return;
       }
 
@@ -422,15 +422,14 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       var startTime = caller.startTime;
       var timeInterval = DateTime.now().millisecondsSinceEpoch - startTime;
       if (timeInterval > 60 * 1000) {
-        log('[firebase] incoming call,  start time of call is beyond 60s '
-            'means this call is ended.');
+        logInfo('start time of call is beyond 60s means this call is ended.');
         return;
       }
 
       if (!modelDict.containsKey(model.callID)) {
-        log('[firebase] incoming call,  model dict does not contain ${model.callID}, add to dict.');
+        logInfo('model dict does not contain ${model.callID}, add to dict.');
         modelDict[model.callID] = model;
-        log('[firebase] incoming call, model dict add ${model.callID}');
+        logInfo('model dict add ${model.callID}');
 
         addCallListener(model.callID);
       }
@@ -459,17 +458,17 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         .listen((DatabaseEvent event) async {
       var snapshotValue = event.snapshot.value;
       if (null == snapshotValue) {
-        log('[firebase] call on value changed, snapshot value is null');
+        logInfo('snapshot value is null');
 
         if (!modelDict.containsKey(event.snapshot.key)) {
-          log('[firebase] call on value changed, model dict has not ${event.snapshot.key}');
+          logInfo('model dict has not ${event.snapshot.key}');
           return;
         }
 
         var model = modelDict[event.snapshot.key]!;
         var myUser = model.getUser(user?.uid ?? "");
         if (myUser.isEmpty()) {
-          log('[firebase] call on value changed, user is empty');
+          logInfo('user is empty');
           return;
         }
 
@@ -477,7 +476,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
             (user) => user.userID != myUser.userID,
             orElse: () => ZegoFirebaseCallUser.empty());
         if (otherUser.isEmpty()) {
-          log('[firebase] call on value changed, otherUser is empty');
+          logInfo('otherUser is empty');
           return;
         }
 
@@ -503,38 +502,37 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
         }
 
         modelDict.remove(model.callID);
-        log('[firebase] call listener, model dict remove ${model.callID}');
+        logInfo('model dict remove ${model.callID}');
 
         return;
       }
 
       var callDict = snapshotValue as Map<dynamic, dynamic>;
-      // log('[firebase] call, call dict: $callDict');
 
       var callStatus = FirebaseCallStatusExtension.mapValue[
               callDict['call_status'] as int? ?? FirebaseCallStatus.unknown.id]
           as FirebaseCallStatus;
       if (callStatus == FirebaseCallStatus.connecting) {
-        log('[firebase] call on value changed, call status is connecting');
+        logInfo('call status is connecting');
         return;
       }
 
       var model = ZegoFirebaseCallModel.fromMap(callDict);
       var myUser = model.getUser(user?.uid ?? "");
       if (myUser.isEmpty()) {
-        log('[firebase] call on value changed, my user is empty');
+        logInfo('my user is empty');
         return;
       }
       var otherUser = model.users.firstWhere(
           (user) => user.userID != myUser.userID,
           orElse: () => ZegoFirebaseCallUser.empty());
       if (otherUser.isEmpty()) {
-        log('[firebase] call on value changed, other user is empty');
+        logInfo('other user is empty');
         return;
       }
 
       if (!modelDict.containsKey(model.callID)) {
-        log('[firebase] call on value changed, old model has not ${model.callID}');
+        logInfo('old model has not ${model.callID}');
         return;
       }
       var oldModel = modelDict[model.callID]!;
@@ -584,7 +582,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
           }
         }
         modelDict[model.callID] = model;
-        log('[firebase] call listener, model dict add ${model.callID}');
+        logInfo('model dict add ${model.callID}');
       }
     });
   }
@@ -595,7 +593,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     ZegoListenerManager.shared.receiveUpdate(notifyCallCanceled, data);
 
     modelDict.remove(callID);
-    log('[firebase] onReceiveCanceledNotify, model dict remove $callID');
+    logInfo('model dict remove $callID');
   }
 
   /// caller receive the accepted
@@ -607,7 +605,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     ZegoListenerManager.shared.receiveUpdate(notifyCallAccept, data);
 
     modelDict[model.callID] = model;
-    log('[firebase] onReceiveAcceptedNotify, model dict add ${model.callID}');
+    logInfo('model dict add ${model.callID}');
   }
 
   /// caller receive the callee declined the call
@@ -620,7 +618,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     ZegoListenerManager.shared.receiveUpdate(notifyCallDecline, data);
 
     modelDict.remove(callID);
-    log('[firebase] onReceiveDeclinedNotify, model dict remove $callID');
+    logInfo('model dict remove $callID');
   }
 
   /// receive other user ended the call.
@@ -629,7 +627,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     ZegoListenerManager.shared.receiveUpdate(notifyCallEnd, data);
 
     modelDict.remove(callID);
-    log('[firebase] onReceiveEndedNotify, model dict remove $callID');
+    logInfo('model dict remove $callID');
   }
 
   onReceiveTimeoutNotify(String callID, String otherUserID) {

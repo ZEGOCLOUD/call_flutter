@@ -7,9 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import '../../../../zegocall/core/manager/zego_service_manager.dart';
-import './../../styles.dart';
 import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
+import './../../styles.dart';
 import 'zego_calling_settings_defines.dart';
 import 'zego_calling_settings_item.dart';
 

@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/foundation.dart';
@@ -10,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import '../../../logger.dart';
 import '../zego_call_defines.dart';
 import './../../../zegocall/core/commands/zego_init_command.dart';
 import './../interface/zego_call_service.dart';
@@ -38,38 +38,42 @@ class ZegoServiceManager extends ChangeNotifier {
   List<ZegoEventHandler> rtcEventDelegates = [];
 
   Future<void> initWithAPPID(int appID) async {
-    log('[service manager] init with app id:$appID');
+    logInfo('app id:$appID');
 
-    initServices();
+    createServices();
     registerExpressEventHandle();
 
     ZegoEngineProfile profile = ZegoEngineProfile(appID, ZegoScenario.General);
     profile.enablePlatformView = true; //  for play stream with platformView
     profile.scenario = ZegoScenario.Communication;
     await ZegoExpressEngine.createEngineWithProfile(profile).then((value) {});
-
-    deviceService.setBestConfig();
-
     isSDKInit = true;
+
+    initServices();
 
     var initCommand = ZegoInitCommand();
     initCommand.execute();
   }
 
-  void initServices() {
-    log('[service manager] init services');
+  void createServices() {
+    logInfo('create services');
 
     roomService = ZegoRoomServiceImpl();
     userService = ZegoUserServiceImpl();
     callService = ZegoCallServiceImpl();
     streamService = ZegoStreamServiceImpl();
     deviceService = ZegoDeviceServiceImpl();
+  }
+
+  void initServices() {
+    logInfo('init services');
 
     roomService.init();
     userService.init();
     callService.init();
     streamService.init();
     deviceService.init();
+    deviceService.setBestConfig();
   }
 
   void addExpressEventHandler(ZegoEventHandler handler) {
@@ -95,7 +99,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   Future<void> uninit() async {
-    log('[service manager] uninit');
+    logInfo('uninit');
 
     isSDKInit = false;
 
@@ -103,7 +107,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   Future<int> uploadLog() async {
-    log('[service manager] upload log');
+    logInfo('upload log');
 
     assert(isSDKInit, "The SDK must be initialised first.");
 
@@ -118,7 +122,8 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode,
       Map<String, dynamic> extendedData) {
-    log('[service manager] onRoomStateUpdate, roomID:$roomID, state:$state, '
+    logInfo(
+        '[service manager] onRoomStateUpdate, roomID:$roomID, state:$state, '
         'errorCode:$errorCode, extendedData:$extendedData');
 
     for (var delegate in rtcEventDelegates) {
@@ -128,8 +133,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
       List<ZegoStream> streamList, Map<String, dynamic> extendedData) {
-    log('[service manager] onRoomStreamUpdate, $roomID:roomID, '
-        'updateType:$updateType, streamList:$streamList, extendedData:$extendedData');
+    logInfo('$roomID:roomID, updateType:$updateType, streamList:$streamList, extendedData:$extendedData');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onRoomStreamUpdate(roomID, updateType, streamList, extendedData);
@@ -138,8 +142,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onRoomUserUpdate(
       String roomID, ZegoUpdateType updateType, List<ZegoUser> userList) {
-    log('[service manager] onRoomUserUpdate, roomID:$roomID, '
-        'updateType:$updateType, userList:$userList');
+    logInfo('roomID:$roomID, updateType:$updateType, userList:$userList');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onRoomUserUpdate(roomID, updateType, userList);
@@ -148,8 +151,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onPlayerStateUpdate(String streamID, ZegoPlayerState state,
       int errorCode, Map<String, dynamic> extendedData) {
-    log('[service manager] onPlayerStateUpdate, streamID:$streamID, '
-        'state:$state, errorCode:$errorCode, extendedData:$extendedData');
+    logInfo('streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onPlayerStateUpdate(streamID, state, errorCode, extendedData);
@@ -157,7 +159,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   void onPlayerRenderVideoFirstFrame(String streamID) {
-    log('[service manager] onPlayerRenderVideoFirstFrame, streamID:$streamID');
+    logInfo('streamID:$streamID');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onPlayerRenderVideoFirstFrame(streamID);
@@ -166,8 +168,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onPublisherStateUpdate(String streamID, ZegoPublisherState state,
       int errorCode, Map<String, dynamic> extendedData) {
-    log('[service manager] onPublisherStateUpdate, streamID:$streamID, '
-        'state:$state, errorCode:$errorCode, extendedData:$extendedData');
+    logInfo('streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onPublisherStateUpdate(streamID, state, errorCode, extendedData);
@@ -176,8 +177,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onNetworkQuality(String userID, ZegoStreamQualityLevel upstreamQuality,
       ZegoStreamQualityLevel downstreamQuality) {
-    // log('[service manager] onNetworkQuality, userID:$userID, '
-    //     'upstreamQuality:$upstreamQuality, downstreamQuality:$downstreamQuality');
+    // logInfo('userID:$userID, upstreamQuality:$upstreamQuality, downstreamQuality:$downstreamQuality');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onNetworkQuality(userID, upstreamQuality, downstreamQuality);
@@ -185,7 +185,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   void onAudioRouteChange(ZegoAudioRoute audioRoute) {
-    log('[service manager] onAudioRouteChange, audioRoute:$audioRoute');
+    logInfo('audioRoute:$audioRoute');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onAudioRouteChange(audioRoute);
@@ -193,8 +193,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   void onRemoteCameraStateUpdate(String streamID, ZegoRemoteDeviceState state) {
-    log('[service manager] onRemoteCameraStateUpdate, streamID:$streamID, '
-        'state:$state');
+    logInfo('streamID:$streamID, state:$state');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onRemoteCameraStateUpdate(streamID, state);
@@ -202,8 +201,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   void onRemoteMicStateUpdate(String streamID, ZegoRemoteDeviceState state) {
-    log('[service manager] onRemoteMicStateUpdate, streamID:$streamID, '
-        'state:$state');
+    logInfo('streamID:$streamID, state:$state');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onRemoteMicStateUpdate(streamID, state);
@@ -211,8 +209,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   void onPublisherCapturedVideoFirstFrame(ZegoPublishChannel channel) {
-    log('[service manager] onPublisherCapturedVideoFirstFrame, '
-        'channel:$channel');
+    logInfo('channel:$channel');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onPublisherCapturedVideoFirstFrame(channel);
@@ -220,8 +217,7 @@ class ZegoServiceManager extends ChangeNotifier {
   }
 
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
-    log('[service manager] onRoomTokenWillExpire, roomID:$roomID, '
-        'remainTimeInSecond: $remainTimeInSecond');
+    logInfo('roomID:$roomID, remainTimeInSecond: $remainTimeInSecond');
 
     for (var delegate in rtcEventDelegates) {
       delegate.onRoomTokenWillExpire(roomID, remainTimeInSecond);
@@ -230,7 +226,7 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onApiCalledResult(int errorCode, String funcName, String info) {
     if (0 != errorCode) {
-      log("_onApiCalledResult funcName:$funcName, errorCode:$errorCode, info:$info");
+      logInfo('funcName:$funcName, errorCode:$errorCode, info:$info');
     }
 
     for (var delegate in rtcEventDelegates) {
