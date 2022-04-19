@@ -6,8 +6,8 @@ import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
-import 'mini_video_calling_overlay_machine.dart';
-import 'mini_voice_calling_overlay_machine.dart';
+import 'zego_mini_video_calling_overlay_machine.dart';
+import 'zego_mini_voice_calling_overlay_machine.dart';
 
 enum MiniOverlayPageState {
   kIdle,
@@ -18,7 +18,7 @@ enum MiniOverlayPageState {
 
 typedef MiniOverlayMachineStateChanged = void Function(MiniOverlayPageState);
 
-class MiniOverlayMachine {
+class ZegoMiniOverlayMachine {
   final machine = sm.Machine<MiniOverlayPageState>();
   MiniOverlayMachineStateChanged? onStateChanged;
 
@@ -27,8 +27,8 @@ class MiniOverlayMachine {
   late sm.State<MiniOverlayPageState> stateVideoCalling;
   late sm.State<MiniOverlayPageState> stateBeInvite;
 
-  late MiniVoiceCallingOverlayMachine voiceCallingOverlayMachine;
-  late MiniVideoCallingOverlayMachine videoCallingOverlayMachine;
+  late ZegoMiniVoiceCallingOverlayMachine voiceCallingOverlayMachine;
+  late ZegoMiniVideoCallingOverlayMachine videoCallingOverlayMachine;
 
   void init() {
     machine.onAfterTransition.listen((event) {
@@ -74,7 +74,7 @@ class MiniOverlayMachine {
   }
 
   void initVoiceCallingOverlayMachine() {
-    voiceCallingOverlayMachine = MiniVoiceCallingOverlayMachine();
+    voiceCallingOverlayMachine = ZegoMiniVoiceCallingOverlayMachine();
     voiceCallingOverlayMachine.init();
 
     voiceCallingOverlayMachine.stateIdle.onEntry(() {
@@ -83,7 +83,7 @@ class MiniOverlayMachine {
   }
 
   void initVideoCallingOverlayMachine() {
-    videoCallingOverlayMachine = MiniVideoCallingOverlayMachine();
+    videoCallingOverlayMachine = ZegoMiniVideoCallingOverlayMachine();
     videoCallingOverlayMachine.init();
 
     videoCallingOverlayMachine.stateIdle.onEntry(() {

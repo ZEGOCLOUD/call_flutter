@@ -9,15 +9,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import './../styles.dart';
-import './../../utils/user_avatar.dart';
+import './../../utils/zego_user_avatar.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
-import './../player/avatar_background.dart';
-import './../player/video_player.dart';
-import 'toolbar/calling_toolbar.dart';
+import './../player/zego_avatar_background.dart';
+import 'toolbar/zego_calling_toolbar.dart';
 
-class CallingCallerView extends StatelessWidget {
-  const CallingCallerView(
+class ZegoCallingCalleeView extends StatelessWidget {
+  const ZegoCallingCalleeView(
       {required this.caller,
       required this.callee,
       required this.callType,
@@ -30,34 +29,27 @@ class CallingCallerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [backgroundView(), surface(context)]);
-  }
-
-  Widget backgroundView() {
-    if (ZegoCallType.kZegoCallTypeVideo == callType) {
-      return VideoPlayer(userID: caller.userID, userName: caller.userName);
-    }
-    return AvatarBackgroundView(userName: callee.userName);
+    return Stack(children: [
+      ZegoAvatarBackgroundView(userName: caller.userName),
+      surface(context),
+    ]);
   }
 
   Widget surface(BuildContext context) {
-    var isVideo = ZegoCallType.kZegoCallTypeVideo == callType;
     var avatarIndex = getUserAvatarIndex(callee.userName);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        isVideo ? const CallingCallerVideoTopToolBar() : const SizedBox(),
-        isVideo ? SizedBox(height: 140.h) : SizedBox(height: 228.h),
+        SizedBox(height: 280.h),
         SizedBox(
-          width: 200.w,
-          height: 200.h,
-          child: CircleAvatar(
-            maxRadius: 200.w,
-            backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
-          ),
-        ),
+            width: 200.w,
+            height: 200.h,
+            child: CircleAvatar(
+              maxRadius: 200.w,
+              backgroundImage: AssetImage(getUserAvatarURLByIndex(avatarIndex)),
+            )),
         SizedBox(height: 10.h),
         SizedBox(
             height: 59.h,
@@ -67,7 +59,8 @@ class CallingCallerView extends StatelessWidget {
         Text(AppLocalizations.of(context)!.callPageStatusCalling,
             style: StyleConstant.callingCenterStatus),
         const Expanded(child: SizedBox()),
-        const CallingCallerBottomToolBar(),
+        ZegoCallingCalleeBottomToolBar(
+            caller: caller, callee: callee, callType: callType),
         SizedBox(height: 105.h),
       ],
     );

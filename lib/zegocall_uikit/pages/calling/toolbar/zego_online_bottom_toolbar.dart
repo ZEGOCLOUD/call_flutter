@@ -10,21 +10,21 @@ import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dar
 import '../../../core/manager/zego_call_manager.dart';
 import './../../styles.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
-import 'calling_bottom_toolbar_button.dart';
+import 'zego_calling_bottom_toolbar_button.dart';
 
-class OnlineBottomToolBar extends StatefulWidget {
+class ZegoOnlineBottomToolBar extends StatefulWidget {
   final ZegoCallType callType;
 
-  const OnlineBottomToolBar({required this.callType, Key? key})
+  const ZegoOnlineBottomToolBar({required this.callType, Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return OnlineBottomToolBarState();
+    return ZegoOnlineBottomToolBarState();
   }
 }
 
-class OnlineBottomToolBarState extends State<OnlineBottomToolBar> {
+class ZegoOnlineBottomToolBarState extends State<ZegoOnlineBottomToolBar> {
   bool isMicEnabled = true;
   bool isCameraEnabled = true;
   bool isSpeakerEnabled = true;
@@ -89,7 +89,7 @@ class OnlineBottomToolBarState extends State<OnlineBottomToolBar> {
   }
 
   Widget cameraButton() {
-    return CallingCalleeBottomToolBarButton(
+    return ZegoCallingCalleeBottomToolBarButton(
       iconWidth: iconWidth(),
       iconHeight: 120.h,
       iconURL: isCameraEnabled
@@ -110,7 +110,7 @@ class OnlineBottomToolBarState extends State<OnlineBottomToolBar> {
   }
 
   Widget microphoneButton() {
-    return CallingCalleeBottomToolBarButton(
+    return ZegoCallingCalleeBottomToolBarButton(
       iconWidth: iconWidth(),
       iconHeight: 120.h,
       iconURL: isMicEnabled
@@ -131,7 +131,7 @@ class OnlineBottomToolBarState extends State<OnlineBottomToolBar> {
   }
 
   Widget endButton() {
-    return CallingCalleeBottomToolBarButton(
+    return ZegoCallingCalleeBottomToolBarButton(
       iconWidth: 120.w,
       iconHeight: 120.h,
       iconURL: StyleIconUrls.toolbarBottomEnd,
@@ -142,7 +142,7 @@ class OnlineBottomToolBarState extends State<OnlineBottomToolBar> {
   }
 
   Widget cameraSwitchButton() {
-    return CallingCalleeBottomToolBarButton(
+    return ZegoCallingCalleeBottomToolBarButton(
       iconWidth: iconWidth(),
       iconHeight: 120.h,
       iconURL: StyleIconUrls.toolbarBottomSwitchCamera,
@@ -173,7 +173,7 @@ class OnlineBottomToolBarState extends State<OnlineBottomToolBar> {
     } else {
       audioIconURL = getAudioRouteIconURLBySpeaker(isSpeakerEnabled);
     }
-    return CallingCalleeBottomToolBarButton(
+    return ZegoCallingCalleeBottomToolBarButton(
       iconWidth: iconWidth(),
       iconHeight: 120.h,
       iconURL: audioIconURL,

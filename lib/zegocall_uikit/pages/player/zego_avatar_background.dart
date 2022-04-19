@@ -5,12 +5,12 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import './../../utils/user_avatar.dart';
+import './../../utils/zego_user_avatar.dart';
 
-class AvatarBackgroundView extends StatelessWidget {
+class ZegoAvatarBackgroundView extends StatelessWidget {
   final String userName;
 
-  const AvatarBackgroundView({required this.userName, Key? key})
+  const ZegoAvatarBackgroundView({required this.userName, Key? key})
       : super(key: key);
 
   @override

@@ -7,26 +7,26 @@ import '../../core/manager/zego_call_manager.dart';
 import './../../../zegocall/core/manager/zego_service_manager.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
-import './../../core/machine/calling_machine.dart';
-import 'calling_callee_view.dart';
-import 'calling_caller_view.dart';
-import 'online_video_view.dart';
-import 'online_voice_view.dart';
+import './../../core/machine/zego_calling_machine.dart';
+import 'zego_calling_callee_view.dart';
+import 'zego_calling_caller_view.dart';
+import 'zego_online_video_view.dart';
+import 'zego_online_voice_view.dart';
 
-class CallingPage extends StatefulWidget {
+class ZegoCallingPage extends StatefulWidget {
   // ignore: public_member_api_docs
-  const CallingPage({
+  const ZegoCallingPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  _CallingPageState createState() => _CallingPageState();
+  ZegoCallingPageState createState() => ZegoCallingPageState();
 }
 
-class _CallingPageState extends State<CallingPage> {
+class ZegoCallingPageState extends State<ZegoCallingPage> {
   CallingState currentState = CallingState.kIdle;
 
-  final CallingMachine machine =
+  final ZegoCallingMachine machine =
       ZegoCallManager.shared.pageHandler.callingMachine;
 
   late ZegoUserInfo caller;
@@ -86,15 +86,15 @@ class _CallingPageState extends State<CallingPage> {
             ? ZegoCallType.kZegoCallTypeVideo
             : ZegoCallType.kZegoCallTypeVoice;
         return localUserIsCaller
-            ? CallingCallerView(
+            ? ZegoCallingCallerView(
                 caller: caller, callee: callee, callType: callType)
-            : CallingCalleeView(
+            : ZegoCallingCalleeView(
                 caller: caller, callee: callee, callType: callType);
       case CallingState.kOnlineVoice:
-        return OnlineVoiceView(
+        return ZegoOnlineVoiceView(
             callID: callID, localUser: localUser, remoteUser: remoteUser);
       case CallingState.kOnlineVideo:
-        return OnlineVideoView(
+        return ZegoOnlineVideoView(
             callID: callID, localUser: localUser, remoteUser: remoteUser);
     }
   }

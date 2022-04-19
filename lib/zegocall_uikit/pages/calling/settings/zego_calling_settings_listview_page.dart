@@ -10,10 +10,10 @@ import '../../../../zegocall/core/manager/zego_service_manager.dart';
 import './../../styles.dart';
 import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
-import 'calling_settings_defines.dart';
-import 'calling_settings_item.dart';
+import 'zego_calling_settings_defines.dart';
+import 'zego_calling_settings_item.dart';
 
-class CallingSettingsListViewPage<T> extends StatelessWidget {
+class ZegoCallingSettingsListViewPage<T> extends StatelessWidget {
   final String title;
 
   final String selectedValue;
@@ -22,7 +22,7 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
   final ValueChanged<int> pageIndexChanged;
   final void Function(T) onSelected;
 
-  const CallingSettingsListViewPage(
+  const ZegoCallingSettingsListViewPage(
       {required this.title,
       required this.selectedValue,
       required this.model,
@@ -79,7 +79,7 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
       itemBuilder: (_, i) {
         var key = model.keys.elementAt(i);
         String value = model[key]!;
-        return CallingSettingsListItem<T>(
+        return ZegoCallingSettingsListItem<T>(
           title: value,
           value: key,
           isChecked: selectedValue == value,
@@ -94,12 +94,12 @@ class CallingSettingsListViewPage<T> extends StatelessWidget {
   }
 }
 
-class CallingVideoResolutionSettingsPage extends StatelessWidget {
+class ZegoCallingVideoResolutionSettingsPage extends StatelessWidget {
   final ValueChanged<int> pageIndexChanged;
   final ValueChanged<String> valueChanged;
   final String selectedValue;
 
-  const CallingVideoResolutionSettingsPage(
+  const ZegoCallingVideoResolutionSettingsPage(
       {required this.pageIndexChanged,
       required this.valueChanged,
       required this.selectedValue,
@@ -108,7 +108,7 @@ class CallingVideoResolutionSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CallingSettingsListViewPage<ZegoVideoResolution>(
+    return ZegoCallingSettingsListViewPage<ZegoVideoResolution>(
         title: AppLocalizations.of(context)!.roomSettingsPageVideoResolution,
         selectedValue: selectedValue,
         model: listModel(context),
@@ -140,12 +140,12 @@ class CallingVideoResolutionSettingsPage extends StatelessWidget {
   }
 }
 
-class CallingAudioBitrateSettingsPage extends StatelessWidget {
+class ZegoCallingAudioBitrateSettingsPage extends StatelessWidget {
   final ValueChanged<int> pageIndexChanged;
   final ValueChanged<String> valueChanged;
   final String selectedValue;
 
-  const CallingAudioBitrateSettingsPage(
+  const ZegoCallingAudioBitrateSettingsPage(
       {required this.pageIndexChanged,
       required this.valueChanged,
       required this.selectedValue,
@@ -154,7 +154,7 @@ class CallingAudioBitrateSettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CallingSettingsListViewPage<ZegoAudioBitrate>(
+    return ZegoCallingSettingsListViewPage<ZegoAudioBitrate>(
         title: AppLocalizations.of(context)!.roomSettingsPageAudioBitrate,
         selectedValue: selectedValue,
         model: listModel(context),

@@ -8,27 +8,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
-import './../../core/machine/mini_video_calling_overlay_machine.dart';
-import './../player/video_player.dart';
+import './../../core/machine/zego_mini_video_calling_overlay_machine.dart';
+import './../player/zego_video_player.dart';
 
-class MiniVideoCallingOverlay extends StatefulWidget {
-  const MiniVideoCallingOverlay({
+class ZegoMiniVideoCallingOverlay extends StatefulWidget {
+  const ZegoMiniVideoCallingOverlay({
     required this.machine,
     required this.caller,
     required this.callee,
     Key? key,
   }) : super(key: key);
 
-  final MiniVideoCallingOverlayMachine machine;
+  final ZegoMiniVideoCallingOverlayMachine machine;
   final ZegoUserInfo caller;
   final ZegoUserInfo callee;
 
   @override
-  _MiniVideoCallingOverlayState createState() =>
-      _MiniVideoCallingOverlayState();
+  ZegoMiniVideoCallingOverlayState createState() =>
+      ZegoMiniVideoCallingOverlayState();
 }
 
-class _MiniVideoCallingOverlayState extends State<MiniVideoCallingOverlay> {
+class ZegoMiniVideoCallingOverlayState extends State<ZegoMiniVideoCallingOverlay> {
   MiniVideoCallingOverlayState currentState =
       MiniVideoCallingOverlayState.kIdle;
 
@@ -69,10 +69,10 @@ class _MiniVideoCallingOverlayState extends State<MiniVideoCallingOverlay> {
       case MiniVideoCallingOverlayState.kBothWithoutVideo:
         return const SizedBox();
       case MiniVideoCallingOverlayState.kLocalUserWithVideo:
-        return createVideoView(VideoPlayer(
+        return createVideoView(ZegoVideoPlayer(
             userID: localUser.userID, userName: localUser.userName));
       case MiniVideoCallingOverlayState.kRemoteUserWithVideo:
-        return createVideoView(VideoPlayer(
+        return createVideoView(ZegoVideoPlayer(
             userID: remoteUser.userID, userName: remoteUser.userName));
     }
   }

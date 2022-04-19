@@ -6,23 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import './../../../../zegocall/core/interface_imp/zego_device_service_impl.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
-import 'calling_settings_defines.dart';
-import 'calling_settings_listview_page.dart';
-import 'calling_settings_page.dart';
+import 'zego_calling_settings_defines.dart';
+import 'zego_calling_settings_listview_page.dart';
+import 'zego_calling_settings_page.dart';
 
-class CallingSettingsView extends StatefulWidget {
+class ZegoCallingSettingsView extends StatefulWidget {
   final ZegoCallType callType;
 
-  const CallingSettingsView({required this.callType, Key? key})
+  const ZegoCallingSettingsView({required this.callType, Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return CallingSettingsViewState();
+    return ZegoCallingSettingsViewState();
   }
 }
 
-class CallingSettingsViewState extends State<CallingSettingsView> {
+class ZegoCallingSettingsViewState extends State<ZegoCallingSettingsView> {
   int pageIndex = 0;
   String audioBitrateSubTitle = "";
   String videoResolutionSubTitle = "";
@@ -61,16 +61,16 @@ class CallingSettingsViewState extends State<CallingSettingsView> {
     return IndexedStack(
       index: pageIndex,
       children: [
-        CallingSettingsPage(
+        ZegoCallingSettingsPage(
             callType: widget.callType,
             pageIndexChanged: updateCurrentPage,
             audioBitrateSubTitle: audioBitrateSubTitle,
             videoResolutionSubTitle: videoResolutionSubTitle),
-        CallingAudioBitrateSettingsPage(
+        ZegoCallingAudioBitrateSettingsPage(
             pageIndexChanged: updateCurrentPage,
             valueChanged: updateAudioBitrate,
             selectedValue: audioBitrateSubTitle),
-        CallingVideoResolutionSettingsPage(
+        ZegoCallingVideoResolutionSettingsPage(
             pageIndexChanged: updateCurrentPage,
             valueChanged: updateVideoResolution,
             selectedValue: videoResolutionSubTitle),

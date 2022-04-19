@@ -14,24 +14,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/manager/zego_call_manager.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
-import './../../core/machine/mini_overlay_machine.dart';
-import 'mini_overlay_be_invited.dart';
-import 'mini_video_calling_overlay.dart';
-import 'mini_voice_calling_overlay.dart';
+import './../../core/machine/zego_mini_overlay_machine.dart';
+import 'zego_mini_overlay_be_invited.dart';
+import 'zego_mini_video_calling_overlay.dart';
+import 'zego_mini_voice_calling_overlay.dart';
 
-class MiniOverlayPage extends StatefulWidget {
-  const MiniOverlayPage({
+class ZegoMiniOverlayPage extends StatefulWidget {
+  const ZegoMiniOverlayPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  _MiniOverlayPageState createState() => _MiniOverlayPageState();
+  ZegoMiniOverlayPageState createState() => ZegoMiniOverlayPageState();
 }
 
-class _MiniOverlayPageState extends State<MiniOverlayPage> {
+class ZegoMiniOverlayPageState extends State<ZegoMiniOverlayPage> {
   MiniOverlayPageState currentState = MiniOverlayPageState.kIdle;
 
-  MiniOverlayMachine machine =
+  ZegoMiniOverlayMachine machine =
       ZegoCallManager.shared.pageHandler.miniOverlayMachine;
 
   Size overlaySize = const Size(0, 0);
@@ -120,7 +120,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                 onTap: () {
                   ZegoCallManager.shared.onMiniOverlayRestore();
                 },
-                child: MiniVoiceCallingOverlay(
+                child: ZegoMiniVoiceCallingOverlay(
                   machine: machine.voiceCallingOverlayMachine,
                 ),
               ),
@@ -142,7 +142,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                   topLeft: Radius.circular(20.0.w),
                   bottomLeft: Radius.circular(20.0.w))),
           child: Stack(children: [
-            MiniVideoCallingOverlay(
+            ZegoMiniVideoCallingOverlay(
                 machine: machine.videoCallingOverlayMachine,
                 caller: caller,
                 callee: callee),
@@ -171,7 +171,7 @@ class _MiniOverlayPageState extends State<MiniOverlayPage> {
                   borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
                 ),
                 child:
-                    MiniOverlayBeInvite(caller: caller, callType: callType)));
+                    ZegoMiniOverlayBeInvite(caller: caller, callType: callType)));
     }
   }
 

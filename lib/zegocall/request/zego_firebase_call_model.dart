@@ -73,7 +73,7 @@ extension FirebaseCallTypeExtension on FirebaseCallType {
   }
 }
 
-class FirebaseCallUser {
+class ZegoFirebaseCallUser {
   String callerID = "";
   String userID = "";
   String userName = "";
@@ -83,9 +83,9 @@ class FirebaseCallUser {
   int heartbeatTime = 0;
   FirebaseCallStatus status = FirebaseCallStatus.connecting;
 
-  FirebaseCallUser.empty();
+  ZegoFirebaseCallUser.empty();
 
-  FirebaseCallUser.clone(FirebaseCallUser object) {
+  ZegoFirebaseCallUser.clone(ZegoFirebaseCallUser object) {
     callerID = object.callerID;
     userID = object.userID;
     userName = object.userName;
@@ -104,7 +104,7 @@ class ZegoFirebaseCallModel {
 
   FirebaseCallType callType = FirebaseCallType.voice;
   FirebaseCallStatus callStatus = FirebaseCallStatus.connecting;
-  List<FirebaseCallUser> users = [];
+  List<ZegoFirebaseCallUser> users = [];
 
   ZegoFirebaseCallModel.empty();
 
@@ -120,7 +120,7 @@ class ZegoFirebaseCallModel {
 
     var usersDict = dict["users"] as Map<dynamic, dynamic>;
     usersDict.forEach((userID, userDict) {
-      var user = FirebaseCallUser.empty();
+      var user = ZegoFirebaseCallUser.empty();
       user.userID = userID;
       user.userName = userDict["user_name"] as String;
       user.callerID = userDict["caller_id"] as String;
@@ -164,8 +164,8 @@ class ZegoFirebaseCallModel {
     return dict;
   }
 
-  FirebaseCallUser getUser(String userID) {
+  ZegoFirebaseCallUser getUser(String userID) {
     return users.firstWhere((user) => user.userID == userID,
-        orElse: () => FirebaseCallUser.empty());
+        orElse: () => ZegoFirebaseCallUser.empty());
   }
 }

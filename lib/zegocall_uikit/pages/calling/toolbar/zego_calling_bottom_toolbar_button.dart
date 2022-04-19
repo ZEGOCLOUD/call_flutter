@@ -7,14 +7,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import './../../styles.dart';
 
-class CallingCalleeBottomToolBarButton extends StatelessWidget {
+class ZegoCallingCalleeBottomToolBarButton extends StatelessWidget {
   final String text;
   final String iconURL;
   final double iconWidth;
   final double iconHeight;
   final VoidCallback onTap;
 
-  const CallingCalleeBottomToolBarButton(
+  const ZegoCallingCalleeBottomToolBarButton(
       {this.text = "",
       required this.iconURL,
       required this.iconWidth,

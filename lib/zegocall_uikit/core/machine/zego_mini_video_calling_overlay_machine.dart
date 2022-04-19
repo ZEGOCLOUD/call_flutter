@@ -15,7 +15,7 @@ enum MiniVideoCallingOverlayState {
 typedef MiniVideoCallingOverlayMachineStateChanged = void Function(
     MiniVideoCallingOverlayState);
 
-class MiniVideoCallingOverlayMachine {
+class ZegoMiniVideoCallingOverlayMachine {
   final machine = sm.Machine<MiniVideoCallingOverlayState>();
   MiniVideoCallingOverlayMachineStateChanged? onStateChanged;
 

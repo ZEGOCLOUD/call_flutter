@@ -7,14 +7,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../../styles.dart';
-import './../../../utils/show_bottom_sheet.dart';
+import './../../../utils/zego_bottom_sheet.dart';
 
-class OnlineTopToolBar extends StatefulWidget {
+class ZegoOnlineTopToolBar extends StatefulWidget {
   final String callID;
   final Widget settingWidget;
   final double settingWidgetHeight;
 
-  const OnlineTopToolBar(
+  const ZegoOnlineTopToolBar(
       {required this.callID,
       required this.settingWidget,
       required this.settingWidgetHeight,
@@ -23,11 +23,11 @@ class OnlineTopToolBar extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return OnlineTopToolBarState();
+    return ZegoOnlineTopToolBarState();
   }
 }
 
-class OnlineTopToolBarState extends State<OnlineTopToolBar> {
+class ZegoOnlineTopToolBarState extends State<ZegoOnlineTopToolBar> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(

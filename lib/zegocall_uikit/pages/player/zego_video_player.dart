@@ -6,22 +6,22 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
-import 'avatar_background.dart';
+import 'zego_avatar_background.dart';
 
-class VideoPlayer extends StatefulWidget {
+class ZegoVideoPlayer extends StatefulWidget {
   final String userID;
   final String userName;
 
-  const VideoPlayer({required this.userID, required this.userName, Key? key})
+  const ZegoVideoPlayer({required this.userID, required this.userName, Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return VideoPlayerState();
+    return ZegoVideoPlayerState();
   }
 }
 
-class VideoPlayerState extends State<VideoPlayer> {
+class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
   int playingViewID = 0;
 
   @override
@@ -35,7 +35,7 @@ class VideoPlayerState extends State<VideoPlayer> {
           builder: (context, isStreamReady, _) {
             return Visibility(
                 visible: !isStreamReady,
-                child: AvatarBackgroundView(userName: widget.userName));
+                child: ZegoAvatarBackgroundView(userName: widget.userName));
           },
         )
       ],

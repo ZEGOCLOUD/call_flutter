@@ -20,7 +20,7 @@ import 'package:wakelock/wakelock.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/navigation_service.dart';
 import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
 import '../zegocall_uikit/core/manager/zego_call_manager.dart';
-import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
+import './../zegocall_uikit/pages/mini_overlay/zego_mini_overlay_page.dart';
 import 'constants/page_constant.dart';
 import 'core/user_list_manager.dart';
 
@@ -102,7 +102,7 @@ class CallAppState extends State<CallApp> with WidgetsBindingObserver {
       routes: materialRoutes,
       builder: EasyLoading.init(builder: (context, child) {
         return Stack(
-          children: [child!, const MiniOverlayPage()],
+          children: [child!, const ZegoMiniOverlayPage()],
         );
       }),
     );

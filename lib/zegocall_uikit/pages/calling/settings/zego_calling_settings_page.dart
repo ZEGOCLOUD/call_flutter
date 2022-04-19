@@ -11,17 +11,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../zegocall/core/manager/zego_service_manager.dart';
 import './../../styles.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
-import 'calling_settings_defines.dart';
-import 'calling_settings_item.dart';
+import 'zego_calling_settings_defines.dart';
+import 'zego_calling_settings_item.dart';
 
-class CallingSettingsPage extends HookWidget {
+class ZegoCallingSettingsPage extends HookWidget {
   final ZegoCallType callType;
 
   final ValueChanged<int> pageIndexChanged;
   final String audioBitrateSubTitle;
   final String videoResolutionSubTitle;
 
-  const CallingSettingsPage(
+  const ZegoCallingSettingsPage(
       {required this.callType,
       required this.pageIndexChanged,
       required this.audioBitrateSubTitle,
@@ -64,7 +64,7 @@ class CallingSettingsPage extends HookWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CallingSettingsSwitchItem(
+        ZegoCallingSettingsSwitchItem(
           title: AppLocalizations.of(context)!.roomSettingsPageNoiseSuppression,
           defaultValue: noiseSlimming.value,
           onTap: () {
@@ -74,7 +74,7 @@ class CallingSettingsPage extends HookWidget {
             noiseSlimming.value = deviceService.noiseSlimming;
           },
         ),
-        CallingSettingsSwitchItem(
+        ZegoCallingSettingsSwitchItem(
           title: AppLocalizations.of(context)!.roomSettingsPageEchoCancellation,
           defaultValue: echoCancellation.value,
           onTap: () {
@@ -84,7 +84,7 @@ class CallingSettingsPage extends HookWidget {
             echoCancellation.value = deviceService.echoCancellation;
           },
         ),
-        CallingSettingsSwitchItem(
+        ZegoCallingSettingsSwitchItem(
           title: AppLocalizations.of(context)!.roomSettingsPageMicVolume,
           defaultValue: volumeAdjustment.value,
           onTap: () {
@@ -95,7 +95,7 @@ class CallingSettingsPage extends HookWidget {
           },
         ),
         isVideo
-            ? CallingSettingsSwitchItem(
+            ? ZegoCallingSettingsSwitchItem(
                 title: AppLocalizations.of(context)!.roomSettingsPageMinoring,
                 defaultValue: isMirroring.value,
                 onTap: () {
@@ -107,7 +107,7 @@ class CallingSettingsPage extends HookWidget {
               )
             : const SizedBox(),
         isVideo
-            ? CallingSettingsPageItem(
+            ? ZegoCallingSettingsPageItem(
                 title: AppLocalizations.of(context)!
                     .roomSettingsPageVideoResolution,
                 subTitle: videoResolutionSubTitle,
@@ -117,7 +117,7 @@ class CallingSettingsPage extends HookWidget {
                 },
               )
             : const SizedBox(),
-        CallingSettingsPageItem(
+        ZegoCallingSettingsPageItem(
           title: AppLocalizations.of(context)!.roomSettingsPageAudioBitrate,
           subTitle: audioBitrateSubTitle,
           onTap: () {

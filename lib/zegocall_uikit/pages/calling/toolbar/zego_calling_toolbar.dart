@@ -10,17 +10,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import '../../../core/manager/zego_call_manager.dart';
 import './../../styles.dart';
-import './../../../utils/show_bottom_sheet.dart';
+import './../../../utils/zego_bottom_sheet.dart';
 import './../../../../zegocall/core/model/zego_user_info.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
-import './../settings/calling_settings.dart';
-import 'calling_bottom_toolbar_button.dart';
+import './../settings/zego_calling_settings.dart';
+import 'zego_calling_bottom_toolbar_button.dart';
 
-class CallingCallerVideoTopToolBarButton extends StatelessWidget {
+class ZegoCallingCallerVideoTopToolBarButton extends StatelessWidget {
   final String iconURL;
   final VoidCallback onTap;
 
-  const CallingCallerVideoTopToolBarButton(
+  const ZegoCallingCallerVideoTopToolBarButton(
       {required this.iconURL, required this.onTap, Key? key})
       : super(key: key);
 
@@ -36,8 +36,8 @@ class CallingCallerVideoTopToolBarButton extends StatelessWidget {
   }
 }
 
-class CallingCallerVideoTopToolBar extends HookWidget {
-  const CallingCallerVideoTopToolBar({Key? key}) : super(key: key);
+class ZegoCallingCallerVideoTopToolBar extends HookWidget {
+  const ZegoCallingCallerVideoTopToolBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class CallingCallerVideoTopToolBar extends HookWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          CallingCallerVideoTopToolBarButton(
+          ZegoCallingCallerVideoTopToolBarButton(
             iconURL: StyleIconUrls.toolbarTopSwitchCamera,
             onTap: () {
               ZegoServiceManager.shared.deviceService
@@ -66,13 +66,13 @@ class CallingCallerVideoTopToolBar extends HookWidget {
             },
           ),
           SizedBox(width: 64.w),
-          CallingCallerVideoTopToolBarButton(
+          ZegoCallingCallerVideoTopToolBarButton(
             iconURL: StyleIconUrls.toolbarTopSettings,
             onTap: () {
               showModalBottomSheetWithStyle(
                   context,
                   763.h,
-                  const CallingSettingsView(
+                  const ZegoCallingSettingsView(
                       callType: ZegoCallType.kZegoCallTypeVideo));
             },
           ),
@@ -82,8 +82,8 @@ class CallingCallerVideoTopToolBar extends HookWidget {
   }
 }
 
-class CallingCallerBottomToolBar extends StatelessWidget {
-  const CallingCallerBottomToolBar({Key? key}) : super(key: key);
+class ZegoCallingCallerBottomToolBar extends StatelessWidget {
+  const ZegoCallingCallerBottomToolBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +104,8 @@ class CallingCallerBottomToolBar extends StatelessWidget {
   }
 }
 
-class CallingCalleeBottomToolBar extends StatelessWidget {
-  const CallingCalleeBottomToolBar(
+class ZegoCallingCalleeBottomToolBar extends StatelessWidget {
+  const ZegoCallingCalleeBottomToolBar(
       {required this.caller,
       required this.callee,
       required this.callType,
@@ -124,7 +124,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CallingCalleeBottomToolBarButton(
+            ZegoCallingCalleeBottomToolBarButton(
                 text: AppLocalizations.of(context)!.callPageActionDecline,
                 iconWidth: 120.w,
                 iconHeight: 120.h,
@@ -135,7 +135,7 @@ class CallingCalleeBottomToolBar extends StatelessWidget {
             SizedBox(
               width: 230.w,
             ),
-            CallingCalleeBottomToolBarButton(
+            ZegoCallingCalleeBottomToolBarButton(
                 text: AppLocalizations.of(context)!.callPageActionAccept,
                 iconWidth: 120.w,
                 iconHeight: 120.h,

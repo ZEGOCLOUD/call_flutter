@@ -8,13 +8,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
-import './../player/video_player.dart';
-import 'settings/calling_settings.dart';
-import 'toolbar/online_bottom_toolbar.dart';
-import 'toolbar/online_top_toolbar.dart';
+import './../player/zego_video_player.dart';
+import 'settings/zego_calling_settings.dart';
+import 'toolbar/zego_online_bottom_toolbar.dart';
+import 'toolbar/zego_online_top_toolbar.dart';
 
-class OnlineVideoView extends StatelessWidget {
-  const OnlineVideoView(
+class ZegoOnlineVideoView extends StatelessWidget {
+  const ZegoOnlineVideoView(
       {required this.callID,
       required this.localUser,
       required this.remoteUser,
@@ -35,7 +35,7 @@ class OnlineVideoView extends StatelessWidget {
             child: SizedBox(
                 width: 190.w,
                 height: 338.h,
-                child: VideoPlayer(
+                child: ZegoVideoPlayer(
                     userID: targetUser.userID, userName: targetUser.userName))),
       ),
     );
@@ -46,13 +46,13 @@ class OnlineVideoView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        OnlineTopToolBar(
+        ZegoOnlineTopToolBar(
             callID: callID,
             settingWidgetHeight: 763.h,
-            settingWidget: const CallingSettingsView(
+            settingWidget: const ZegoCallingSettingsView(
                 callType: ZegoCallType.kZegoCallTypeVideo)),
         const Expanded(child: SizedBox()),
-        const OnlineBottomToolBar(callType: ZegoCallType.kZegoCallTypeVideo),
+        const ZegoOnlineBottomToolBar(callType: ZegoCallType.kZegoCallTypeVideo),
         SizedBox(height: 105.h),
       ],
     );
@@ -62,7 +62,7 @@ class OnlineVideoView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        VideoPlayer(
+        ZegoVideoPlayer(
           userID: localUser.userID,
           userName: localUser.userName,
         ),

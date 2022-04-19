@@ -10,23 +10,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import '../../core/manager/zego_call_manager.dart';
 import './../styles.dart';
-import './../../core/machine/mini_voice_calling_overlay_machine.dart';
+import './../../core/machine/zego_mini_voice_calling_overlay_machine.dart';
 
-class MiniVoiceCallingOverlay extends StatefulWidget {
-  const MiniVoiceCallingOverlay(
+class ZegoMiniVoiceCallingOverlay extends StatefulWidget {
+  const ZegoMiniVoiceCallingOverlay(
       {required this.machine,
       // this.defaultState = MiniVoiceCallingOverlayState.kIdle,
       Key? key})
       : super(key: key);
 
-  final MiniVoiceCallingOverlayMachine machine;
+  final ZegoMiniVoiceCallingOverlayMachine machine;
 
   @override
-  _MiniVoiceCallingOverlayState createState() =>
-      _MiniVoiceCallingOverlayState();
+  ZegoMiniVoiceCallingOverlayState createState() =>
+      ZegoMiniVoiceCallingOverlayState();
 }
 
-class _MiniVoiceCallingOverlayState extends State<MiniVoiceCallingOverlay> {
+class ZegoMiniVoiceCallingOverlayState extends State<ZegoMiniVoiceCallingOverlay> {
   MiniVoiceCallingOverlayState currentState =
       MiniVoiceCallingOverlayState.kIdle;
 

@@ -8,12 +8,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import '../../core/manager/zego_call_manager.dart';
 import './../styles.dart';
-import './../../utils/user_avatar.dart';
+import './../../utils/zego_user_avatar.dart';
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 
-class MiniOverlayBeInvite extends StatefulWidget {
-  const MiniOverlayBeInvite({
+class ZegoMiniOverlayBeInvite extends StatefulWidget {
+  const ZegoMiniOverlayBeInvite({
     Key? key,
     required this.caller,
     required this.callType,
@@ -23,10 +23,10 @@ class MiniOverlayBeInvite extends StatefulWidget {
   final ZegoCallType callType;
 
   @override
-  _MiniOverlayBeInvite createState() => _MiniOverlayBeInvite();
+  ZegoMiniOverlayBeInviteState createState() => ZegoMiniOverlayBeInviteState();
 }
 
-class _MiniOverlayBeInvite extends State<MiniOverlayBeInvite> {
+class ZegoMiniOverlayBeInviteState extends State<ZegoMiniOverlayBeInvite> {
   @override
   Widget build(BuildContext context) {
     var avatarIndex = getUserAvatarIndex(widget.caller.userName);

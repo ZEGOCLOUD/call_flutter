@@ -7,12 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import './../../styles.dart';
 
-class CallingSettingsSwitchItem extends StatelessWidget {
+class ZegoCallingSettingsSwitchItem extends StatelessWidget {
   final String title;
   final bool defaultValue;
   final VoidCallback onTap;
 
-  const CallingSettingsSwitchItem(
+  const ZegoCallingSettingsSwitchItem(
       {required this.title,
       required this.onTap,
       this.defaultValue = false,
@@ -39,12 +39,12 @@ class CallingSettingsSwitchItem extends StatelessWidget {
   }
 }
 
-class CallingSettingsPageItem extends StatelessWidget {
+class ZegoCallingSettingsPageItem extends StatelessWidget {
   final String title;
   final String subTitle;
   final VoidCallback onTap;
 
-  const CallingSettingsPageItem(
+  const ZegoCallingSettingsPageItem(
       {required this.title,
       required this.subTitle,
       required this.onTap,
@@ -71,14 +71,14 @@ class CallingSettingsPageItem extends StatelessWidget {
   }
 }
 
-class CallingSettingsListItem<T> extends StatelessWidget {
+class ZegoCallingSettingsListItem<T> extends StatelessWidget {
   final String title;
   final T value;
   final bool isChecked;
 
   final void Function(T) onSelected;
 
-  const CallingSettingsListItem(
+  const ZegoCallingSettingsListItem(
       {required this.title,
       required this.value,
       required this.isChecked,

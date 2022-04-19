@@ -18,7 +18,7 @@ enum CallingState {
 
 typedef CallingMachineStateChanged = void Function(CallingState);
 
-class CallingMachine {
+class ZegoCallingMachine {
   final machine = sm.Machine<CallingState>();
   CallingMachineStateChanged? onStateChanged;
 

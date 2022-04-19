@@ -3,26 +3,26 @@ import 'package:flutter/cupertino.dart';
 
 // Project imports:
 import '../../../zegocall/core/manager/zego_service_manager.dart';
-import 'avatar_background.dart';
+import 'zego_avatar_background.dart';
 
-class AudioPlayer extends StatefulWidget {
+class ZegoAudioPlayer extends StatefulWidget {
   final String remoteUserID;
   final String remoteUserName;
 
-  const AudioPlayer(
+  const ZegoAudioPlayer(
       {required this.remoteUserID, required this.remoteUserName, Key? key})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return AudioPlayerState();
+    return ZegoAudioPlayerState();
   }
 }
 
-class AudioPlayerState extends State<AudioPlayer> {
+class ZegoAudioPlayerState extends State<ZegoAudioPlayer> {
   @override
   Widget build(BuildContext context) {
-    return AvatarBackgroundView(userName: widget.remoteUserName);
+    return ZegoAvatarBackgroundView(userName: widget.remoteUserName);
   }
 
   @override
