@@ -9,9 +9,16 @@ class ZegoPageRoute {
   static var shared = ZegoPageRoute();
 
   String currentRouteName = "";
-  String callingBackRouteName = "";
 
-  void navigatorPush(String routeName, {bool isForce = false}) {
+  String callingPageRouteName = "";
+  String callingParentPageRouteName = "";
+
+  void init(String callingPageRouteName, String callingParentPageRouteName) {
+    this.callingPageRouteName = callingPageRouteName;
+    this.callingParentPageRouteName = callingParentPageRouteName;
+  }
+
+  void push(String routeName, {bool isForce = false}) {
     if (currentRouteName == routeName && !isForce) {
       logInfo('$routeName is current route name');
       return;
@@ -19,22 +26,27 @@ class ZegoPageRoute {
 
     logInfo('push $routeName');
 
-    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
 
-    // var n = ModalRoute.of(context)?.settings.name;
     currentRouteName = routeName;
     Navigator.pushNamed(context, routeName);
   }
 
-  void navigatorPop() {
-    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
+  void pop() {
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     Navigator.pop(_navigationService.navigatorKey.currentContext!);
   }
 
-  void navigatePopCalling({bool isForce = false}) {
-    assert(callingBackRouteName.isNotEmpty);
+  void popToCallingParentPage() {
+    assert(callingParentPageRouteName.isNotEmpty);
+    if (callingParentPageRouteName.isEmpty) {
+      logInfo('parent page route name is empty');
+      return;
+    }
 
-    navigatorPush(callingBackRouteName, isForce: isForce);
+    push(callingParentPageRouteName);
   }
 }

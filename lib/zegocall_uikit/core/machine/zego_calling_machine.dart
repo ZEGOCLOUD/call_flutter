@@ -36,24 +36,32 @@ class ZegoCallingMachine {
 
     stateIdle = machine.newState(CallingState.kIdle)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling();
+        ZegoPageRoute.shared.popToCallingParentPage();
       }); // default state
 
     stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
     stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
     stateOnlineVoice = machine.newState(CallingState.kOnlineVoice)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
     stateOnlineVideo = machine.newState(CallingState.kOnlineVideo)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
   }
 

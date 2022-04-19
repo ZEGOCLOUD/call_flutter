@@ -56,13 +56,13 @@ class ZegoMiniOverlayMachine {
       }); //  default state;
     stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling();
+        ZegoPageRoute.shared.popToCallingParentPage();
 
         // sync current voice state
       });
     stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling();
+        ZegoPageRoute.shared.popToCallingParentPage();
 
         // sync current video state
       });

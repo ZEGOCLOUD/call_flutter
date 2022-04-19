@@ -16,7 +16,6 @@ class PageRouteNames {
   static const String onlineList = "/online_list";
 }
 
-
 Map<String, WidgetBuilder> materialRoutes = {
   PageRouteNames.login: (context) => const GoogleLoginPage(),
   PageRouteNames.welcome: (context) => const WelcomePage(),
