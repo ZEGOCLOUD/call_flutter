@@ -6,9 +6,9 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import '../../../logger.dart';
-import './../../../zegocall/core/interface/zego_event_handler.dart';
-import './../interface/zego_stream_service.dart';
-import './../manager/zego_service_manager.dart';
+import '../interface/zego_event_handler.dart';
+import '../interface/zego_stream_service.dart';
+import '../manager/zego_service_manager.dart';
 
 class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   Map<String, ValueNotifier<bool>> streamCameraStateNotifiers = {};

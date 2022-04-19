@@ -1,5 +1,5 @@
 // Project imports:
-import './../core/zego_call_defines.dart';
+import '../core/zego_call_defines.dart';
 import 'zego_command_manager.dart';
 
 class ZegoCommand {

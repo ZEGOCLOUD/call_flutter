@@ -2,9 +2,9 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
+import '../delegate/zego_room_service_delegate.dart';
+import '../model/zego_room_info.dart';
 import '../zego_call_defines.dart';
-import './../delegate/zego_room_service_delegate.dart';
-import './../model/zego_room_info.dart';
 import 'zego_service.dart';
 
 /// Class LiveAudioRoom information management.

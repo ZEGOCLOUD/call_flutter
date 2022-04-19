@@ -6,13 +6,14 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/core/uikit_manager.dart';
-import 'package:zego_call_flutter/zegocall_demo/pages/navigation_service.dart';
 import 'logger.dart';
 import 'zegocall_demo/call_demo_app.dart';
+import 'zegocall_demo/constants/page_constant.dart';
 import 'zegocall_demo/core/login_manager.dart';
+import 'zegocall_demo/core/uikit_manager.dart';
 import 'zegocall_demo/secret/zego_secret_reader.dart';
 import 'zegocall_uikit/core/manager/zego_call_manager.dart';
+import 'zegocall_uikit/core/page/zego_page_route.dart';
 
 Future<void> main() async {
   initLogger();
@@ -24,7 +25,6 @@ Future<void> main() async {
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    NavigationService().setupLocator();
     runApp(const CallApp());
   });
 }
@@ -32,9 +32,13 @@ Future<void> main() async {
 void initManagers() async {
   LoginManager.shared.init();
 
+  ZegoPageRoute.shared.init(PageRouteNames.calling, PageRouteNames.onlineList);
+
   await ZegoSecretReader.instance.loadKeyCenterData().then((_) {
-    // WARNING: DO NOT USE APPID AND APPSIGN IN PRODUCTION CODE!!!GET IT FROM SERVER INSTEAD!!!
+    // WARNING: DO NOT USE APP ID AND APP SIGN IN PRODUCTION CODE!!!GET IT
+    // FROM SERVER INSTEAD!!!
     ZegoCallManager.shared.initWithAppID(ZegoSecretReader.instance.appID);
+
     UIKitManager.shared.init();
   });
 }

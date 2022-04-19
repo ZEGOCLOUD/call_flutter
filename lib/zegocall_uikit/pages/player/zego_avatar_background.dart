@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import './../../utils/zego_user_avatar.dart';
+import '../../utils/zego_user_avatar.dart';
 
 class ZegoAvatarBackgroundView extends StatelessWidget {
   final String userName;

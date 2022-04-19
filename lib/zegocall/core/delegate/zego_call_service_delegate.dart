@@ -1,6 +1,6 @@
 // Project imports:
-import './../model/zego_user_info.dart';
-import './../zego_call_defines.dart';
+import '../model/zego_user_info.dart';
+import '../zego_call_defines.dart';
 
 mixin ZegoCallServiceDelegate {
   void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type);

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../constants/page_constant.dart';
-import './../../styles.dart';
-import './../../widgets/browser.dart';
+import '../../constants/page_constant.dart';
+import '../../styles.dart';
+import '../../widgets/browser.dart';
 
 class SettingsBrowserItem extends StatelessWidget {
   final String text;

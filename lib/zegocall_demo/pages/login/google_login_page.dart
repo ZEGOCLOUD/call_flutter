@@ -14,10 +14,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
+import '../../constants/page_constant.dart';
+import '../../core/login_manager.dart';
+import '../../styles.dart';
 import '../../widgets/toast_manager.dart';
-import './../../constants/page_constant.dart';
-import './../../core/login_manager.dart';
-import './../../styles.dart';
 import 'google_login_protocol_item.dart';
 
 class GoogleLoginPage extends StatefulWidget {

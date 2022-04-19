@@ -1,12 +1,14 @@
-// Flutter imports:
+// Dart imports:
 import 'dart:math';
+
+// Flutter imports:
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../styles.dart';
+import '../../styles.dart';
 
 class ZegoCallingCalleeBottomToolBarButtonIcon extends StatefulWidget {
   final String iconURL;

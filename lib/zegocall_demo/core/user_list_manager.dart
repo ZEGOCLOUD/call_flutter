@@ -9,7 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
-import './../constants/user_info.dart' as demo;
+import '../constants/user_info.dart' as demo;
 
 class UserListManager extends ChangeNotifier {
   static var shared = UserListManager();

@@ -11,10 +11,10 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../../zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/zego_call_defines.dart';
+import '../../core/machine/zego_mini_overlay_machine.dart';
 import '../../core/manager/zego_call_manager.dart';
-import './../../../zegocall/core/model/zego_user_info.dart';
-import './../../../zegocall/core/zego_call_defines.dart';
-import './../../core/machine/zego_mini_overlay_machine.dart';
 import 'zego_mini_overlay_be_invited.dart';
 import 'zego_mini_video_calling_overlay.dart';
 import 'zego_mini_voice_calling_overlay.dart';

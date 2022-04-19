@@ -1,11 +1,8 @@
-
-
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
 import '../../../logger.dart';
-import '../../../zegocall_demo/constants/page_constant.dart';
 import '../page/zego_page_route.dart';
 
 enum CallingState {
@@ -39,26 +36,32 @@ class ZegoCallingMachine {
 
     stateIdle = machine.newState(CallingState.kIdle)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling();
+        ZegoPageRoute.shared.popToCallingParentPage();
       }); // default state
 
     stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatorPush(PageRouteNames.calling);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
     stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatorPush(PageRouteNames.calling);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
     stateOnlineVoice = machine.newState(CallingState.kOnlineVoice)
       ..onEntry(() {
-        ZegoPageRoute.shared
-            .navigatorPush(PageRouteNames.calling, isForce: true);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
     stateOnlineVideo = machine.newState(CallingState.kOnlineVideo)
       ..onEntry(() {
-        ZegoPageRoute.shared
-            .navigatorPush(PageRouteNames.calling, isForce: true);
+        assert(ZegoPageRoute.shared.callingPageRouteName.isNotEmpty,
+            "calling page rout name is empty");
+        ZegoPageRoute.shared.push(ZegoPageRoute.shared.callingPageRouteName);
       });
   }
 

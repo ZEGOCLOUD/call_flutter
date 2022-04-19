@@ -6,11 +6,11 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../../zegocall/core/model/zego_user_info.dart';
+import '../../../zegocall/core/zego_call_defines.dart';
 import '../../core/manager/zego_call_manager.dart';
-import './../../../zegocall/core/model/zego_user_info.dart';
-import './../../../zegocall/core/zego_call_defines.dart';
-import './../../utils/zego_user_avatar.dart';
-import './../styles.dart';
+import '../../utils/zego_user_avatar.dart';
+import '../styles.dart';
 
 class ZegoMiniOverlayBeInvite extends StatefulWidget {
   const ZegoMiniOverlayBeInvite({

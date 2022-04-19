@@ -7,12 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 // Project imports:
+import '../../constants/page_constant.dart';
+import '../../constants/user_info.dart';
+import '../../core/user_list_manager.dart';
+import '../../styles.dart';
+import '../../widgets/navigation_back_bar.dart';
 import '../../widgets/toast_manager.dart';
-import './../../constants/page_constant.dart';
-import './../../constants/user_info.dart';
-import './../../core/user_list_manager.dart';
-import './../../styles.dart';
-import './../../widgets/navigation_back_bar.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 

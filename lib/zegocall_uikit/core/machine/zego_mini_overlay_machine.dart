@@ -2,8 +2,8 @@
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
 import '../../../logger.dart';
+import '../page/zego_page_route.dart';
 import 'zego_mini_video_calling_overlay_machine.dart';
 import 'zego_mini_voice_calling_overlay_machine.dart';
 
@@ -56,13 +56,13 @@ class ZegoMiniOverlayMachine {
       }); //  default state;
     stateVoiceCalling = machine.newState(MiniOverlayPageState.kVoiceCalling)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling();
+        ZegoPageRoute.shared.popToCallingParentPage();
 
         // sync current voice state
       });
     stateVideoCalling = machine.newState(MiniOverlayPageState.kVideoCalling)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatePopCalling();
+        ZegoPageRoute.shared.popToCallingParentPage();
 
         // sync current video state
       });

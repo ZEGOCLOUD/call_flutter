@@ -14,8 +14,8 @@ import 'package:result_type/result_type.dart';
 // Project imports:
 import '../../logger.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
+import '../../zegocall_uikit/utils/zego_navigation_service.dart';
 import '../constants/page_constant.dart';
-import '../pages/navigation_service.dart';
 import 'user_list_manager.dart';
 
 typedef LoginResult = Result<User, int>;
@@ -73,7 +73,7 @@ class LoginManager extends ChangeNotifier {
 
     user = null;
 
-    final NavigationService _navigationService = locator<NavigationService>();
+    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
     Navigator.pushReplacementNamed(context, PageRouteNames.login);
   }

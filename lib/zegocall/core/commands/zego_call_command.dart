@@ -1,7 +1,7 @@
 // Project imports:
-import './../../../zegocall/core/model/zego_user_info.dart';
-import './../../command/zego_command.dart';
-import './../../core/zego_call_defines.dart';
+import '../../command/zego_command.dart';
+import '../../core/zego_call_defines.dart';
+import '../model/zego_user_info.dart';
 
 class ZegoCallCommand extends ZegoCommand {
   ZegoCallCommand(String callID, ZegoUserInfo caller,

@@ -17,10 +17,10 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/pages/navigation_service.dart';
-import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
 import '../zegocall_uikit/core/manager/zego_call_manager.dart';
-import './../zegocall_uikit/pages/mini_overlay/zego_mini_overlay_page.dart';
+import '../zegocall_uikit/core/page/zego_page_route.dart';
+import '../zegocall_uikit/pages/mini_overlay/zego_mini_overlay_page.dart';
+import '../zegocall_uikit/utils/zego_navigation_service.dart';
 import 'constants/page_constant.dart';
 import 'core/user_list_manager.dart';
 
@@ -46,8 +46,7 @@ class CallAppState extends State<CallApp> with WidgetsBindingObserver {
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider(
-              create: (context) => UserListManager.shared)
+          ChangeNotifierProvider(create: (context) => UserListManager.shared)
         ],
         child: GestureDetector(
           onTap: () {
@@ -67,8 +66,6 @@ class CallAppState extends State<CallApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-
-    ZegoPageRoute.shared.callingBackRouteName = PageRouteNames.onlineList;
 
     WidgetsBinding.instance?.addObserver(this);
   }
@@ -95,7 +92,7 @@ class CallAppState extends State<CallApp> with WidgetsBindingObserver {
         Locale('en', ''), // English, no country code
         Locale('zh', ''),
       ],
-      navigatorKey: locator<NavigationService>().navigatorKey,
+      navigatorKey: locator<ZegoNavigationService>().navigatorKey,
       initialRoute: FirebaseAuth.instance.currentUser != null
           ? PageRouteNames.welcome
           : PageRouteNames.login,

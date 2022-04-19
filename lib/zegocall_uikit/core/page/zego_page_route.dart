@@ -3,15 +3,22 @@ import 'package:flutter/cupertino.dart';
 
 // Project imports:
 import '../../../logger.dart';
-import '../../../zegocall_demo/pages/navigation_service.dart';
+import '../../utils/zego_navigation_service.dart';
 
 class ZegoPageRoute {
   static var shared = ZegoPageRoute();
 
   String currentRouteName = "";
-  String callingBackRouteName = "";
 
-  void navigatorPush(String routeName, {bool isForce = false}) {
+  String callingPageRouteName = "";
+  String callingParentPageRouteName = "";
+
+  void init(String callingPageRouteName, String callingParentPageRouteName) {
+    this.callingPageRouteName = callingPageRouteName;
+    this.callingParentPageRouteName = callingParentPageRouteName;
+  }
+
+  void push(String routeName, {bool isForce = false}) {
     if (currentRouteName == routeName && !isForce) {
       logInfo('$routeName is current route name');
       return;
@@ -19,22 +26,27 @@ class ZegoPageRoute {
 
     logInfo('push $routeName');
 
-    final NavigationService _navigationService = locator<NavigationService>();
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
 
-    // var n = ModalRoute.of(context)?.settings.name;
     currentRouteName = routeName;
     Navigator.pushNamed(context, routeName);
   }
 
-  void navigatorPop() {
-    final NavigationService _navigationService = locator<NavigationService>();
+  void pop() {
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     Navigator.pop(_navigationService.navigatorKey.currentContext!);
   }
 
-  void navigatePopCalling() {
-    assert(callingBackRouteName.isNotEmpty);
+  void popToCallingParentPage() {
+    assert(callingParentPageRouteName.isNotEmpty);
+    if (callingParentPageRouteName.isEmpty) {
+      logInfo('parent page route name is empty');
+      return;
+    }
 
-    navigatorPush(callingBackRouteName);
+    push(callingParentPageRouteName);
   }
 }
