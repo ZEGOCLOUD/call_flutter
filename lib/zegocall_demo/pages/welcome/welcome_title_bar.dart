@@ -1,5 +1,4 @@
 // Dart imports:
-import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -17,10 +16,10 @@ class WelcomeTitleBar extends StatefulWidget {
   const WelcomeTitleBar({Key? key}) : super(key: key);
 
   @override
-  _WelcomeTitleBarState createState() => _WelcomeTitleBarState();
+  WelcomeTitleBarState createState() => WelcomeTitleBarState();
 }
 
-class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
+class WelcomeTitleBarState extends State<WelcomeTitleBar> {
   late User user;
 
   @override
@@ -33,8 +32,6 @@ class _WelcomeTitleBarState extends State<WelcomeTitleBar> {
         });
       }
     });
-
-    log(user.toString());
 
     super.initState();
   }

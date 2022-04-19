@@ -1,12 +1,16 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer' as developer;
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall_uikit/utils/zego_loading_manager.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
+
+import '../../../logger.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
+import '../../../zegocall_demo/pages/navigation_service.dart';
 import '../machine/zego_calling_machine.dart';
 import '../machine/zego_mini_overlay_machine.dart';
 import '../manager/zego_call_manager.dart';
@@ -49,8 +53,8 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   void debugCurrentMachineState() {
     var callingState = callingMachine.getPageState();
     var miniOverlayState = miniOverlayMachine.getPageState();
-    developer.log('[page handler] debug machine state, calling '
-        'state:$callingState, mini overlay state:$miniOverlayState');
+    logInfo(
+        'calling state:$callingState, mini overlay state:$miniOverlayState');
   }
 
   ZegoCallPageType currentPageType() {
@@ -262,7 +266,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   void onMiniOverlayRequest() {
-    developer.log('[page handler] mini overlay request');
+    logInfo('request');
 
     var callType = ZegoCallManager.shared.currentCallType;
     if (ZegoCallType.kZegoCallTypeVoice == callType) {
@@ -310,7 +314,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   void onMiniOverlayRestore() {
-    developer.log('[page handler] mini overlay restore');
+    logInfo('restore');
 
     miniOverlayMachine.stateIdle.enter();
 

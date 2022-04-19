@@ -56,7 +56,6 @@ class UserListManager extends ChangeNotifier {
     userDic.clear();
 
     var map = snapshot.value as Map<dynamic, dynamic>?;
-    // log('[firebase] getOnlineUsers: $map');
     if (map != null) {
       var currentUser = FirebaseAuth.instance.currentUser!;
 

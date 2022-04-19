@@ -1,8 +1,8 @@
-// Dart imports:
-import 'dart:developer';
-
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
+
+// Project imports:
+import '../../../logger.dart';
 
 enum MiniVoiceCallingOverlayState {
   kIdle,
@@ -31,7 +31,7 @@ class ZegoMiniVoiceCallingOverlayMachine {
   void init() {
     // Update current for drive UI rebuild
     machine.onAfterTransition.listen((event) {
-      log('[state machine] mini voice, from ${event.source} to ${event.target}');
+      logInfo('mini voice, from ${event.source} to ${event.target}');
 
       if (null != onStateChanged) {
         onStateChanged!(machine.current!.identifier);

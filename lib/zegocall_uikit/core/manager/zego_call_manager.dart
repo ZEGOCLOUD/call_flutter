@@ -1,12 +1,12 @@
-// Dart imports:
-import 'dart:developer';
-
 // Package imports:
+import 'package:zego_call_flutter/zegocall_uikit/utils/zego_loading_manager.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
+import '../../../logger.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_room_service_delegate.dart';
@@ -16,6 +16,7 @@ import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../../zegocall/request/zego_firebase_manager.dart';
+import '../../../zegocall_demo/pages/navigation_service.dart';
 import '../page/zego_call_page_handler.dart';
 import 'zego_call_manager_interface.dart';
 
@@ -44,7 +45,7 @@ class ZegoCallManager
 
   @override
   void initWithAppID(int appID) {
-    log('[call manager] init, app id:$appID');
+    logInfo('app id:$appID');
 
     ZegoServiceManager.shared.initWithAPPID(appID);
     ZegoServiceManager.shared.userService.delegate = this;
@@ -60,7 +61,7 @@ class ZegoCallManager
 
   @override
   void uninit() {
-    log('[call manager] uninit');
+    logInfo('uninit');
 
     ZegoServiceManager.shared.userService.delegate = null;
     ZegoServiceManager.shared.callService.delegate = null;
@@ -73,7 +74,7 @@ class ZegoCallManager
 
   @override
   void resetCallData() {
-    log('[call manager] reset call data');
+    logInfo('reset');
 
     switch (currentCallStatus) {
       case ZegoCallStatus.free:
@@ -104,7 +105,7 @@ class ZegoCallManager
 
   @override
   void setLocalUser(String userID, String userName) {
-    log('[call manager] set local user, user id:$userID, user name:$userName');
+    logInfo('user id:$userID, user name:$userName');
 
     ZegoServiceManager.shared.userService.setLocalUser(userID, userName);
   }
@@ -116,18 +117,18 @@ class ZegoCallManager
 
   @override
   void renewToken(String token, String roomID) {
-    log('[call manager] renew token, token:$token, room id:$roomID');
+    logInfo('token:$token, room id:$roomID');
 
     ZegoExpressEngine.instance.renewToken(roomID, token);
   }
 
   @override
   Future<ZegoError> callUser(ZegoUserInfo callee, ZegoCallType callType) async {
-    log('[call manager] call user, user:${callee.toString()}, call '
+    logInfo('call user, user:${callee.toString()}, call '
         'type:${callType.string}');
 
     if (currentCallStatus != ZegoCallStatus.free) {
-      log('[call manager] current call status is not free, $currentCallStatus}');
+      logInfo('current call status is not free, $currentCallStatus}');
       return ZegoError.callStatusWrong;
     }
 
@@ -146,7 +147,7 @@ class ZegoCallManager
 
     return delegate!.getRTCToken().then((String token) {
       if (currentCallStatus != ZegoCallStatus.waitAccept) {
-        log('[call manager] current call status is not wait accept, '
+        logInfo('current call status is not wait accept, '
             '$currentCallStatus}');
         return ZegoError.callStatusWrong;
       }
@@ -173,7 +174,7 @@ class ZegoCallManager
 
   Future<ZegoError> acceptCall(
       ZegoUserInfo caller, ZegoCallType callType) async {
-    log('[call manager] accept call, user:${caller.toString()}, call '
+    logInfo('user:${caller.toString()}, call '
         'type:${callType.string}');
 
     currentCallType = callType;
@@ -193,7 +194,7 @@ class ZegoCallManager
 
     return delegate!.getRTCToken().then((String token) {
       if (currentCallStatus != ZegoCallStatus.calling) {
-        log('[call manager] current call status is not calling, '
+        logInfo('current call status is not calling, '
             '$currentCallStatus}');
         return ZegoError.callStatusWrong;
       }
@@ -225,7 +226,7 @@ class ZegoCallManager
   }
 
   void declineCall() {
-    log('[call manager] decline call');
+    logInfo('decline');
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
@@ -239,7 +240,7 @@ class ZegoCallManager
   }
 
   void endCall() {
-    log('[call manager] end call');
+    logInfo('end');
 
     if (ZegoServiceManager.shared.callService.status ==
         LocalUserStatus.calling) {
@@ -258,7 +259,7 @@ class ZegoCallManager
   }
 
   void cancelCall() {
-    log('[call manager] cancel call');
+    logInfo('cancel');
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
@@ -272,7 +273,7 @@ class ZegoCallManager
   }
 
   void updateDeviceConfigInCalling() {
-    log('[call manager] reset device config');
+    logInfo('update');
 
     var userService = ZegoServiceManager.shared.userService;
     var deviceService = ZegoServiceManager.shared.deviceService;
@@ -289,14 +290,14 @@ class ZegoCallManager
 
   @override
   void onCallingStateUpdated(ZegoCallingState state) {
-    log('[call manager] calling state updated, state:${state.string}');
+    logInfo('state:${state.string}');
 
     pageHandler.onCallingStateUpdated(state);
   }
 
   @override
   void onReceiveCallAccepted(ZegoUserInfo callee) {
-    log('[call manager] receive call accept, callee:${callee.toString()}');
+    logInfo('callee:${callee.toString()}');
 
     caller = ZegoServiceManager.shared.userService.localUserInfo;
     callee = callee;
@@ -310,13 +311,13 @@ class ZegoCallManager
 
   @override
   void onReceiveCallCanceled(ZegoUserInfo caller) {
-    log('[call manager] receive call canceled, caller:${caller.toString()}');
+    logInfo('caller:${caller.toString()}');
 
     if ((currentCallStatus == ZegoCallStatus.calling ||
             currentCallStatus == ZegoCallStatus.wait) &&
         this.caller.userID != caller.userID) {
-      log('[call manager] receive call canceled, call status is not '
-          'right:$currentCallStatus, and user id is different:[${this.caller.userID}, ${caller.userID}]');
+      logInfo(
+          'call status is not right:$currentCallStatus, and user id is different:[${this.caller.userID}, ${caller.userID}]');
       return;
     }
 
@@ -331,8 +332,7 @@ class ZegoCallManager
 
   @override
   void onReceiveCallDecline(ZegoUserInfo callee, ZegoDeclineType type) {
-    log('[call manager] receive call decline, user:${callee.toString()}, '
-        'type:${type.string}');
+    logInfo('user:${callee.toString()}, type:${type.string}');
 
     callTimeManager.stopTimer(currentCallID());
     ZegoNotificationManager.shared.stopRing();
@@ -345,7 +345,7 @@ class ZegoCallManager
 
   @override
   void onReceiveCallEnded() {
-    log('[call manager] receive call ended');
+    logInfo('receive');
 
     callTimeManager.stopTimer(currentCallID());
     ZegoNotificationManager.shared.stopRing();
@@ -358,14 +358,13 @@ class ZegoCallManager
 
   @override
   void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type) {
-    log('[call manager] receive call invite, caller:${caller.toString()}, '
+    logInfo('caller:${caller.toString()}, '
         'type:${type.string}');
 
     if (currentCallStatus == ZegoCallStatus.calling ||
         currentCallStatus == ZegoCallStatus.wait ||
         currentCallStatus == ZegoCallStatus.waitAccept) {
-      log('[call manager] receive call invite, call status is not '
-          'right:$currentCallStatus');
+      logInfo('call status is not right:$currentCallStatus');
       return;
     }
 
@@ -386,21 +385,20 @@ class ZegoCallManager
   }
 
   void onMiniOverlayRequest() {
-    log('[call manager] mini overlay request');
+    logInfo('request');
 
     pageHandler.onMiniOverlayRequest();
   }
 
   void onMiniOverlayRestore() {
-    log('[call manager] mini overlay restore');
+    logInfo('restore');
 
     pageHandler.onMiniOverlayRestore();
   }
 
   @override
   void onReceiveCallTimeout(ZegoUserInfo caller, ZegoCallTimeoutType type) {
-    log('[call manager] receive call timeout, user:${caller.toString()}, '
-        'type:${type.string}');
+    logInfo('ruser:${caller.toString()}, type:${type.string}');
 
     switch (type) {
       case ZegoCallTimeoutType.connecting:
@@ -423,18 +421,16 @@ class ZegoCallManager
 
   @override
   void onAudioRouteChange(ZegoAudioRoute audioRoute) {
-    log('[call manager] audio route route, audio route:$audioRoute');
+    logInfo('audio route:$audioRoute');
   }
 
   @override
   void onNetworkQuality(String userID, ZegoStreamQualityLevel level) {
-    //
-    // log('[call manager] network quality, user id:$userID, level:$level');
   }
 
   @override
   void onUserInfoUpdate(ZegoUserInfo info) {
-    log('[call manager] user info update, user:${info.toString()}');
+    logInfo('user:${info.toString()}');
 
     pageHandler.onUserInfoUpdate(info);
   }

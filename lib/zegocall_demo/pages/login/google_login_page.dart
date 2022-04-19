@@ -20,7 +20,6 @@ import './../../core/login_manager.dart';
 import './../../styles.dart';
 import 'google_login_protocol_item.dart';
 
-
 class GoogleLoginPage extends StatefulWidget {
   // ignore: public_member_api_docs
   const GoogleLoginPage({Key? key}) : super(key: key);
