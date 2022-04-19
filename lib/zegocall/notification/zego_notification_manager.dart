@@ -14,9 +14,9 @@ import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 // Project imports:
 import '../../logger.dart';
-import './../core/manager/zego_service_manager.dart';
-import './../core/model/zego_user_info.dart';
-import './../core/zego_call_defines.dart';
+import '../core/manager/zego_service_manager.dart';
+import '../core/model/zego_user_info.dart';
+import '../core/zego_call_defines.dart';
 import 'zego_notification_call_model.dart';
 
 const firebaseChannelGroupName = 'firebase_channel_group';

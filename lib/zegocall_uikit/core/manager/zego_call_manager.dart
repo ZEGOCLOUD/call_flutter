@@ -3,22 +3,22 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
-import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
-import 'package:zego_call_flutter/zegocall_uikit/utils/zego_loading_manager.dart';
 import '../../../logger.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_room_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_user_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
+import '../../../zegocall/core/model/zego_room_info.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../../zegocall/request/zego_firebase_manager.dart';
-import '../../../zegocall_demo/pages/navigation_service.dart';
+import '../../utils/zego_loading_manager.dart';
+import '../../utils/zego_navigation_service.dart';
 import '../page/zego_call_page_handler.dart';
 import 'zego_call_manager_interface.dart';
+import 'zego_calltime_manager.dart';
 
 class ZegoCallManager
     with
@@ -46,6 +46,8 @@ class ZegoCallManager
   @override
   void initWithAppID(int appID) {
     logInfo('app id:$appID');
+
+    ZegoNavigationService().init();
 
     ZegoServiceManager.shared.initWithAPPID(appID);
     ZegoServiceManager.shared.userService.delegate = this;
@@ -431,7 +433,8 @@ class ZegoCallManager
       return;
     }
 
-    final NavigationService _navigationService = locator<NavigationService>();
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
     ZegoToastManager.shared.showToast(localUserInfo?.userID == userID
         ? AppLocalizations.of(context)!.networkConnnectMeUnstable

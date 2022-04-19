@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
-import './../../core/token_manager.dart';
+import '../../core/token_manager.dart';
 import 'welcome_one_on_one_bg.dart';
 import 'welcome_title_bar.dart';
 import 'welcome_tool_bar.dart';

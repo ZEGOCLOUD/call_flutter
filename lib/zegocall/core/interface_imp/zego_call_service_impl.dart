@@ -7,20 +7,20 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import '../../../logger.dart';
-import './../../../zegocall/core/commands/zego_accept_call_command.dart';
-import './../../../zegocall/core/commands/zego_call_command.dart';
-import './../../../zegocall/core/commands/zego_cancel_call_command.dart';
-import './../../../zegocall/core/commands/zego_decline_call_command.dart';
-import './../../../zegocall/core/commands/zego_end_call_command.dart';
-import './../../../zegocall/core/commands/zego_heartbeat_command.dart';
-import './../../../zegocall/core/model/zego_call_info.dart';
-import './../../../zegocall/listener/zego_listener_manager.dart';
-import './../../listener/zego_listener.dart';
-import './../interface/zego_call_service.dart';
-import './../interface/zego_event_handler.dart';
-import './../manager/zego_service_manager.dart';
-import './../model/zego_user_info.dart';
-import './../zego_call_defines.dart';
+import '../../listener/zego_listener.dart';
+import '../../listener/zego_listener_manager.dart';
+import '../commands/zego_accept_call_command.dart';
+import '../commands/zego_call_command.dart';
+import '../commands/zego_cancel_call_command.dart';
+import '../commands/zego_decline_call_command.dart';
+import '../commands/zego_end_call_command.dart';
+import '../commands/zego_heartbeat_command.dart';
+import '../interface/zego_call_service.dart';
+import '../interface/zego_event_handler.dart';
+import '../manager/zego_service_manager.dart';
+import '../model/zego_call_info.dart';
+import '../model/zego_user_info.dart';
+import '../zego_call_defines.dart';
 
 class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
   bool isHeartbeatTimerRunning = false;

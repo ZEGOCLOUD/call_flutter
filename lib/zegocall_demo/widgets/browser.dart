@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 // Project imports:
-import './../styles.dart';
+import '../styles.dart';
 import 'navigation_back_bar.dart';
 import 'toast_manager.dart';
 

@@ -8,14 +8,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
+import '../../../../zegocall/core/manager/zego_service_manager.dart';
+import '../../../../zegocall/core/model/zego_user_info.dart';
+import '../../../../zegocall/core/zego_call_defines.dart';
 import '../../../core/manager/zego_call_manager.dart';
 import '../../../core/manager/zego_call_manager_interface.dart';
-import './../../../../zegocall/core/model/zego_user_info.dart';
-import './../../../../zegocall/core/zego_call_defines.dart';
-import './../../../utils/zego_bottom_sheet.dart';
-import './../../styles.dart';
-import './../settings/zego_calling_settings.dart';
+import '../../../utils/zego_bottom_sheet.dart';
+import '../../styles.dart';
+import '../settings/zego_calling_settings.dart';
 import 'zego_calling_bottom_toolbar_button.dart';
 
 class ZegoCallingCallerVideoTopToolBarButton extends StatelessWidget {

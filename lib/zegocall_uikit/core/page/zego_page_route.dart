@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 // Project imports:
 import '../../../logger.dart';
-import '../../../zegocall_demo/pages/navigation_service.dart';
+import '../../utils/zego_navigation_service.dart';
 
 class ZegoPageRoute {
   static var shared = ZegoPageRoute();
@@ -19,7 +19,7 @@ class ZegoPageRoute {
 
     logInfo('push $routeName');
 
-    final NavigationService _navigationService = locator<NavigationService>();
+    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
 
     // var n = ModalRoute.of(context)?.settings.name;
@@ -28,13 +28,13 @@ class ZegoPageRoute {
   }
 
   void navigatorPop() {
-    final NavigationService _navigationService = locator<NavigationService>();
+    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
     Navigator.pop(_navigationService.navigatorKey.currentContext!);
   }
 
-  void navigatePopCalling() {
+  void navigatePopCalling({bool isForce = false}) {
     assert(callingBackRouteName.isNotEmpty);
 
-    navigatorPush(callingBackRouteName);
+    navigatorPush(callingBackRouteName, isForce: isForce);
   }
 }

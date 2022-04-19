@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../styles.dart';
+import '../../styles.dart';
 
 class ZegoCallingSettingsSwitchItem extends StatelessWidget {
   final String title;

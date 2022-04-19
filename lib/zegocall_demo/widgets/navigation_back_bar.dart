@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../styles.dart';
+import '../styles.dart';
 
 class NavigationBackBar extends HookWidget {
   final String targetBackUrl;

@@ -2,8 +2,8 @@
 import 'package:flutter/foundation.dart';
 
 // Project imports:
-import './../delegate/zego_user_service_delegate.dart';
-import './../model/zego_user_info.dart';
+import '../delegate/zego_user_service_delegate.dart';
+import '../model/zego_user_info.dart';
 import 'zego_service.dart';
 
 /// Class user information management.

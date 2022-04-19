@@ -10,11 +10,11 @@ import 'package:result_type/result_type.dart';
 
 // Project imports:
 import '../../logger.dart';
-import './../command/zego_request_protocol.dart';
-import './../core/model/zego_user_info.dart';
-import './../core/zego_call_defines.dart';
-import './../listener/zego_listener.dart';
-import './../listener/zego_listener_manager.dart';
+import '../command/zego_request_protocol.dart';
+import '../core/model/zego_user_info.dart';
+import '../core/zego_call_defines.dart';
+import '../listener/zego_listener.dart';
+import '../listener/zego_listener_manager.dart';
 import 'zego_firebase_call_model.dart';
 
 class ZegoFireBaseManager extends ZegoRequestProtocol {

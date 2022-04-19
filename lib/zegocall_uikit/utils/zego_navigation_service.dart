@@ -6,14 +6,14 @@ import 'package:get_it/get_it.dart';
 
 GetIt locator = GetIt.instance;
 
-class NavigationService {
+class ZegoNavigationService {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  void init() {
+    locator.registerLazySingleton(() => ZegoNavigationService());
+  }
 
   Future<dynamic> navigateTo(String routeName) {
     return navigatorKey.currentState!.pushNamed(routeName);
-  }
-
-  void setupLocator() {
-    locator.registerLazySingleton(() => NavigationService());
   }
 }

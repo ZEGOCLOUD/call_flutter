@@ -2,8 +2,8 @@
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
 import '../../../logger.dart';
+import '../page/zego_page_route.dart';
 import 'zego_mini_video_calling_overlay_machine.dart';
 import 'zego_mini_voice_calling_overlay_machine.dart';
 

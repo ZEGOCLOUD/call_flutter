@@ -1,6 +1,6 @@
 // Project imports:
-import './../../command/zego_command.dart';
-import './../../core/zego_call_defines.dart';
+import '../../command/zego_command.dart';
+import '../../core/zego_call_defines.dart';
 
 class ZegoCancelCallCommand extends ZegoCommand {
   ZegoCancelCallCommand(String userID, String callID, String calleeID)

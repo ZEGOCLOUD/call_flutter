@@ -7,9 +7,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../constants/page_constant.dart';
-import './../../styles.dart';
-import './../../widgets/navigation_back_bar.dart';
+import '../../constants/page_constant.dart';
+import '../../styles.dart';
+import '../../widgets/navigation_back_bar.dart';
 import 'settings_browser_block.dart';
 import 'settings_logout_block.dart';
 import 'settings_upload_log_block.dart';

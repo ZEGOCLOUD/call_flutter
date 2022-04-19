@@ -2,11 +2,11 @@
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import './../../zegocall_uikit/pages/calling/zego_calling_page.dart';
-import './../pages/login/google_login_page.dart';
-import './../pages/settings/settings_page.dart';
-import './../pages/users/online_list_page.dart';
-import './../pages/welcome/welcome_page.dart';
+import '../../zegocall_uikit/pages/calling/zego_calling_page.dart';
+import '../pages/login/google_login_page.dart';
+import '../pages/settings/settings_page.dart';
+import '../pages/users/online_list_page.dart';
+import '../pages/welcome/welcome_page.dart';
 
 class PageRouteNames {
   static const String login = "/login";

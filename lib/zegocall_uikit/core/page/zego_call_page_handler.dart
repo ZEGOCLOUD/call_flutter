@@ -5,13 +5,13 @@ import 'dart:async';
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_uikit/utils/zego_loading_manager.dart';
 import '../../../logger.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
-import '../../../zegocall_demo/pages/navigation_service.dart';
+import '../../utils/zego_navigation_service.dart';
+import '../../utils/zego_loading_manager.dart';
 import '../machine/zego_calling_machine.dart';
 import '../machine/zego_mini_overlay_machine.dart';
 import '../manager/zego_call_manager.dart';
@@ -156,7 +156,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     callingState = state;
 
-    final NavigationService _navigationService = locator<NavigationService>();
+    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
 
     switch (state) {

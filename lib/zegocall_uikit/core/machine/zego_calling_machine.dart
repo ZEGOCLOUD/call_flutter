@@ -1,11 +1,8 @@
-
-
 // Package imports:
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
 import '../../../logger.dart';
-import '../../../zegocall_demo/constants/page_constant.dart';
 import '../page/zego_page_route.dart';
 
 enum CallingState {
@@ -44,21 +41,19 @@ class ZegoCallingMachine {
 
     stateCallingWithVoice = machine.newState(CallingState.kCallingWithVoice)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatorPush(PageRouteNames.calling);
+        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
       });
     stateCallingWithVideo = machine.newState(CallingState.kCallingWithVideo)
       ..onEntry(() {
-        ZegoPageRoute.shared.navigatorPush(PageRouteNames.calling);
+        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
       });
     stateOnlineVoice = machine.newState(CallingState.kOnlineVoice)
       ..onEntry(() {
-        ZegoPageRoute.shared
-            .navigatorPush(PageRouteNames.calling, isForce: true);
+        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
       });
     stateOnlineVideo = machine.newState(CallingState.kOnlineVideo)
       ..onEntry(() {
-        ZegoPageRoute.shared
-            .navigatorPush(PageRouteNames.calling, isForce: true);
+        ZegoPageRoute.shared.navigatePopCalling(isForce: true);
       });
   }
 
