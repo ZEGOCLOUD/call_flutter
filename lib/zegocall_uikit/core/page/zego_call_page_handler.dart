@@ -27,6 +27,8 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   late ZegoCallingMachine callingMachine;
   late ZegoMiniOverlayMachine miniOverlayMachine;
 
+  ZegoCallingState callingState = ZegoCallingState.connected;
+
   void init() {
     callingMachine = ZegoCallingMachine();
     callingMachine.init();
@@ -149,7 +151,23 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
   @override
   void onCallingStateUpdated(ZegoCallingState state) {
-    // TODO: implement onCallingStateUpdated
+    logInfo("state:$state");
+
+    callingState = state;
+
+    final NavigationService _navigationService = locator<NavigationService>();
+    var context = _navigationService.navigatorKey.currentContext!;
+
+    switch (state) {
+      case ZegoCallingState.disconnected:
+      case ZegoCallingState.connected:
+        ZegoToastManager.shared.hide();
+        break;
+      case ZegoCallingState.connecting:
+        ZegoToastManager.shared.showLoading(
+            message: AppLocalizations.of(context)!.callPageCallDisconnected);
+        break;
+    }
   }
 
   @override

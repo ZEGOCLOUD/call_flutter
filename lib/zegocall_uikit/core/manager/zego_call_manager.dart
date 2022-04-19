@@ -426,6 +426,18 @@ class ZegoCallManager
 
   @override
   void onNetworkQuality(String userID, ZegoStreamQualityLevel level) {
+    var isStable = (level == ZegoStreamQualityLevel.Excellent ||
+        level == ZegoStreamQualityLevel.Good ||
+        level == ZegoStreamQualityLevel.Medium);
+    if (isStable) {
+      return;
+    }
+
+    final NavigationService _navigationService = locator<NavigationService>();
+    var context = _navigationService.navigatorKey.currentContext!;
+    ZegoToastManager.shared.showToast(localUserInfo?.userID == userID
+        ? AppLocalizations.of(context)!.networkConnnectMeUnstable
+        : AppLocalizations.of(context)!.networkConnnectOtherUnstable);
   }
 
   @override
