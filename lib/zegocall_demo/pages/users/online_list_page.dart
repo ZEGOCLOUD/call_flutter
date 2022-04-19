@@ -11,8 +11,8 @@ import '../../widgets/toast_manager.dart';
 import './../../styles.dart';
 import './../../widgets/navigation_back_bar.dart';
 import './../../constants/user_info.dart';
-import './../../constants/zego_page_constant.dart';
-import './../../core/zego_user_list_manager.dart';
+import './../../constants/page_constant.dart';
+import './../../core/user_list_manager.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 
@@ -49,7 +49,7 @@ class OnlineListPageState extends State<OnlineListPage> {
             titleStyle: StyleConstant.backText),
         SizedBox(height: 10.h),
         const OnlineListTitleBar(),
-        Consumer<ZegoUserListManager>(builder: (_, userListManager, child) {
+        Consumer<UserListManager>(builder: (_, userListManager, child) {
           ToastManager.shared.hide();
 
           return SizedBox(
@@ -80,19 +80,19 @@ class OnlineListPageState extends State<OnlineListPage> {
     );
   }
 
-  Widget userListView(ZegoUserListManager userListManager) {
+  Widget userListView(UserListManager userListManager) {
     return RefreshIndicator(
       onRefresh: () async {
         ToastManager.shared.showLoading();
 
-        ZegoUserListManager.shared.updateUser();
+        UserListManager.shared.updateUser();
       },
       child: ListView.builder(
         itemExtent: 148.h,
         padding: EdgeInsets.only(left: 32.w, right: 32.w),
         itemCount: userListManager.userList.length,
         itemBuilder: (_, i) {
-          DemoUserInfo user = userListManager.userList[i];
+          UserInfo user = userListManager.userList[i];
           return OnlineListItem(userInfo: user);
         },
       ),

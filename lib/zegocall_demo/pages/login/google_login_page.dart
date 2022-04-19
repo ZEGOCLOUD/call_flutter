@@ -16,8 +16,8 @@ import 'package:permission_handler/permission_handler.dart';
 // Project imports:
 import '../../widgets/toast_manager.dart';
 import './../../styles.dart';
-import './../../constants/zego_page_constant.dart';
-import './../../core/zego_login_manager.dart';
+import './../../constants/page_constant.dart';
+import './../../core/login_manager.dart';
 import 'google_login_protocol_item.dart';
 
 class GoogleLoginPage extends StatefulWidget {
@@ -174,7 +174,7 @@ class GoogleLoginPageState extends State<GoogleLoginPage> {
       final googleAuth = await googleUser?.authentication;
 
       if (googleAuth != null) {
-        await ZegoLoginManager.shared.login(googleAuth.idToken ?? "");
+        await LoginManager.shared.login(googleAuth.idToken ?? "");
       }
     } on FirebaseAuthException catch (e) {
       setState(() {

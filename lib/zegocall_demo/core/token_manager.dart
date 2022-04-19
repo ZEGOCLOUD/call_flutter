@@ -9,18 +9,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Project imports:
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 
-const storeUserID = "zego_user_id_key";
-const storeKeyToken = "zego_token_key";
-const storeKeyExpirySeconds = "zego_token_expiry_time_key";
+const storeUserID = "call_user_id_key";
+const storeKeyToken = "call_token_key";
+const storeKeyExpirySeconds = "call_token_expiry_time_key";
 
-class ZegoToken {
+class Token {
   String token = "";
   int expirySeconds = 0;
   String userID = "";
 
-  ZegoToken.empty();
+  Token.empty();
 
-  ZegoToken(this.token, this.expirySeconds, this.userID);
+  Token(this.token, this.expirySeconds, this.userID);
 
   bool isValid() {
     if (token.isEmpty) {
@@ -33,15 +33,15 @@ class ZegoToken {
 
   @override
   String toString() {
-    return "[zego token] user id:$userID, expiry seconds:$expirySeconds, "
+    return "[token manager] user id:$userID, expiry seconds:$expirySeconds, "
         "token:$token";
   }
 }
 
-class ZegoTokenManager {
-  ZegoToken token = ZegoToken.empty();
+class TokenManager {
+  Token token = Token.empty();
 
-  static var shared = ZegoTokenManager();
+  static var shared = TokenManager();
 
   void init() async {
     token = await getTokenFromDisk();
@@ -84,7 +84,7 @@ class ZegoTokenManager {
     prefs.setInt(storeKeyExpirySeconds, expirySeconds);
     prefs.setString(storeUserID, userID);
 
-    this.token = ZegoToken(token, expirySeconds, userID);
+    this.token = Token(token, expirySeconds, userID);
   }
 
   bool isNeedUpdate(String userID) {
@@ -113,23 +113,23 @@ class ZegoTokenManager {
     return token.token;
   }
 
-  Future<ZegoToken> getTokenFromDisk() async {
+  Future<Token> getTokenFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
 
     var localUserID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
     if (localUserID.isEmpty) {
       log('[token manager] get token from disk, local user id is empty');
-      return ZegoToken.empty();
+      return Token.empty();
     }
 
     var oldUserID = prefs.getString(storeUserID) ?? "";
     if (oldUserID != localUserID) {
       log('[token manager] get token from disk, local user id:localUserID is different of'
           ' old user id:$oldUserID');
-      return ZegoToken.empty();
+      return Token.empty();
     }
 
-    var token = ZegoToken(
+    var token = Token(
       prefs.getString(storeKeyToken) ?? "",
       prefs.getInt(storeKeyExpirySeconds) ?? 0,
       prefs.getString(storeUserID) ?? "",

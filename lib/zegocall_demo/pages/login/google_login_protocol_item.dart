@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 // Project imports:
 import './../../widgets/browser.dart';
-import './../../constants/zego_page_constant.dart';
+import './../../constants/page_constant.dart';
 
 class GoogleLoginProtocolItem extends StatefulWidget {
   final ValueChanged<bool> updatePolicyCheckState;

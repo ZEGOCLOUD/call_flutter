@@ -14,22 +14,22 @@ import 'package:result_type/result_type.dart';
 
 // Project imports:
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
-import '../constants/zego_page_constant.dart';
-import '../pages/zego_navigation_service.dart';
-import 'zego_user_list_manager.dart';
+import '../constants/page_constant.dart';
+import '../pages/navigation_service.dart';
+import 'user_list_manager.dart';
 
 typedef LoginResult = Result<User, int>;
 
-mixin ZegoLoginManagerDelegate {
+mixin LoginManagerDelegate {
   onReceiveUserKickOut();
 }
 
-class ZegoLoginManager extends ChangeNotifier {
-  static var shared = ZegoLoginManager();
+class LoginManager extends ChangeNotifier {
+  static var shared = LoginManager();
 
   User? user;
   String fcmToken = "";
-  ZegoLoginManagerDelegate? delegate;
+  LoginManagerDelegate? delegate;
 
   StreamSubscription<DatabaseEvent>? fcmTokenListenerSubscription;
 
@@ -41,7 +41,7 @@ class ZegoLoginManager extends ChangeNotifier {
       if (null != this.user) {
         addUserToDatabase(this.user!);
 
-        ZegoUserListManager.shared.init();
+        UserListManager.shared.init();
       }
     });
   }

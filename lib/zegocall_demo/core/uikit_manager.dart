@@ -7,12 +7,12 @@ import 'package:flutter/cupertino.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 import 'package:zego_call_flutter/zegocall/core/zego_call_defines.dart';
-import 'package:zego_call_flutter/zegocall_demo/core/zego_token_manager.dart';
+import 'package:zego_call_flutter/zegocall_demo/core/token_manager.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager_delegate.dart';
 
-class ZegoUIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
-  static var shared = ZegoUIKitManager();
+class UIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
+  static var shared = UIKitManager();
 
   void init() {
     ZegoCallManager.interface.delegate = this;
@@ -44,7 +44,7 @@ class ZegoUIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
       return "";
     }
 
-    var token = ZegoTokenManager.shared.getToken(userID);
+    var token = TokenManager.shared.getToken(userID);
     log('[uikit manager] get rtc token, get token, token:$token');
     return token;
   }
@@ -58,7 +58,7 @@ class ZegoUIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
     }
 
     log('[uikit manager] onRoomTokenWillExpire, try get token..');
-    ZegoTokenManager.shared.getToken(userID).then((token) {
+    TokenManager.shared.getToken(userID).then((token) {
       log('[uikit manager] onRoomTokenWillExpire, get token, $token');
       if (token.isNotEmpty) {
         ZegoCallManager.interface.renewToken(token, roomID);

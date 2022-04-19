@@ -9,13 +9,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
-import './../constants/user_info.dart';
+import './../constants/user_info.dart' as demo;
 
-class ZegoUserListManager extends ChangeNotifier {
-  static var shared = ZegoUserListManager();
+class UserListManager extends ChangeNotifier {
+  static var shared = UserListManager();
 
-  List<DemoUserInfo> userList = [];
-  Map<String, DemoUserInfo> userDic = <String, DemoUserInfo>{};
+  List<demo.UserInfo> userList = [];
+  Map<String, demo.UserInfo> userDic = <String, demo.UserInfo>{};
 
   StreamSubscription? onlineUserSubscription;
 
@@ -23,8 +23,8 @@ class ZegoUserListManager extends ChangeNotifier {
     addOnlineUsersValueListener();
   }
 
-  DemoUserInfo getUserInfoByID(String userID) {
-    return userDic[userID] ?? DemoUserInfo.empty();
+  demo.UserInfo getUserInfoByID(String userID) {
+    return userDic[userID] ?? demo.UserInfo.empty();
   }
 
   void addOnlineUsersValueListener() {
@@ -62,7 +62,7 @@ class ZegoUserListManager extends ChangeNotifier {
 
       map.forEach((key, value) async {
         var userMap = Map<String, dynamic>.from(value);
-        var user = DemoUserInfo.fromJson(userMap);
+        var user = demo.UserInfo.fromJson(userMap);
         if (currentUser.uid == user.userID) {
           return;
         }

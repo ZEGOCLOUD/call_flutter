@@ -17,21 +17,21 @@ import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/pages/zego_navigation_service.dart';
+import 'package:zego_call_flutter/zegocall_demo/pages/navigation_service.dart';
 import 'package:zego_call_flutter/zegocall_uikit/core/page/zego_page_route.dart';
 import '../zegocall_uikit/core/manager/zego_call_manager.dart';
 import './../zegocall_uikit/pages/mini_overlay/mini_overlay_page.dart';
-import 'constants/zego_page_constant.dart';
-import 'core/zego_user_list_manager.dart';
+import 'constants/page_constant.dart';
+import 'core/user_list_manager.dart';
 
-class ZegoApp extends StatefulWidget {
-  const ZegoApp({Key? key}) : super(key: key);
+class CallApp extends StatefulWidget {
+  const CallApp({Key? key}) : super(key: key);
 
   @override
-  _ZegoAppState createState() => _ZegoAppState();
+  CallAppState createState() => CallAppState();
 }
 
-class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
+class CallAppState extends State<CallApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     Wakelock.enable(); //  always bright
@@ -47,7 +47,7 @@ class _ZegoAppState extends State<ZegoApp> with WidgetsBindingObserver {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
-              create: (context) => ZegoUserListManager.shared)
+              create: (context) => UserListManager.shared)
         ],
         child: GestureDetector(
           onTap: () {

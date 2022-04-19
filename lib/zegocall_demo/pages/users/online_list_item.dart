@@ -16,7 +16,7 @@ import 'online_list_elements.dart';
 
 class OnlineListItem extends StatelessWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);
-  final DemoUserInfo userInfo;
+  final UserInfo userInfo;
 
   void onAudioCallTap(BuildContext context) async {
     ZegoCallManager.interface

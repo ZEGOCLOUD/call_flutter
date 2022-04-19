@@ -1,6 +1,6 @@
 /// Class user information.
 /// <p>Description: This class contains the user related information.</>
-class DemoUserInfo {
+class UserInfo {
   /// User ID, refers to the user unique ID, can only contains numbers and letters.
   String userID = "";
 
@@ -11,18 +11,18 @@ class DemoUserInfo {
     return userID.isEmpty || userName.isEmpty;
   }
 
-  DemoUserInfo.empty();
+  UserInfo.empty();
 
-  DemoUserInfo(this.userID, this.userName);
+  UserInfo(this.userID, this.userName);
 
-  DemoUserInfo clone() => DemoUserInfo(userID, userName);
+  UserInfo clone() => UserInfo(userID, userName);
 
   @override
   String toString() {
     return "UserInfo [user_id=$userID,display_name=$userName";
   }
 
-  DemoUserInfo.fromJson(Map<String, dynamic> json)
+  UserInfo.fromJson(Map<String, dynamic> json)
       : userID = json['user_id'] ?? "",
         userName = json['display_name'];
 

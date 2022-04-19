@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:statemachine/statemachine.dart' as sm;
 
 // Project imports:
-import '../../../zegocall_demo/constants/zego_page_constant.dart';
+import '../../../zegocall_demo/constants/page_constant.dart';
 import '../page/zego_page_route.dart';
 
 enum CallingState {

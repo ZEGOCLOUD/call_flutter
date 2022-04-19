@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 
 // Project imports:
-import '../../../zegocall_demo/pages/zego_navigation_service.dart';
+import '../../../zegocall_demo/pages/navigation_service.dart';
 
 class ZegoPageRoute {
   static var shared = ZegoPageRoute();

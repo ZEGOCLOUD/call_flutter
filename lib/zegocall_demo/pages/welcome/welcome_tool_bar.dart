@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import './../../styles.dart';
 import './../../widgets/browser.dart';
-import './../../constants/zego_page_constant.dart';
+import './../../constants/page_constant.dart';
 
 class WelcomeToolBarButton extends StatelessWidget {
   final String iconAssetName;
