@@ -104,7 +104,11 @@ class ZegoCallingCallerBottomToolBar extends StatelessWidget {
   }
 }
 
-class ZegoCallingCalleeBottomToolBar extends StatelessWidget {
+class ZegoCallingCalleeBottomToolBar extends StatefulWidget {
+  final ZegoCallType callType;
+  final ZegoUserInfo caller;
+  final ZegoUserInfo callee;
+
   const ZegoCallingCalleeBottomToolBar(
       {required this.caller,
       required this.callee,
@@ -112,9 +116,16 @@ class ZegoCallingCalleeBottomToolBar extends StatelessWidget {
       Key? key})
       : super(key: key);
 
-  final ZegoCallType callType;
-  final ZegoUserInfo caller;
-  final ZegoUserInfo callee;
+  @override
+  State<ZegoCallingCalleeBottomToolBar> createState() {
+    return ZegoCallingCalleeBottomToolBarState();
+  }
+}
+
+class ZegoCallingCalleeBottomToolBarState
+    extends State<ZegoCallingCalleeBottomToolBar> {
+  bool isAccepting = false;
+  ValueNotifier<bool> acceptingNotifier = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -125,31 +136,50 @@ class ZegoCallingCalleeBottomToolBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ZegoCallingCalleeBottomToolBarButton(
-                text: AppLocalizations.of(context)!.callPageActionDecline,
-                iconWidth: 120.w,
-                iconHeight: 120.h,
-                iconURL: StyleIconUrls.toolbarBottomDecline,
-                onTap: () {
-                  ZegoCallManager.shared.declineCall();
-                }),
-            SizedBox(
-              width: 230.w,
+              text: AppLocalizations.of(context)!.callPageActionDecline,
+              iconWidth: 120.w,
+              iconHeight: 120.h,
+              iconURL: StyleIconUrls.toolbarBottomDecline,
+              onTap: () {
+                ZegoCallManager.shared.declineCall();
+              },
             ),
+            SizedBox(width: 230.w),
             ZegoCallingCalleeBottomToolBarButton(
-                text: AppLocalizations.of(context)!.callPageActionAccept,
-                iconWidth: 120.w,
-                iconHeight: 120.h,
-                iconURL: imageURLByCallType(callType),
-                onTap: () {
-                  ZegoCallManager.shared.acceptCall(caller, callType);
-                }),
+              text: AppLocalizations.of(context)!.callPageActionAccept,
+              iconWidth: 120.w,
+              iconHeight: 120.h,
+              iconURL: imageURLByCallType(widget.callType),
+              onTap: isAccepting ? null : onAcceptTap,
+              rotateIconNotifier: acceptingNotifier,
+            ),
           ],
         ),
       ),
     );
   }
 
+  void onAcceptTap() {
+    setState(() {
+      isAccepting = true;
+      acceptingNotifier.value = true;
+    });
+
+    ZegoCallManager.shared
+        .acceptCall(widget.caller, widget.callType)
+        .then((value) {
+      setState(() {
+        // isAccepting = false;
+        acceptingNotifier.value = false;
+      });
+    });
+  }
+
   String imageURLByCallType(ZegoCallType callType) {
+    if (isAccepting) {
+      return StyleIconUrls.toolbarBottomAcceptLoading;
+    }
+
     switch (callType) {
       case ZegoCallType.kZegoCallTypeVoice:
         return StyleIconUrls.toolbarBottomVoice;

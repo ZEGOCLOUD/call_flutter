@@ -67,6 +67,8 @@ class StyleIconUrls {
       'assets/images/toolbar_bottom_video.png';
   static const String toolbarBottomVoice =
       'assets/images/toolbar_bottom_voice.png';
+  static const String toolbarBottomAcceptLoading =
+      'assets/images/toolbar_bottom_accept_loading.png';
   static const String toolbarTopMini = 'assets/images/toolbar_top_mini.png';
   static const String toolbarTopSettings =
       'assets/images/toolbar_top_settings.png';

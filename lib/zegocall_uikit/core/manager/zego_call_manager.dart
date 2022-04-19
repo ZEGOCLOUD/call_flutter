@@ -174,8 +174,7 @@ class ZegoCallManager
 
   Future<ZegoError> acceptCall(
       ZegoUserInfo caller, ZegoCallType callType) async {
-    logInfo('user:${caller.toString()}, call '
-        'type:${callType.string}');
+    logInfo('user:${caller.toString()}, call type:${callType.string}');
 
     currentCallType = callType;
     currentCallStatus = ZegoCallStatus.calling;
@@ -194,8 +193,7 @@ class ZegoCallManager
 
     return delegate!.getRTCToken().then((String token) {
       if (currentCallStatus != ZegoCallStatus.calling) {
-        logInfo('current call status is not calling, '
-            '$currentCallStatus}');
+        logInfo('current call status is not calling, $currentCallStatus}');
         return ZegoError.callStatusWrong;
       }
       if (token.isEmpty) {
@@ -398,7 +396,7 @@ class ZegoCallManager
 
   @override
   void onReceiveCallTimeout(ZegoUserInfo caller, ZegoCallTimeoutType type) {
-    logInfo('ruser:${caller.toString()}, type:${type.string}');
+    logInfo('caller:${caller.toString()}, type:${type.string}');
 
     switch (type) {
       case ZegoCallTimeoutType.connecting:
