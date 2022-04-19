@@ -6,8 +6,8 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../styles.dart';
 import './../../core/login_manager.dart';
+import './../../styles.dart';
 
 class SettingsLogoutBlock extends StatelessWidget {
   const SettingsLogoutBlock({Key? key}) : super(key: key);

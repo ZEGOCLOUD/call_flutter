@@ -8,11 +8,11 @@ import 'package:provider/provider.dart';
 
 // Project imports:
 import '../../widgets/toast_manager.dart';
+import './../../constants/page_constant.dart';
+import './../../constants/user_info.dart';
+import './../../core/user_list_manager.dart';
 import './../../styles.dart';
 import './../../widgets/navigation_back_bar.dart';
-import './../../constants/user_info.dart';
-import './../../constants/page_constant.dart';
-import './../../core/user_list_manager.dart';
 import 'online_list_item.dart';
 import 'online_list_title_bar.dart';
 
@@ -52,9 +52,7 @@ class OnlineListPageState extends State<OnlineListPage> {
         Consumer<UserListManager>(builder: (_, userListManager, child) {
           ToastManager.shared.hide();
 
-          return SizedBox(
-            width: double.infinity,
-            height: 1080.h,
+          return Expanded(
             child: userListManager.userList.isEmpty
                 ? emptyTips(context)
                 : userListView(userListManager),

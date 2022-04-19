@@ -40,36 +40,40 @@ class ZegoServiceManager extends ChangeNotifier {
   Future<void> initWithAPPID(int appID) async {
     log('[service manager] init with app id:$appID');
 
-    initServices();
+    createServices();
     registerExpressEventHandle();
 
     ZegoEngineProfile profile = ZegoEngineProfile(appID, ZegoScenario.General);
     profile.enablePlatformView = true; //  for play stream with platformView
     profile.scenario = ZegoScenario.Communication;
     await ZegoExpressEngine.createEngineWithProfile(profile).then((value) {});
-
-    deviceService.setBestConfig();
-
     isSDKInit = true;
+
+    initServices();
 
     var initCommand = ZegoInitCommand();
     initCommand.execute();
   }
 
-  void initServices() {
-    log('[service manager] init services');
+  void createServices() {
+    log('[service manager] create services');
 
     roomService = ZegoRoomServiceImpl();
     userService = ZegoUserServiceImpl();
     callService = ZegoCallServiceImpl();
     streamService = ZegoStreamServiceImpl();
     deviceService = ZegoDeviceServiceImpl();
+  }
+
+  void initServices() {
+    log('[service manager] init services');
 
     roomService.init();
     userService.init();
     callService.init();
     streamService.init();
     deviceService.init();
+    deviceService.setBestConfig();
   }
 
   void addExpressEventHandler(ZegoEventHandler handler) {

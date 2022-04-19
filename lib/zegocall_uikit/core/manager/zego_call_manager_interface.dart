@@ -1,6 +1,5 @@
 // Project imports:
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager_delegate.dart';
-
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 

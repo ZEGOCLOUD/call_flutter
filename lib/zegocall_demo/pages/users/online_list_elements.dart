@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../styles.dart';
 import '../../../zegocall_uikit/utils/zego_user_avatar.dart';
+import './../../styles.dart';
 
 class OnlineListAvatar extends StatelessWidget {
   final String userName;

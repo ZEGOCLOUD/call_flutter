@@ -8,9 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall_demo/core/uikit_manager.dart';
 import 'package:zego_call_flutter/zegocall_demo/pages/navigation_service.dart';
+import 'zegocall_demo/call_demo_app.dart';
 import 'zegocall_demo/core/login_manager.dart';
 import 'zegocall_demo/secret/zego_secret_reader.dart';
-import 'zegocall_demo/call_demo_app.dart';
 import 'zegocall_uikit/core/manager/zego_call_manager.dart';
 
 Future<void> main() async {

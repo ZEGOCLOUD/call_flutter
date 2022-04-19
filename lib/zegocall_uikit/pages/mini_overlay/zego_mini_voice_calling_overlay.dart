@@ -9,8 +9,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import '../../core/manager/zego_call_manager.dart';
-import './../styles.dart';
 import './../../core/machine/zego_mini_voice_calling_overlay_machine.dart';
+import './../styles.dart';
 
 class ZegoMiniVoiceCallingOverlay extends StatefulWidget {
   const ZegoMiniVoiceCallingOverlay(
