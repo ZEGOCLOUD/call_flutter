@@ -6,8 +6,8 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../../utils/styles.dart';
-import './../../core/zego_login_manager.dart';
+import './../../styles.dart';
+import './../../core/login_manager.dart';
 
 class SettingsLogoutBlock extends StatelessWidget {
   const SettingsLogoutBlock({Key? key}) : super(key: key);
@@ -32,6 +32,6 @@ class SettingsLogoutBlock extends StatelessWidget {
   }
 
   Future<void> logout(BuildContext context) async {
-    ZegoLoginManager.shared.logout();
+    LoginManager.shared.logout();
   }
 }

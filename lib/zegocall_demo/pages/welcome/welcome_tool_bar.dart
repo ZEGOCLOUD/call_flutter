@@ -6,9 +6,9 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../../utils/styles.dart';
-import './../../../utils/widgets/browser.dart';
-import './../../constants/zego_page_constant.dart';
+import './../../styles.dart';
+import './../../widgets/browser.dart';
+import './../../constants/page_constant.dart';
 
 class WelcomeToolBarButton extends StatelessWidget {
   final String iconAssetName;
@@ -20,19 +20,22 @@ class WelcomeToolBarButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Image(
-          image: AssetImage(iconAssetName),
-        ),
-        const SizedBox(width: 5),
-        Text(
-          text,
-          style: const TextStyle(color: Color(0xff2A2A2A)),
-        ),
-      ],
+    return Container(
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image(
+            image: AssetImage(iconAssetName),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            text,
+            style: const TextStyle(color: Color(0xff2A2A2A)),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -34,6 +34,6 @@ class ZegoUserInfo {
 
   @override
   String toString() {
-    return "UserInfo [user_id=$userID,display_name=$userName,mic=$mic,camera=$camera";
+    return "ZegoUserInfo [user_id=$userID,display_name=$userName,mic=$mic,camera=$camera";
   }
 }

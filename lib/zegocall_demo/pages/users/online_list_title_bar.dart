@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
-import './../../../utils/styles.dart';
+import './../../styles.dart';
 
 class OnlineListTitleBar extends StatelessWidget {
   const OnlineListTitleBar({Key? key}) : super(key: key);

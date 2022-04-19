@@ -4,13 +4,13 @@ import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:firebase_core/firebase_core.dart';
-import 'package:zego_call_flutter/zegocall_demo/core/zego_uikit_manager.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/pages/zego_navigation_service.dart';
-import 'zegocall_demo/core/zego_login_manager.dart';
+import 'package:zego_call_flutter/zegocall_demo/core/uikit_manager.dart';
+import 'package:zego_call_flutter/zegocall_demo/pages/navigation_service.dart';
+import 'zegocall_demo/core/login_manager.dart';
 import 'zegocall_demo/secret/zego_secret_reader.dart';
-import 'zegocall_demo/zegocall_demo_app.dart';
+import 'zegocall_demo/call_demo_app.dart';
 import 'zegocall_uikit/core/manager/zego_call_manager.dart';
 
 Future<void> main() async {
@@ -23,16 +23,16 @@ Future<void> main() async {
       .then((_) {
     NavigationService().setupLocator();
 
-    runApp(const ZegoApp());
+    runApp(const CallApp());
   });
 }
 
 void initManagers() async {
-  ZegoLoginManager.shared.init();
+  LoginManager.shared.init();
 
   await ZegoSecretReader.instance.loadKeyCenterData().then((_) {
     // WARNING: DO NOT USE APPID AND APPSIGN IN PRODUCTION CODE!!!GET IT FROM SERVER INSTEAD!!!
     ZegoCallManager.shared.initWithAppID(ZegoSecretReader.instance.appID);
-    ZegoUIKitManager.shared.init();
+    UIKitManager.shared.init();
   });
 }

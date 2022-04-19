@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 // Project imports:
+import './../../widgets/toast_manager.dart';
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
-import './../../../utils/styles.dart';
+import './../../styles.dart';
 
 class SettingsUploadLogBlock extends StatelessWidget {
   const SettingsUploadLogBlock({Key? key}) : super(key: key);
@@ -24,15 +24,17 @@ class SettingsUploadLogBlock extends StatelessWidget {
             height: 98.h,
             child: InkWell(
               onTap: () {
-                ZegoCallManager.shared.uploadLog().then((errorCode) {
+                ToastManager.shared.showLoading();
+
+                ZegoCallManager.interface.uploadLog().then((errorCode) {
+                  ToastManager.shared.hide();
+
                   if (0 != errorCode) {
-                    Fluttertoast.showToast(
-                        msg: AppLocalizations.of(context)!
-                            .toastUploadLogFail(errorCode));
+                    ToastManager.shared.showToast(AppLocalizations.of(context)!
+                        .toastUploadLogFail(errorCode));
                   } else {
-                    Fluttertoast.showToast(
-                        msg: AppLocalizations.of(context)!
-                            .toastUploadLogSuccess);
+                    ToastManager.shared.showToast(
+                        AppLocalizations.of(context)!.toastUploadLogSuccess);
                   }
                 });
               },

@@ -8,7 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
 import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
-import './../../core/zego_token_manager.dart';
+import './../../core/token_manager.dart';
 import 'welcome_one_on_one_bg.dart';
 import 'welcome_title_bar.dart';
 import 'welcome_tool_bar.dart';
@@ -22,9 +22,9 @@ class WelcomePage extends HookWidget {
     useEffect(() {
       var user = FirebaseAuth.instance.currentUser!;
 
-      ZegoCallManager.shared.setLocalUser(user.uid, user.displayName ?? "");
+      ZegoCallManager.interface.setLocalUser(user.uid, user.displayName ?? "");
       // init after set local user
-      ZegoTokenManager.shared.init();
+      TokenManager.shared.init();
 
       return null;
     }, []);

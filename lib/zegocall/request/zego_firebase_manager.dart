@@ -101,7 +101,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     callModel.callStatus = FirebaseCallStatus.connecting;
     callModel.users.clear();
 
-    var firebaseCaller = FirebaseCallUser.empty();
+    var firebaseCaller = ZegoFirebaseCallUser.empty();
     firebaseCaller.callerID = caller.userID;
     firebaseCaller.userID = caller.userID;
     firebaseCaller.userName = caller.userName;
@@ -110,7 +110,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     callModel.users.add(firebaseCaller);
 
     for (var user in callees) {
-      var callee = FirebaseCallUser.clone(firebaseCaller);
+      var callee = ZegoFirebaseCallUser.clone(firebaseCaller);
       callee.userID = user.userID;
       callee.userName = user.userName;
       callModel.users.add(callee);
@@ -412,7 +412,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
 
       var caller = model.users.firstWhere(
           (user) => user.callerID == user.userID,
-          orElse: () => FirebaseCallUser.empty());
+          orElse: () => ZegoFirebaseCallUser.empty());
       if (caller.isEmpty()) {
         log('[firebase] incoming call, caller is empty');
         return;
@@ -475,7 +475,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
 
         var otherUser = model.users.firstWhere(
             (user) => user.userID != myUser.userID,
-            orElse: () => FirebaseCallUser.empty());
+            orElse: () => ZegoFirebaseCallUser.empty());
         if (otherUser.isEmpty()) {
           log('[firebase] call on value changed, otherUser is empty');
           return;
@@ -527,7 +527,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       }
       var otherUser = model.users.firstWhere(
           (user) => user.userID != myUser.userID,
-          orElse: () => FirebaseCallUser.empty());
+          orElse: () => ZegoFirebaseCallUser.empty());
       if (otherUser.isEmpty()) {
         log('[firebase] call on value changed, other user is empty');
         return;

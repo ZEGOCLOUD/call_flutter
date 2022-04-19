@@ -1,4 +1,6 @@
 // Project imports:
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager_delegate.dart';
+
 import './../../../zegocall/core/model/zego_user_info.dart';
 import './../../../zegocall/core/zego_call_defines.dart';
 
@@ -18,11 +20,11 @@ enum ZegoCallStatus {
 }
 
 mixin ZegoCallManagerInterface {
+  /// The delegate instance of the call manager.
+  ZegoCallManagerDelegate? delegate;
+
   /// The local logged-in user information.
   ZegoUserInfo? localUserInfo;
-
-  ZegoCallStatus currentCallStatus = ZegoCallStatus.free;
-  ZegoCallType currentCallType = ZegoCallType.kZegoCallTypeVoice;
 
   /// Initialize the SDK
   ///
@@ -39,15 +41,6 @@ mixin ZegoCallManagerInterface {
   ///
   /// Call this method at: When the SDK is no longer be used. We recommend you call this method when the application exits.
   void uninit();
-
-  /// Get a Token
-  ///
-  /// Description: this method can be used to get a Token with userID.
-  ///
-  /// Call this method at: after the SDK initialization
-  ///
-  /// - Parameter callback: refers to the callback for request the Token for authentication
-  Future<String> getToken(String userID, int effectiveTimeInSeconds);
 
   /// Set the local user info
   ///
@@ -92,5 +85,5 @@ mixin ZegoCallManagerInterface {
   ///
   /// @param token The token that needs to be renew.
   /// @param roomID Room ID.
-  renewToken(String token, String roomID);
+  void renewToken(String token, String roomID);
 }

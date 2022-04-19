@@ -12,14 +12,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 // Project imports:
-import 'package:zego_call_flutter/zegocall_demo/zegocall_demo_app.dart';
+import 'package:zego_call_flutter/zegocall_demo/call_demo_app.dart';
 
 // Project imports:
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const ZegoApp());
+    await tester.pumpWidget(const CallApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -2,10 +2,10 @@
 import 'dart:developer';
 
 // Package imports:
-import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
+import 'package:zego_call_flutter/zegocall/core/model/zego_room_info.dart';
 import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_calltime_manager.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
@@ -17,7 +17,6 @@ import '../../../zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../../zegocall/request/zego_firebase_manager.dart';
 import '../page/zego_call_page_handler.dart';
-import 'zego_call_manager_delegate.dart';
 import 'zego_call_manager_interface.dart';
 
 class ZegoCallManager
@@ -27,11 +26,15 @@ class ZegoCallManager
         ZegoUserServiceDelegate,
         ZegoRoomServiceDelegate,
         ZegoDeviceServiceDelegate {
+  static ZegoCallManagerInterface interface = ZegoCallManager.shared;
+
   static var shared = ZegoCallManager();
+
+  ZegoCallStatus currentCallStatus = ZegoCallStatus.free;
+  ZegoCallType currentCallType = ZegoCallType.kZegoCallTypeVoice;
 
   ZegoUserInfo caller = ZegoUserInfo.empty();
   ZegoUserInfo callee = ZegoUserInfo.empty();
-  ZegoCallManagerDelegate? delegate;
 
   ZegoCallingTimeManager callTimeManager = ZegoCallingTimeManager.empty();
   late ZegoCallPageHandler pageHandler;
@@ -67,22 +70,6 @@ class ZegoCallManager
 
     ZegoServiceManager.shared.uninit();
   }
-
-  // @override
-  // Future<String> getToken(String userID, int effectiveTimeInSeconds) async {
-  //   return ZegoServiceManager.shared.userService
-  //       .getToken(userID, effectiveTimeInSeconds)
-  //       .then((result) {
-  //     if (result.isSuccess) {
-  //       log('[call manager] get token, token is ${result.success}');
-  //
-  //       return result.success as String;
-  //     }
-  //
-  //     log('[call manager] fail to get token');
-  //     return "";
-  //   });
-  // }
 
   @override
   void resetCallData() {
@@ -141,7 +128,7 @@ class ZegoCallManager
 
     if (currentCallStatus != ZegoCallStatus.free) {
       log('[call manager] current call status is not free, $currentCallStatus}');
-      return ZegoError.failed;
+      return ZegoError.callStatusWrong;
     }
 
     currentCallType = callType;
@@ -463,12 +450,6 @@ class ZegoCallManager
 
   String currentCallID() {
     return ZegoServiceManager.shared.callService.callInfo.callID;
-  }
-
-  @override
-  Future<String> getToken(String userID, int effectiveTimeInSeconds) {
-    // TODO: implement getToken
-    throw UnimplementedError();
   }
 
   @override

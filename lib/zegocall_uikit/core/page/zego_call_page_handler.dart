@@ -7,8 +7,8 @@ import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
-import '../machine/calling_machine.dart';
-import '../machine/mini_overlay_machine.dart';
+import '../machine/zego_calling_machine.dart';
+import '../machine/zego_mini_overlay_machine.dart';
 import '../manager/zego_call_manager.dart';
 import '../manager/zego_call_manager_interface.dart';
 
@@ -20,14 +20,14 @@ enum ZegoCallPageType {
 }
 
 class ZegoCallPageHandler with ZegoCallServiceDelegate {
-  late CallingMachine callingMachine;
-  late MiniOverlayMachine miniOverlayMachine;
+  late ZegoCallingMachine callingMachine;
+  late ZegoMiniOverlayMachine miniOverlayMachine;
 
   void init() {
-    callingMachine = CallingMachine();
+    callingMachine = ZegoCallingMachine();
     callingMachine.init();
 
-    miniOverlayMachine = MiniOverlayMachine();
+    miniOverlayMachine = ZegoMiniOverlayMachine();
     miniOverlayMachine.init();
   }
 
@@ -140,8 +140,6 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   void onCancelCallExecuted() {
-    var callType = ZegoCallManager.shared.currentCallType;
-
     restoreToIdle();
   }
 
