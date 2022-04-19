@@ -1,10 +1,11 @@
 // Dart imports:
 import 'dart:async';
 
-// Project imports:
-import 'package:zego_call_flutter/zegocall_uikit/utils/zego_loading_manager.dart';
+// Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
+// Project imports:
+import 'package:zego_call_flutter/zegocall_uikit/utils/zego_loading_manager.dart';
 import '../../../logger.dart';
 import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';

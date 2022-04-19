@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 // Project imports:
 import 'package:zego_call_flutter/zegocall/core/manager/zego_service_manager.dart';
 import '../../../core/manager/zego_call_manager.dart';
+import '../../../core/manager/zego_call_manager_interface.dart';
 import './../../../../zegocall/core/model/zego_user_info.dart';
 import './../../../../zegocall/core/zego_call_defines.dart';
 import './../../../utils/zego_bottom_sheet.dart';
@@ -126,6 +128,22 @@ class ZegoCallingCalleeBottomToolBarState
     extends State<ZegoCallingCalleeBottomToolBar> {
   bool isAccepting = false;
   ValueNotifier<bool> acceptingNotifier = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (ZegoCallStatus.calling == ZegoCallManager.shared.currentCallStatus) {
+      //  status is call connecting before init, mean is accepting now,
+      //  so state should be accepting when render finished
+      SchedulerBinding.instance?.addPostFrameCallback((_) {
+        setState(() {
+          isAccepting = true;
+          acceptingNotifier.value = true;
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
