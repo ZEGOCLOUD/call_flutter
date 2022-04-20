@@ -116,9 +116,7 @@ class CallAppState extends State<CallApp> with WidgetsBindingObserver {
     PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
       var androidConfig = FlutterBackgroundAndroidConfig(
         notificationTitle: packageInfo.appName,
-        notificationText: "Background notification for keeping " +
-            packageInfo.appName +
-            " running in the background",
+        notificationText: "keep alive",
         notificationImportance: AndroidNotificationImportance.Default,
         // notificationIcon: , // Default is ic_launcher from folder mipmap
       );

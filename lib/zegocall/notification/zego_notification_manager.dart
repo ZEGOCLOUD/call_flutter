@@ -107,6 +107,7 @@ class ZegoNotificationManager {
   }
 
   void listenAwesomeNotification() {
+    //  BEFORE!! MaterialApp widget, starts to listen the notification actions
     AwesomeNotifications().actionStream.listen((receivedAction) {
       if (receivedAction.channelKey != firebaseChannelKey) {
         logInfo('unknown channel key');
@@ -161,9 +162,10 @@ class ZegoNotificationManager {
   }
 }
 
+// Declared as global, outside of any class
 Future<void> onFirebaseBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  logInfo("message: $message");
+  // logInfo("message: ${message.data}");
   ZegoNotificationManager.shared.onFirebaseRemoteMessageReceive(message);
 }
