@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -119,12 +121,13 @@ class ZegoNotificationManager {
       logInfo('receive:${model.toMap()}');
 
       //  dispatch notification message
-      var caller = ZegoUserInfo(model.callerID, model.callerName);
-      var callType =
-          ZegoCallTypeExtension.mapValue[int.parse(model.callTypeID)] ??
-              ZegoCallType.kZegoCallTypeVoice;
-      ZegoServiceManager.shared.callService.delegate
-          ?.onReceiveCallInvite(caller, callType);
+      // var caller = ZegoUserInfo(model.callerID, model.callerName);
+      // var callType =
+      //     ZegoCallTypeExtension.mapValue[int.parse(model.callTypeID)] ??
+      //         ZegoCallType.kZegoCallTypeVoice;
+      // ZegoServiceManager.shared.callService.delegate
+      //     ?.onReceiveCallInvite(caller, callType);
+      //  do nothing! cause can't receive call cancel
     });
   }
 
@@ -137,28 +140,36 @@ class ZegoNotificationManager {
     // onFirebaseRemoteMessageReceive(message);
   }
 
-  Future<void> onFirebaseRemoteMessageReceive(RemoteMessage message) async {
-    ZegoNotificationRing.shared.startRing();
+  int getUserAvatarIndex(String userName) {
+    if (userName.isEmpty) {
+      return 0;
+    }
 
+    var digest = md5.convert(utf8.encode(userName));
+    var value0 = digest.bytes[0] & 0xff;
+    return (value0 % 6).abs();
+  }
+
+  Future<void> onFirebaseRemoteMessageReceive(RemoteMessage message) async {
     logInfo('remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
 
-    Map<String, dynamic> notificationAdapter = {
-      NOTIFICATION_CONTENT: {
-        NOTIFICATION_ID: Random().nextInt(2147483647),
-        NOTIFICATION_GROUP_KEY: firebaseChannelGroupName,
-        NOTIFICATION_CHANNEL_KEY: firebaseChannelKey,
-        NOTIFICATION_TITLE: ZegoCallTypeExtension
-                .mapValue[int.parse(notificationModel.callTypeID)]?.string ??
-            "",
-        NOTIFICATION_BODY: "${notificationModel.callerName} Calling...",
-        NOTIFICATION_PAYLOAD: notificationModel.toMap(),
-        NOTIFICATION_PLAY_SOUND: false,
-        NOTIFICATION_ENABLE_VIBRATION: false,
-      }
-    };
-    logInfo('create notification: $notificationAdapter');
-    AwesomeNotifications().createNotificationFromJsonData(notificationAdapter);
+    var callType = ZegoCallTypeExtension
+            .mapValue[int.parse(notificationModel.callTypeID)]?.string ??
+        "";
+    var title = "${notificationModel.callerName}'s ${callType.toUpperCase()} "
+        "calling...";
+    var callerIcon =
+        'asset://assets/images/avatar_${getUserAvatarIndex(notificationModel.callerName)}.png';
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: Random().nextInt(2147483647),
+            groupKey: firebaseChannelGroupName,
+            channelKey: firebaseChannelKey,
+            title: title,
+            largeIcon: callerIcon,
+            payload: notificationModel.toMap(),
+            notificationLayout: NotificationLayout.Default));
   }
 }
 
@@ -166,6 +177,5 @@ class ZegoNotificationManager {
 Future<void> onFirebaseBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  // logInfo("message: ${message.data}");
   ZegoNotificationManager.shared.onFirebaseRemoteMessageReceive(message);
 }
