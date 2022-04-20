@@ -6,11 +6,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_vibrate/flutter_vibrate.dart';
 
 // Project imports:
 import '../../logger.dart';
@@ -18,17 +16,13 @@ import '../core/manager/zego_service_manager.dart';
 import '../core/model/zego_user_info.dart';
 import '../core/zego_call_defines.dart';
 import 'zego_notification_call_model.dart';
+import 'zego_notification_ring.dart';
 
 const firebaseChannelGroupName = 'firebase_channel_group';
 const firebaseChannelKey = 'firebase_channel';
-const String callRingName = 'CallRing.wav';
 
 class ZegoNotificationManager {
   static var shared = ZegoNotificationManager();
-
-  bool isRingTimerRunning = false;
-  AudioPlayer? audioPlayer;
-  late AudioCache audioCache;
 
   void init() {
     AwesomeNotifications()
@@ -57,16 +51,11 @@ class ZegoNotificationManager {
             debug: true)
         .then(onInitFinished);
 
-    audioCache = AudioCache(
-      prefix: 'assets/audio/',
-      fixedPlayer: AudioPlayer()..setReleaseMode(ReleaseMode.STOP),
-    );
+    ZegoNotificationRing.shared.init();
   }
 
   void uninit() async {
-    stopRing();
-
-    await audioCache.clearAll();
+    ZegoNotificationRing.shared.uninit();
   }
 
   void onInitFinished(bool initResult) async {
@@ -76,41 +65,6 @@ class ZegoNotificationManager {
     FirebaseMessaging.onBackgroundMessage(onFirebaseBackgroundMessage);
 
     listenAwesomeNotification();
-  }
-
-  void startRing() async {
-    if (isRingTimerRunning) {
-      logInfo('ring is running');
-      return;
-    }
-
-    logInfo('start ring');
-
-    isRingTimerRunning = true;
-
-    await audioCache.loop(callRingName).then((player) => audioPlayer = player);
-    Vibrate.vibrate();
-
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
-      logInfo('ring timer periodic');
-      if (!isRingTimerRunning) {
-        logInfo('ring timer ended');
-
-        audioPlayer?.stop();
-
-        timer.cancel();
-      } else {
-        Vibrate.vibrate();
-      }
-    });
-  }
-
-  void stopRing() async {
-    logInfo('stop ring');
-
-    isRingTimerRunning = false;
-
-    audioPlayer?.stop();
   }
 
   void requestFirebaseMessagePermission() async {
@@ -183,11 +137,7 @@ class ZegoNotificationManager {
   }
 
   Future<void> onFirebaseRemoteMessageReceive(RemoteMessage message) async {
-    if (isRingTimerRunning) {
-      return;
-    }
-
-    startRing();
+    ZegoNotificationRing.shared.startRing();
 
     logInfo('remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
