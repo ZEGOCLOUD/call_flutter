@@ -14,9 +14,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 // Project imports:
 import '../../logger.dart';
-import '../core/manager/zego_service_manager.dart';
-import '../core/model/zego_user_info.dart';
-import '../core/zego_call_defines.dart';
 import 'zego_notification_call_model.dart';
 import 'zego_notification_ring.dart';
 
@@ -26,32 +23,31 @@ const firebaseChannelKey = 'firebase_channel';
 class ZegoNotificationManager {
   static var shared = ZegoNotificationManager();
 
-  void init() {
-    AwesomeNotifications()
-        .initialize(
-            // set the icon to null if you want to use the default app icon
-            '',
-            [
-              NotificationChannel(
-                  channelGroupKey: firebaseChannelGroupName,
-                  channelKey: firebaseChannelKey,
-                  channelName: 'Firebase notifications',
-                  channelDescription: 'Notification channel for firebase',
-                  defaultColor: const Color(0xFF9D50DD),
-                  playSound: true,
-                  enableVibration: true,
-                  vibrationPattern: lowVibrationPattern,
-                  onlyAlertOnce: false,
-                  ledColor: Colors.white)
-            ],
-            // Channel groups are only visual and are not required
-            channelGroups: [
-              NotificationChannelGroup(
-                  channelGroupkey: firebaseChannelGroupName,
-                  channelGroupName: 'Firebase group')
-            ],
-            debug: true)
-        .then(onInitFinished);
+  Future<void> init() async {
+    await AwesomeNotifications().initialize(
+        // set the icon to null if you want to use the default app icon
+        '',
+        [
+          NotificationChannel(
+              channelGroupKey: firebaseChannelGroupName,
+              channelKey: firebaseChannelKey,
+              channelName: 'Firebase notifications',
+              channelDescription: 'Notification channel for firebase',
+              defaultColor: const Color(0xFF9D50DD),
+              playSound: true,
+              enableVibration: true,
+              vibrationPattern: lowVibrationPattern,
+              onlyAlertOnce: false,
+              ledColor: Colors.white)
+        ],
+        // Channel groups are only visual and are not required
+        channelGroups: [
+          NotificationChannelGroup(
+              channelGroupkey: firebaseChannelGroupName,
+              channelGroupName: 'Firebase group')
+        ],
+        debug: true);
+    await onInitFinished();
 
     ZegoNotificationRing.shared.init();
   }
@@ -60,7 +56,7 @@ class ZegoNotificationManager {
     ZegoNotificationRing.shared.uninit();
   }
 
-  void onInitFinished(bool initResult) async {
+  Future<void> onInitFinished() async {
     requestFirebaseMessagePermission();
     requestAwesomeNotificationsPermission();
 

@@ -23,7 +23,7 @@ mixin ZegoCallManagerInterface {
   ZegoCallManagerDelegate? delegate;
 
   /// The local logged-in user information.
-  ZegoUserInfo? localUserInfo;
+  ZegoUserInfo localUserInfo = ZegoUserInfo.empty();
 
   /// Initialize the SDK
   ///
@@ -32,7 +32,7 @@ mixin ZegoCallManagerInterface {
   /// Call this method at: Before you log in. We recommend you call this method when the application starts.
   ///
   /// - Parameter appID: refers to the project ID. To get this, go to ZEGOCLOUD Admin Console: https://console.zego.im/dashboard?lang=en
-  void initWithAppID(int appID);
+  Future<void> initWithAppID(int appID);
 
   /// The method to deinitialize the SDK
   ///

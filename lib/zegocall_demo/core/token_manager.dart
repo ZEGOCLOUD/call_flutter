@@ -73,7 +73,8 @@ class TokenManager {
 
   void saveToken(
       String userID, String token, int effectiveTimeInSeconds) async {
-    logInfo('user id:$userID, token:$token, effectiveTimeInSeconds:$effectiveTimeInSeconds');
+    logInfo(
+        'user id:$userID, token:$token, effectiveTimeInSeconds:$effectiveTimeInSeconds');
 
     var expirySeconds =
         DateTime.now().millisecondsSinceEpoch ~/ 1000 + effectiveTimeInSeconds;
@@ -115,7 +116,7 @@ class TokenManager {
   Future<Token> getTokenFromDisk() async {
     final prefs = await SharedPreferences.getInstance();
 
-    var localUserID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
+    var localUserID = ZegoCallManager.interface.localUserInfo.userID;
     if (localUserID.isEmpty) {
       logInfo('local user id is empty');
       return Token.empty();
@@ -123,7 +124,8 @@ class TokenManager {
 
     var oldUserID = prefs.getString(storeUserID) ?? "";
     if (oldUserID != localUserID) {
-      logInfo('local user id:localUserID is different of old user id:$oldUserID');
+      logInfo(
+          'local user id:localUserID is different of old user id:$oldUserID');
       return Token.empty();
     }
 

@@ -45,7 +45,7 @@ class ZegoCallManager
   get localUserInfo => ZegoServiceManager.shared.userService.localUserInfo;
 
   @override
-  void initWithAppID(int appID) {
+  Future<void> initWithAppID(int appID) async {
     logInfo('app id:$appID');
 
     ZegoNavigationService().init();
@@ -56,7 +56,7 @@ class ZegoCallManager
     ZegoServiceManager.shared.deviceService.delegate = this;
 
     ZegoFireBaseManager.shared.init();
-    ZegoNotificationManager.shared.init();
+    await ZegoNotificationManager.shared.init();
 
     pageHandler = ZegoCallPageHandler();
     pageHandler.init();
@@ -439,7 +439,7 @@ class ZegoCallManager
     final ZegoNavigationService _navigationService =
         locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
-    ZegoToastManager.shared.showToast(localUserInfo?.userID == userID
+    ZegoToastManager.shared.showToast(localUserInfo.userID == userID
         ? AppLocalizations.of(context)!.networkConnnectMeUnstable
         : AppLocalizations.of(context)!.networkConnnectOtherUnstable);
   }

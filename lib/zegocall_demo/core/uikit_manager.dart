@@ -36,7 +36,7 @@ class UIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
 
   @override
   Future<String> getRTCToken() async {
-    var userID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
+    var userID = ZegoCallManager.interface.localUserInfo.userID;
     if (userID.isEmpty) {
       logInfo('user id is empty');
       return "";
@@ -49,7 +49,7 @@ class UIKitManager extends ChangeNotifier with ZegoCallManagerDelegate {
 
   @override
   onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
-    var userID = ZegoCallManager.interface.localUserInfo?.userID ?? "";
+    var userID = ZegoCallManager.interface.localUserInfo.userID;
     if (userID.isEmpty) {
       logInfo('user id is empty');
       return;

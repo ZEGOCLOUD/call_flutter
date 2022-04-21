@@ -46,43 +46,36 @@ class OnlineListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        OnlineListAvatar(userName: userInfo.userName),
-        SizedBox(width: 26.w),
-        Container(
+    return Row(children: [
+      OnlineListAvatar(userName: userInfo.userName),
+      SizedBox(width: 26.w),
+      Container(
           decoration: const BoxDecoration(
             border: Border(
               bottom: BorderSide(
                   width: 1.0, color: StyleColors.userListSeparateLineColor),
             ),
           ),
-          child: Row(
-            children: [
-              OnlineListUserInfo(
-                  userName: userInfo.userName, userID: userInfo.userID),
-              SizedBox(width: 36.w),
-              Row(
-                children: [
-                  GestureDetector(
-                      child: const OnlineListButton(
-                          iconAssetName: StyleIconUrls.userListAudioCall),
-                      onTap: () {
-                        onAudioCallTap(context);
-                      }),
-                  SizedBox(width: 32.w),
-                  GestureDetector(
-                      child: const OnlineListButton(
-                          iconAssetName: StyleIconUrls.userLIstVideoCall),
-                      onTap: () {
-                        onVideoCallTap(context);
-                      }),
-                ],
-              ),
-            ],
-          ),
-        )
-      ],
-    );
+          child: Row(children: [
+            OnlineListUserInfo(
+                userName: userInfo.userName, userID: userInfo.userID),
+            SizedBox(width: 36.w),
+            Row(children: [
+              GestureDetector(
+                  child: const OnlineListButton(
+                      iconAssetName: StyleIconUrls.userListAudioCall),
+                  onTap: () {
+                    onAudioCallTap(context);
+                  }),
+              SizedBox(width: 32.w),
+              GestureDetector(
+                  child: const OnlineListButton(
+                      iconAssetName: StyleIconUrls.userLIstVideoCall),
+                  onTap: () {
+                    onVideoCallTap(context);
+                  })
+            ])
+          ]))
+    ]);
   }
 }

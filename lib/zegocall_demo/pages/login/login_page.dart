@@ -1,6 +1,5 @@
 // Dart imports:
 import 'dart:async';
-import 'dart:developer';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -14,29 +13,28 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
+import '../../../logger.dart';
+import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../../constants/page_constant.dart';
 import '../../core/login_manager.dart';
 import '../../styles.dart';
 import '../../widgets/toast_manager.dart';
-import 'google_login_protocol_item.dart';
+import 'login_protocol_item.dart';
 
-class GoogleLoginPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   // ignore: public_member_api_docs
-  const GoogleLoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => GoogleLoginPageState();
+  State<StatefulWidget> createState() => LoginPageState();
 }
 
-class GoogleLoginPageState extends State<GoogleLoginPage> {
+class LoginPageState extends State<LoginPage> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  String error = '';
   String verificationId = '';
 
   bool isLoading = false;
   bool isPolicyCheck = false;
-
-  StreamSubscription<User?>? authStateChangesSubscription;
 
   @override
   void initState() {
@@ -44,21 +42,12 @@ class GoogleLoginPageState extends State<GoogleLoginPage> {
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       checkPermission();
-
-      authStateChangesSubscription =
-          FirebaseAuth.instance.authStateChanges().listen((User? user) {
-        if (user != null) {
-          Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
-        }
-      });
     });
   }
 
   @override
   void dispose() {
     super.dispose();
-
-    authStateChangesSubscription?.cancel();
   }
 
   @override
@@ -89,7 +78,7 @@ class GoogleLoginPageState extends State<GoogleLoginPage> {
                           const Expanded(child: SizedBox()),
                           body(),
                           SizedBox(height: 48.h),
-                          GoogleLoginProtocolItem(updatePolicyCheckState),
+                          LoginProtocolItem(updatePolicyCheckState),
                           SizedBox(height: 76.h),
                         ],
                       ),
@@ -121,25 +110,35 @@ class GoogleLoginPageState extends State<GoogleLoginPage> {
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
-        child: Container(
-          width: 602.w,
-          height: 100.h,
-          decoration: const BoxDecoration(
-            color: Color(0xffF3F4F7),
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-          ),
-          child: TextButton(
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Image(
-                  image: const AssetImage(StyleIconUrls.authIconGoogle),
-                  height: 45.h),
-              Text(AppLocalizations.of(context)!.loginPageGoogleLogin)
-            ]),
-            onPressed: isLoading ? null : onLogInGooglePressed,
-          ),
-        ),
+        child: Column(children: loginWidgets()),
       ),
     );
+  }
+
+  List<Widget> loginWidgets() {
+    List<Widget> widgets = [];
+
+    var buttonDecoration = const BoxDecoration(
+      color: Color(0xffF3F4F7),
+      borderRadius: BorderRadius.all(Radius.circular(8)),
+    );
+    var googleLoginWidget = Container(
+        width: 602.w,
+        height: 80.h,
+        decoration: buttonDecoration,
+        child: TextButton(
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Image(
+                image: const AssetImage(StyleIconUrls.authIconGoogle),
+                height: 45.h),
+            Text(AppLocalizations.of(context)!.loginPageGoogleLogin)
+          ]),
+          onPressed: isLoading ? null : onLogInGooglePressed,
+        ));
+
+    widgets.add(googleLoginWidget);
+
+    return widgets;
   }
 
   void updatePolicyCheckState(bool value) {
@@ -148,19 +147,20 @@ class GoogleLoginPageState extends State<GoogleLoginPage> {
     });
   }
 
+  void checkPermission() async {
+    await Permission.camera.request();
+    await Permission.microphone.request();
+  }
+
   void onLogInGooglePressed() {
-    log('onLogInGooglePressed');
+    logInfo('login google');
+
     if (isPolicyCheck) {
       logInWithGoogle();
     } else {
       ToastManager.shared
           .showToast(AppLocalizations.of(context)!.toastLoginServicePrivacy);
     }
-  }
-
-  void checkPermission() async {
-    await Permission.camera.request();
-    await Permission.microphone.request();
   }
 
   Future<void> logInWithGoogle() async {
@@ -181,14 +181,19 @@ class GoogleLoginPageState extends State<GoogleLoginPage> {
         await LoginManager.shared.login(googleAuth.idToken ?? "");
       }
     } on FirebaseAuthException catch (e) {
-      setState(() {
-        error = '${e.message}';
-      });
+      logInfo('login failed, code:${e.code}, message:${e.message}');
+      ToastManager.shared.showToast(
+          AppLocalizations.of(context)!.toastLoginFail(int.parse(e.code)));
     } finally {
       setState(() {
         isLoading = false;
       });
       ToastManager.shared.hide();
+
+      var user = FirebaseAuth.instance.currentUser!;
+      ZegoCallManager.interface.setLocalUser(user.uid, user.displayName ?? "");
+
+      Navigator.pushReplacementNamed(context, PageRouteNames.welcome);
     }
   }
 }

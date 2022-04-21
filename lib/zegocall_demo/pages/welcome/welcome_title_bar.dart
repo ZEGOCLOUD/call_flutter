@@ -4,8 +4,8 @@
 import 'package:flutter/material.dart';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 
 // Project imports:
 import '../../../zegocall_uikit/utils/zego_user_avatar.dart';
@@ -20,19 +20,8 @@ class WelcomeTitleBar extends StatefulWidget {
 }
 
 class WelcomeTitleBarState extends State<WelcomeTitleBar> {
-  late User user;
-
   @override
   void initState() {
-    user = FirebaseAuth.instance.currentUser!;
-    FirebaseAuth.instance.userChanges().listen((event) {
-      if (event != null && mounted) {
-        setState(() {
-          user = event;
-        });
-      }
-    });
-
     super.initState();
   }
 
@@ -43,7 +32,8 @@ class WelcomeTitleBarState extends State<WelcomeTitleBar> {
 
   @override
   Widget build(BuildContext context) {
-    var avatarIndex = getUserAvatarIndex(user.displayName ?? "");
+    var localUser = ZegoCallManager.interface.localUserInfo;
+    var avatarIndex = getUserAvatarIndex(localUser.userName);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -59,7 +49,7 @@ class WelcomeTitleBarState extends State<WelcomeTitleBar> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                user.displayName ?? '',
+                localUser.userName,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: const Color(0xFF1B1B1B),
@@ -68,7 +58,7 @@ class WelcomeTitleBarState extends State<WelcomeTitleBar> {
                 ),
               ),
               Text(
-                ("ID: ${user.uid}"),
+                ("ID: ${localUser.userID}"),
                 style: TextStyle(
                   color: const Color(0xFF606060),
                   fontSize: 20.sp,
