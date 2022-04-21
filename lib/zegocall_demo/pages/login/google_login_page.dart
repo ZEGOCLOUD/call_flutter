@@ -63,39 +63,43 @@ class GoogleLoginPageState extends State<GoogleLoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: FocusScope.of(context).unfocus,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SafeArea(
-              child: Form(
-                key: formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: 159.h / 2),
-                      header(),
-                      const Expanded(child: SizedBox()),
-                      body(),
-                      SizedBox(height: 48.h),
-                      GoogleLoginProtocolItem(updatePolicyCheckState),
-                      SizedBox(height: 76.h),
-                    ],
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: GestureDetector(
+          onTap: FocusScope.of(context).unfocus,
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SafeArea(
+                  child: Form(
+                    key: formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 400),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 159.h / 2),
+                          header(),
+                          const Expanded(child: SizedBox()),
+                          body(),
+                          SizedBox(height: 48.h),
+                          GoogleLoginProtocolItem(updatePolicyCheckState),
+                          SizedBox(height: 76.h),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget header() {

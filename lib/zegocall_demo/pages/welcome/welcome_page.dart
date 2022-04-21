@@ -29,33 +29,27 @@ class WelcomePage extends HookWidget {
       return null;
     }, []);
 
-    return GestureDetector(
-      onTap: FocusScope.of(context).unfocus,
-      child: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  const WelcomeTitleBar(),
-                  const WelcomeOneOnOneBg(),
-                  const Expanded(child: SizedBox()),
-                  const WelcomeToolBar(),
-                  SizedBox(
-                    height: 96.h,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: GestureDetector(
+            onTap: FocusScope.of(context).unfocus,
+            child: Scaffold(
+                body: Center(
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: SafeArea(
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                              SizedBox(height: 10.h),
+                              const WelcomeTitleBar(),
+                              const WelcomeOneOnOneBg(),
+                              const Expanded(child: SizedBox()),
+                              const WelcomeToolBar(),
+                              SizedBox(height: 96.h)
+                            ])))))));
   }
 }

@@ -38,28 +38,32 @@ class OnlineListPageState extends State<OnlineListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: Container(
-      padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 5.h),
-      child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        NavigationBackBar(
-            targetBackUrl: PageRouteNames.welcome,
-            title: AppLocalizations.of(context)!.back,
-            titleStyle: StyleConstant.backText),
-        SizedBox(height: 10.h),
-        const OnlineListTitleBar(),
-        Consumer<UserListManager>(builder: (_, userListManager, child) {
-          ToastManager.shared.hide();
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: Scaffold(
+            body: SafeArea(
+                child: Container(
+          padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 5.h),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            NavigationBackBar(
+                targetBackUrl: PageRouteNames.welcome,
+                title: AppLocalizations.of(context)!.back,
+                titleStyle: StyleConstant.backText),
+            SizedBox(height: 10.h),
+            const OnlineListTitleBar(),
+            Consumer<UserListManager>(builder: (_, userListManager, child) {
+              ToastManager.shared.hide();
 
-          return Expanded(
-            child: userListManager.userList.isEmpty
-                ? emptyTips(context)
-                : userListView(userListManager),
-          );
-        }),
-      ]),
-    )));
+              return Expanded(
+                child: userListManager.userList.isEmpty
+                    ? emptyTips(context)
+                    : userListView(userListManager),
+              );
+            }),
+          ]),
+        ))));
   }
 
   Widget emptyTips(BuildContext context) {

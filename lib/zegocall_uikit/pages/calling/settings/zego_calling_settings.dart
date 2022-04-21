@@ -58,23 +58,27 @@ class ZegoCallingSettingsViewState extends State<ZegoCallingSettingsView> {
 
   @override
   Widget build(BuildContext context) {
-    return IndexedStack(
-      index: pageIndex,
-      children: [
-        ZegoCallingSettingsPage(
-            callType: widget.callType,
-            pageIndexChanged: updateCurrentPage,
-            audioBitrateSubTitle: audioBitrateSubTitle,
-            videoResolutionSubTitle: videoResolutionSubTitle),
-        ZegoCallingAudioBitrateSettingsPage(
-            pageIndexChanged: updateCurrentPage,
-            valueChanged: updateAudioBitrate,
-            selectedValue: audioBitrateSubTitle),
-        ZegoCallingVideoResolutionSettingsPage(
-            pageIndexChanged: updateCurrentPage,
-            valueChanged: updateVideoResolution,
-            selectedValue: videoResolutionSubTitle),
-      ],
-    );
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: IndexedStack(
+          index: pageIndex,
+          children: [
+            ZegoCallingSettingsPage(
+                callType: widget.callType,
+                pageIndexChanged: updateCurrentPage,
+                audioBitrateSubTitle: audioBitrateSubTitle,
+                videoResolutionSubTitle: videoResolutionSubTitle),
+            ZegoCallingAudioBitrateSettingsPage(
+                pageIndexChanged: updateCurrentPage,
+                valueChanged: updateAudioBitrate,
+                selectedValue: audioBitrateSubTitle),
+            ZegoCallingVideoResolutionSettingsPage(
+                pageIndexChanged: updateCurrentPage,
+                valueChanged: updateVideoResolution,
+                selectedValue: videoResolutionSubTitle),
+          ],
+        ));
   }
 }
