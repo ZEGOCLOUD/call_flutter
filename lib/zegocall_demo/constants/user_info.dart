@@ -24,7 +24,7 @@ class UserInfo {
 
   UserInfo.fromJson(Map<String, dynamic> json)
       : userID = json['user_id'] ?? "",
-        userName = json['display_name'];
+        userName = json['display_name'] ?? "";
 
   Map<String, dynamic> toJson() => {
         'user_id': userID,
