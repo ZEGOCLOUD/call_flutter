@@ -154,11 +154,6 @@ class ZegoNotificationManager {
     logInfo('remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
 
-    var callType = ZegoCallTypeExtension
-            .mapValue[int.parse(notificationModel.callTypeID)]?.string ??
-        "";
-    var title = "${notificationModel.callerName}'s ${callType.toUpperCase()} "
-        "calling...";
     var callerIcon =
         'asset://assets/images/avatar_${getUserAvatarIndex(notificationModel.callerName)}.png';
     AwesomeNotifications().createNotification(
@@ -166,7 +161,8 @@ class ZegoNotificationManager {
             id: Random().nextInt(2147483647),
             groupKey: firebaseChannelGroupName,
             channelKey: firebaseChannelKey,
-            title: title,
+            title: "You have a new call",
+            body: "${notificationModel.callerName} is calling you",
             largeIcon: callerIcon,
             payload: notificationModel.toMap(),
             notificationLayout: NotificationLayout.Default));
