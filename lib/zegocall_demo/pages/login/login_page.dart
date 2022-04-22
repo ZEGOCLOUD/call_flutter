@@ -178,7 +178,11 @@ class LoginPageState extends State<LoginPage> {
       final googleAuth = await googleUser?.authentication;
 
       if (googleAuth != null) {
-        await LoginManager.shared.login(googleAuth.idToken ?? "");
+        // Create a new credential
+        final credential = GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken ?? "",
+        );
+        await LoginManager.shared.login(credential);
       }
     } on FirebaseAuthException catch (e) {
       logInfo('login failed, code:${e.code}, message:${e.message}');

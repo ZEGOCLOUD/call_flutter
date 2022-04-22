@@ -8,12 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:result_type/result_type.dart';
-import 'package:zego_call_flutter/zegocall/core/model/zego_user_info.dart';
 
 // Project imports:
 import '../../logger.dart';
+import '../../zegocall/core/model/zego_user_info.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../../zegocall_uikit/utils/zego_navigation_service.dart';
 import '../constants/page_constant.dart';
@@ -55,11 +54,7 @@ class LoginManager extends ChangeNotifier {
     return ZegoUserInfo(user?.uid ?? "", user?.displayName ?? "");
   }
 
-  Future<LoginResult> login(String token) async {
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      idToken: token,
-    );
+  Future<LoginResult> login(AuthCredential credential) async {
     // Once signed in, return the UserCredential
     await FirebaseAuth.instance
         .signInWithCredential(credential)
@@ -71,8 +66,6 @@ class LoginManager extends ChangeNotifier {
   }
 
   void logout() async {
-    await GoogleSignIn().signOut();
-
     await FirebaseAuth.instance.signOut();
 
     fcmTokenListenerSubscription?.cancel();
