@@ -205,7 +205,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   @override
-  void onReceiveCallDecline(ZegoUserInfo callee, ZegoDeclineType type) {
+  void onReceiveCallDeclined(ZegoUserInfo callee, ZegoDeclineType type) {
     switch (currentPageType()) {
       case ZegoCallPageType.callingPage:
         callingMachine.stateIdle.enter();
@@ -247,7 +247,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   @override
-  void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type) {
+  void onReceiveCallInvited(ZegoUserInfo caller, ZegoCallType type) {
     switch (currentPageType()) {
       case ZegoCallPageType.callingPage:
         break;

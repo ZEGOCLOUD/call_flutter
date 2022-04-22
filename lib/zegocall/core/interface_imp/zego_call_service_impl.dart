@@ -461,7 +461,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
     callInfo.caller = caller;
     callInfo.callees = callees;
 
-    delegate?.onReceiveCallInvite(caller, callType);
+    delegate?.onReceiveCallInvited(caller, callType);
   }
 
   void onCallCanceledNotify(ZegoNotifyListenerParameter parameter) {
@@ -548,7 +548,7 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
 
     var callee = callInfo.callees.firstWhere((user) => user.userID == calleeID,
         orElse: () => ZegoUserInfo.empty());
-    delegate?.onReceiveCallDecline(callee, declineType);
+    delegate?.onReceiveCallDeclined(callee, declineType);
   }
 
   void onCallEndNotify(ZegoNotifyListenerParameter parameter) {

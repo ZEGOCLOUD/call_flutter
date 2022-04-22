@@ -122,7 +122,7 @@ class ZegoCallManager
   void renewToken(String token, String roomID) {
     logInfo('token:$token, room id:$roomID');
 
-    ZegoExpressEngine.instance.renewToken(roomID, token);
+    ZegoServiceManager.shared.roomService.renewToken(token, roomID);
   }
 
   @override
@@ -332,13 +332,13 @@ class ZegoCallManager
   }
 
   @override
-  void onReceiveCallDecline(ZegoUserInfo callee, ZegoDeclineType type) {
+  void onReceiveCallDeclined(ZegoUserInfo callee, ZegoDeclineType type) {
     logInfo('user:${callee.toString()}, type:${type.string}');
 
     callTimeManager.stopTimer(currentCallID());
     ZegoNotificationRing.shared.stopRing();
 
-    pageHandler.onReceiveCallDecline(callee, type);
+    pageHandler.onReceiveCallDeclined(callee, type);
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
@@ -358,7 +358,7 @@ class ZegoCallManager
   }
 
   @override
-  void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type) {
+  void onReceiveCallInvited(ZegoUserInfo caller, ZegoCallType type) {
     logInfo('caller:${caller.toString()}, '
         'type:${type.string}');
 
@@ -378,7 +378,7 @@ class ZegoCallManager
     currentCallStatus = ZegoCallStatus.wait;
     currentCallType = type;
 
-    pageHandler.onReceiveCallInvite(caller, type);
+    pageHandler.onReceiveCallInvited(caller, type);
   }
 
   void onMiniOverlayBeInvitePageEmptyClicked() {
@@ -463,9 +463,6 @@ class ZegoCallManager
   String currentCallID() {
     return ZegoServiceManager.shared.callService.callInfo.callID;
   }
-
-  @override
-  void onRoomInfoUpdate(ZegoRoomInfo info) {}
 
   @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {

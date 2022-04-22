@@ -70,4 +70,9 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
     // }
     delegate?.onRoomTokenWillExpire(roomID, remainTimeInSecond);
   }
+
+  @override
+  void renewToken(String token, String roomID) {
+    ZegoExpressEngine.instance.renewToken(roomID, token);
+  }
 }

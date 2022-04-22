@@ -170,9 +170,8 @@ class ZegoCallingAudioBitrateSettingsPage extends StatelessWidget {
   Map<ZegoAudioBitrate, String> listModel(BuildContext context) {
     Map<ZegoAudioBitrate, String> model = {};
     model[ZegoAudioBitrate.b16] = getBitrateString(ZegoAudioBitrate.b16);
-    model[ZegoAudioBitrate.b48] = getBitrateString(ZegoAudioBitrate.b48);
-    model[ZegoAudioBitrate.b56] = getBitrateString(ZegoAudioBitrate.b56);
-    model[ZegoAudioBitrate.b96] = getBitrateString(ZegoAudioBitrate.b96);
+    model[ZegoAudioBitrate.b32] = getBitrateString(ZegoAudioBitrate.b32);
+    model[ZegoAudioBitrate.b64] = getBitrateString(ZegoAudioBitrate.b64);
     model[ZegoAudioBitrate.b128] = getBitrateString(ZegoAudioBitrate.b128);
 
     return model;

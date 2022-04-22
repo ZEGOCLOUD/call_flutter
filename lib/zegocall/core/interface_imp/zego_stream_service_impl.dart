@@ -130,6 +130,19 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
 
     getCameraStateNotifierByStreamID(streamID).value = enabled;
   }
+
+  @override
+  void stopPlaying(String userID) {
+    var roomID = ZegoServiceManager.shared.roomService.roomInfo.roomID;
+    if (roomID.isEmpty) {
+      assert(false, "The room ID can not be empty");
+      return;
+    }
+
+    var streamID = generateStreamIDByUserID(userID);
+    logInfo('stop play $streamID');
+    ZegoExpressEngine.instance.stopPlayingStream(streamID);
+  }
 }
 
 String generateStreamIDByUserID(String userID) {

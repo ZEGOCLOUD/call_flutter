@@ -36,7 +36,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     logInfo('path:$path, parameters:$parameters');
 
     if (!functionMap.containsKey(path)) {
-      return Failure(ZegoError.firebasePathNotExist);
+      return Failure(ZegoError.failed);
     }
 
     return functionMap[path]!(parameters);
