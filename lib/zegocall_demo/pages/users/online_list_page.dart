@@ -48,6 +48,9 @@ class OnlineListPageState extends State<OnlineListPage> {
           padding: EdgeInsets.only(left: 0, top: 20.h, right: 0, bottom: 5.h),
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             NavigationBackBar(
+                onBackTap: () {
+                  ToastManager.shared.hide();
+                },
                 targetBackUrl: PageRouteNames.welcome,
                 title: AppLocalizations.of(context)!.back,
                 titleStyle: StyleConstant.backText),

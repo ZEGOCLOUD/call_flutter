@@ -128,7 +128,7 @@ class ZegoNotificationManager {
   }
 
   Future<void> onFirebaseForegroundMessage(RemoteMessage message) async {
-    // for more reliable, faster notification in foreground
+    // for more reliable and faster notification in foreground,
     // use listener in firebase manager
     return;
 

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 
 // Project imports:
+import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../../../zegocall_uikit/utils/zego_user_avatar.dart';
 import '../../constants/page_constant.dart';
 import '../../styles.dart';

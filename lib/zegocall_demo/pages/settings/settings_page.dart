@@ -33,6 +33,7 @@ class SettingsPage extends HookWidget {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           NavigationBackBar(
+                              onBackTap: () {},
                               targetBackUrl: PageRouteNames.welcome,
                               title: AppLocalizations.of(context)!
                                   .settingPageSettings,

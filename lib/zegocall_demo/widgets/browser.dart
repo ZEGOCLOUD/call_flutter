@@ -46,6 +46,9 @@ class BrowserState extends State<Browser> {
       child: Column(
         children: [
           NavigationBackBar(
+              onBackTap: () {
+                ToastManager.shared.hide();
+              },
               targetBackUrl: widget.backURL,
               title: title,
               titleStyle: StyleConstant.browserTitle,
