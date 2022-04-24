@@ -14,7 +14,7 @@ import 'package:result_type/result_type.dart';
 import '../../logger.dart';
 import '../../zegocall/core/model/zego_user_info.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
-import '../../zegocall/utils/zego_navigation_service.dart';
+import '../../zegocall_uikit/utils/zego_navigation_service.dart';
 import '../constants/page_constant.dart';
 import 'user_list_manager.dart';
 

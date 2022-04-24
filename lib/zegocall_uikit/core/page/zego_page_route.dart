@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 // Project imports:
 import '../../../logger.dart';
-import '../../../zegocall/utils/zego_navigation_service.dart';
+import '../../utils/zego_navigation_service.dart';
 
 class ZegoPageRoute {
   static var shared = ZegoPageRoute();

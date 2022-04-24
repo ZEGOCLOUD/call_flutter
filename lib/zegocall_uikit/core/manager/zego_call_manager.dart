@@ -15,7 +15,7 @@ import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../../zegocall/notification/zego_notification_ring.dart';
 import '../../../zegocall/request/zego_firebase_manager.dart';
 import '../../utils/zego_loading_manager.dart';
-import '../../../zegocall/utils/zego_navigation_service.dart';
+import '../../utils/zego_navigation_service.dart';
 import '../page/zego_call_page_handler.dart';
 import 'zego_call_manager_interface.dart';
 import 'zego_calltime_manager.dart';
@@ -60,11 +60,11 @@ class ZegoCallManager
     ZegoServiceManager.shared.callService.delegate = this;
     ZegoServiceManager.shared.deviceService.delegate = this;
 
-    ZegoFireBaseManager.shared.init();
-    await ZegoNotificationManager.shared.init();
-
     pageHandler = ZegoCallPageHandler();
     pageHandler.init();
+
+    ZegoFireBaseManager.shared.init();
+    await ZegoNotificationManager.shared.init();
   }
 
   @override

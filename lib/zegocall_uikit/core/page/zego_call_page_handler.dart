@@ -11,7 +11,7 @@ import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import '../../utils/zego_loading_manager.dart';
-import '../../../zegocall/utils/zego_navigation_service.dart';
+import '../../utils/zego_navigation_service.dart';
 import '../machine/zego_calling_machine.dart';
 import '../machine/zego_mini_overlay_machine.dart';
 import '../manager/zego_call_manager.dart';
