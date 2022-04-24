@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:ui';
+
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
@@ -42,6 +45,8 @@ class ZegoCallManager
 
   ZegoCallingTimeManager callTimeManager = ZegoCallingTimeManager.empty();
   late ZegoCallPageHandler pageHandler;
+
+  AppLifecycleState appLifecycleState = AppLifecycleState.resumed;
 
   @override
   get localUserInfo => ZegoServiceManager.shared.userService.localUserInfo;
@@ -474,7 +479,7 @@ class ZegoCallManager
 
   @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
-    var userID = ZegoCallManager.interface.localUserInfo.userID;
+    var userID = ZegoCallManager.shared.localUserInfo.userID;
     if (userID.isEmpty) {
       logInfo('user id is empty');
       return;

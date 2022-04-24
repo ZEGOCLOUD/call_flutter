@@ -86,10 +86,12 @@ class CallAppState extends State<CallApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    ZegoCallManager.shared.appLifecycleState = state;
+
     if (AppLifecycleState.detached == state) {
       WidgetsBinding.instance?.removeObserver(this);
 
-      ZegoCallManager.interface.uninit();
+      ZegoCallManager.shared.uninit();
     }
   }
 

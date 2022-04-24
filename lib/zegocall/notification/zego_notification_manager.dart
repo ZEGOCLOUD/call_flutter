@@ -149,7 +149,10 @@ class ZegoNotificationManager {
   Future<void> onFirebaseRemoteMessageReceive(RemoteMessage message) async {
     logInfo('remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
+    createNotification(notificationModel);
+  }
 
+  void createNotification(ZegoNotificationModel notificationModel) {
     var callerIcon =
         'asset://assets/images/avatar_${getUserAvatarIndex(notificationModel.callerName)}.png';
     AwesomeNotifications().createNotification(

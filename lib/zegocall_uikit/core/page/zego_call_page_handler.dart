@@ -1,5 +1,7 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
@@ -10,6 +12,8 @@ import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/notification/zego_notification_call_model.dart';
+import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../utils/zego_loading_manager.dart';
 import '../../utils/zego_navigation_service.dart';
 import '../machine/zego_calling_machine.dart';
@@ -156,7 +160,8 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     callingState = state;
 
-    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
 
     switch (state) {
@@ -260,6 +265,21 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
         break;
       default:
         break;
+    }
+
+    if (Platform.isIOS) {
+      //  only for iOS
+      if (AppLifecycleState.paused ==
+          ZegoCallManager.shared.appLifecycleState) {
+        ZegoNotificationModel notificationModel = ZegoNotificationModel.empty();
+        notificationModel.callID = ZegoCallManager.shared.currentCallID();
+        notificationModel.callerID = ZegoCallManager.shared.caller.userID;
+        notificationModel.callerName = ZegoCallManager.shared.caller.userName;
+        notificationModel.callTypeID =
+            ZegoCallManager.shared.currentCallType.id.toString();
+
+        ZegoNotificationManager.shared.createNotification(notificationModel);
+      }
     }
   }
 

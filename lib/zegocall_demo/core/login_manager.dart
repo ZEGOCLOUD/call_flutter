@@ -36,7 +36,7 @@ class LoginManager extends ChangeNotifier {
   void init() {
     user = convertFirebaseAuthUser(FirebaseAuth.instance.currentUser);
     if (!user.isEmpty()) {
-      ZegoCallManager.shared.setLocalUser(user.userID, user.userName);
+      ZegoCallManager.interface.setLocalUser(user.userID, user.userName);
     }
 
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
