@@ -9,17 +9,17 @@ import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_room_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_user_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
-import '../../../zegocall/core/model/zego_room_info.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../../zegocall/notification/zego_notification_ring.dart';
 import '../../../zegocall/request/zego_firebase_manager.dart';
 import '../../utils/zego_loading_manager.dart';
-import '../../utils/zego_navigation_service.dart';
+import '../../../zegocall/utils/zego_navigation_service.dart';
 import '../page/zego_call_page_handler.dart';
 import 'zego_call_manager_interface.dart';
 import 'zego_calltime_manager.dart';
+import 'zego_token_provider_interface.dart';
 
 class ZegoCallManager
     with
@@ -31,6 +31,8 @@ class ZegoCallManager
   static ZegoCallManagerInterface interface = ZegoCallManager.shared;
 
   static var shared = ZegoCallManager();
+
+  ZegoTokenProviderInterface? tokenProvider;
 
   ZegoCallStatus currentCallStatus = ZegoCallStatus.free;
   ZegoCallType currentCallType = ZegoCallType.kZegoCallTypeVoice;
@@ -45,8 +47,11 @@ class ZegoCallManager
   get localUserInfo => ZegoServiceManager.shared.userService.localUserInfo;
 
   @override
-  Future<void> initWithAppID(int appID) async {
+  Future<void> initWithAppID(int appID,
+      {ZegoTokenProviderInterface? provider}) async {
     logInfo('app id:$appID');
+
+    tokenProvider = provider;
 
     ZegoNavigationService().init();
 
@@ -73,6 +78,11 @@ class ZegoCallManager
     ZegoNotificationManager.shared.uninit();
 
     ZegoServiceManager.shared.uninit();
+  }
+
+  @override
+  void setTokenProvider(ZegoTokenProviderInterface provider) {
+    tokenProvider = provider;
   }
 
   @override
@@ -119,13 +129,6 @@ class ZegoCallManager
   }
 
   @override
-  void renewToken(String token, String roomID) {
-    logInfo('token:$token, room id:$roomID');
-
-    ZegoServiceManager.shared.roomService.renewToken(token, roomID);
-  }
-
-  @override
   Future<ZegoError> callUser(ZegoUserInfo callee, ZegoCallType callType) async {
     logInfo('call user, user:${callee.toString()}, call '
         'type:${callType.string}');
@@ -143,12 +146,12 @@ class ZegoCallManager
 
     updateDeviceConfigInCalling();
 
-    if (delegate == null) {
-      assert(false, "delegate is null");
+    if (tokenProvider == null) {
+      assert(false, "You must call `setTokenProvider` to set a provider.");
       return ZegoError.failed;
     }
 
-    return delegate!.getRTCToken().then((String token) {
+    return tokenProvider!.getRTCToken().then((String token) {
       if (currentCallStatus != ZegoCallStatus.waitAccept) {
         logInfo('current call status is not wait accept, '
             '$currentCallStatus}');
@@ -194,7 +197,12 @@ class ZegoCallManager
       return ZegoError.failed;
     }
 
-    return delegate!.getRTCToken().then((String token) {
+    if (tokenProvider == null) {
+      assert(false, "You must call `setTokenProvider` to set a provider.");
+      return ZegoError.failed;
+    }
+
+    return tokenProvider!.getRTCToken().then((String token) {
       if (currentCallStatus != ZegoCallStatus.calling) {
         logInfo('current call status is not calling, $currentCallStatus}');
         return ZegoError.callStatusWrong;
@@ -466,6 +474,24 @@ class ZegoCallManager
 
   @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
-    delegate?.onRoomTokenWillExpire(roomID, remainTimeInSecond);
+    var userID = ZegoCallManager.interface.localUserInfo.userID;
+    if (userID.isEmpty) {
+      logInfo('user id is empty');
+      return;
+    }
+
+    if (tokenProvider == null) {
+      assert(false, "You must call `setTokenProvider` to set a provider.");
+      return;
+    }
+
+    logInfo('try get token..');
+    tokenProvider!.getRTCToken().then((String token) {
+      logInfo('get token, $token');
+      if (token.isNotEmpty) {
+        logInfo('renew token.');
+        ZegoServiceManager.shared.roomService.renewToken(token, roomID);
+      }
+    });
   }
 }

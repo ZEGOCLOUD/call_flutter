@@ -1,5 +1,6 @@
 {
 	"appName": "ZEGO Call",
+	"loginPageTitle": "Welcome to experience \n ZEGO Call.",
 	"loginPageUserName": "Please enter your username.",
 	"loginPageLogin": "Log in",
 	"loginPageGoogleLogin": "Log in with Google",
@@ -103,11 +104,46 @@
 	"zegoVideoCall": "ZEGO Video Call",
 	"zegoVoiceCall": "ZEGO Voice Call",
 	"floatPermissionTips": "Please allow popup permission to receive incoming calls.",
-	"callNotification": "On the line with %@. Tap here to go back. ",
-	"receiveCallNotification": "%@ is calling you. Tap here to check.",
-	"inviteCallNotification": "%@ is calling you. ",
-	"requestCallNotification": "You are calling %@. Tap here to check.",
-	"cancelCallNotification": "%@ canceled the call.",
+	"callNotification": "On the line with {user}. Tap here to go back. ",
+	"@callNotification": {
+		"placeholders": {
+			"user": {
+				"type": "String"
+			}
+		}
+	},
+	"receiveCallNotification": "{caller} is calling you. Tap here to check.",
+	"@receiveCallNotification": {
+		"placeholders": {
+			"caller": {
+				"type": "String"
+			}
+		}
+	},
+	"inviteCallNotification": "{caller} is calling you. ",
+	"@inviteCallNotification": {
+		"placeholders": {
+			"caller": {
+				"type": "String"
+			}
+		}
+	},
+	"requestCallNotification": "You are calling {callee}. Tap here to check.",
+	"@requestCallNotification": {
+		"placeholders": {
+			"callee": {
+				"type": "String"
+			}
+		}
+	},
+	"cancelCallNotification": "{caller} canceled the call.",
+	"@cancelCallNotification": {
+		"placeholders": {
+			"caller": {
+				"type": "String"
+			}
+		}
+	},
 	"timeoutCallNotification": "The call has ended.",
 	"micOperateFailed": "Failed to enable/disable the microphone. Error code: {code}",
 	"@micOperateFailed": {

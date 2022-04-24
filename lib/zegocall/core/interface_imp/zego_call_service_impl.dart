@@ -61,13 +61,13 @@ class ZegoCallServiceImpl extends IZegoCallService with ZegoEventHandler {
       logInfo('token is empty');
       return ZegoError.failed;
     }
-    if (status != LocalUserStatus.free) {
-      logInfo('status is not free');
-      return ZegoError.failed;
-    }
     if (callee.userID.isEmpty) {
       logInfo('user id is empty');
       return ZegoError.failed;
+    }
+    if (status != LocalUserStatus.free) {
+      logInfo('status is not free');
+      return ZegoError.callStatusWrong;
     }
 
     var caller = ZegoServiceManager.shared.userService.localUserInfo;

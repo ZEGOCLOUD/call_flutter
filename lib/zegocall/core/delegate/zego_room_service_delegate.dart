@@ -1,6 +1,3 @@
-// Project imports:
-import '../model/zego_room_info.dart';
-
 mixin ZegoRoomServiceDelegate {
   /// Callback notification that room Token authentication is about to expire.
   ///

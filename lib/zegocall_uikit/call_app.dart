@@ -19,7 +19,7 @@ import 'package:wakelock/wakelock.dart';
 // Project imports:
 import 'core/manager/zego_call_manager.dart';
 import 'pages/mini_overlay/zego_mini_overlay_page.dart';
-import 'utils/zego_navigation_service.dart';
+import '../zegocall/utils/zego_navigation_service.dart';
 
 class CallAppConfig {
   CallAppConfig(

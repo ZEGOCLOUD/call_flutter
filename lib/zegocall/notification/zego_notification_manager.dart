@@ -5,6 +5,7 @@ import 'dart:math';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 
 // Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
@@ -14,6 +15,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 
 // Project imports:
 import '../../logger.dart';
+import '../utils/zego_navigation_service.dart';
 import 'zego_notification_call_model.dart';
 import 'zego_notification_ring.dart';
 
@@ -150,6 +152,10 @@ class ZegoNotificationManager {
     logInfo('remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
 
+    final ZegoNavigationService _navigationService =
+    locator<ZegoNavigationService>();
+    var context = _navigationService.navigatorKey.currentContext!;
+
     var callerIcon =
         'asset://assets/images/avatar_${getUserAvatarIndex(notificationModel.callerName)}.png';
     AwesomeNotifications().createNotification(
@@ -158,7 +164,7 @@ class ZegoNotificationManager {
             groupKey: firebaseChannelGroupName,
             channelKey: firebaseChannelKey,
             title: "You have a new call",
-            body: "${notificationModel.callerName} is calling you",
+            body: AppLocalizations.of(context)!.inviteCallNotification(notificationModel.callerName),
             largeIcon: callerIcon,
             payload: notificationModel.toMap(),
             notificationLayout: NotificationLayout.Default));

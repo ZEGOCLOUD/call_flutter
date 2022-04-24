@@ -10,6 +10,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import '../../../logger.dart';
+import '../../utils/zego_assert_error_code.dart';
 import '../commands/zego_init_command.dart';
 import '../interface/zego_call_service.dart';
 import '../interface/zego_device_service.dart';
@@ -157,6 +158,8 @@ class ZegoServiceManager extends ChangeNotifier {
         '[service manager] onRoomStateUpdate, roomID:$roomID, state:$state, '
         'errorCode:$errorCode, extendedData:$extendedData');
 
+    assertErrorCode(errorCode);
+
     for (var delegate in rtcEventDelegates) {
       delegate.onRoomStateUpdate(roomID, state, errorCode, extendedData);
     }
@@ -186,6 +189,8 @@ class ZegoServiceManager extends ChangeNotifier {
     logInfo(
         'streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
 
+    assertErrorCode(errorCode);
+
     for (var delegate in rtcEventDelegates) {
       delegate.onPlayerStateUpdate(streamID, state, errorCode, extendedData);
     }
@@ -203,6 +208,8 @@ class ZegoServiceManager extends ChangeNotifier {
       int errorCode, Map<String, dynamic> extendedData) {
     logInfo(
         'streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
+
+    assertErrorCode(errorCode);
 
     for (var delegate in rtcEventDelegates) {
       delegate.onPublisherStateUpdate(streamID, state, errorCode, extendedData);
