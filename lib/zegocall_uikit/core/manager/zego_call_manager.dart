@@ -298,7 +298,6 @@ class ZegoCallManager
 
     deviceService.enableCamera(userService.localUserInfo.camera);
     deviceService.enableMic(userService.localUserInfo.mic);
-    deviceService.enableSpeaker(true);
     deviceService.resetDeviceConfig();
   }
 
