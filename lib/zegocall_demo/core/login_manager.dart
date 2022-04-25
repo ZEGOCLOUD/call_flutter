@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
@@ -16,6 +17,7 @@ import '../../zegocall/core/model/zego_user_info.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../../zegocall_uikit/utils/zego_navigation_service.dart';
 import '../constants/page_constant.dart';
+import '../widgets/toast_manager.dart';
 import 'user_list_manager.dart';
 
 typedef LoginResult = Result<ZegoUserInfo, int>;
@@ -116,10 +118,24 @@ class LoginManager extends ChangeNotifier {
       var snapshotValue = event.snapshot.value;
       logInfo('fcm token onValue: $snapshotValue');
 
-      var token = snapshotValue ?? "";
-      if (token == fcmToken) {
+      var token = snapshotValue as String? ?? "";
+      if (token.isEmpty) {
+        logInfo('token is empty');
         return;
       }
+
+      if (token == fcmToken) {
+        logInfo('token is same');
+        return;
+      }
+
+      logInfo('Current User is logging at other device.');
+
+      final ZegoNavigationService _navigationService =
+          locator<ZegoNavigationService>();
+      var context = _navigationService.navigatorKey.currentContext!;
+      ToastManager.shared
+          .showToast(AppLocalizations.of(context)!.toastLoginKickOut);
 
       resetData(removeUserData: false);
 
