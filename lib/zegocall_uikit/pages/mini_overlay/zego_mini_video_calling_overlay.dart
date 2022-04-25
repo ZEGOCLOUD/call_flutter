@@ -79,16 +79,12 @@ class ZegoMiniVideoCallingOverlayState extends State<ZegoMiniVideoCallingOverlay
 
   Widget createVideoView(Widget playingView) {
     return Center(
-        child: Container(
-      width: 133.w,
-      height: 237.h,
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8.0.w),
-            bottomLeft: Radius.circular(8.0.w)),
-      ),
-      child: playingView,
-    ));
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: SizedBox(
+          width: 133.w,
+          height: 237.h,
+          child: playingView))
+    );
   }
 }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 // Project imports:
 import '../../../zegocall/core/model/zego_user_info.dart';
@@ -16,16 +15,35 @@ import '../../styles.dart';
 import '../../widgets/toast_manager.dart';
 import 'online_list_elements.dart';
 
-class OnlineListItem extends StatelessWidget {
+class OnlineListItem extends StatefulWidget {
   const OnlineListItem({Key? key, required this.userInfo}) : super(key: key);
+
   final UserInfo userInfo;
 
+  @override
+  OnlineListItemState createState() => OnlineListItemState();
+}
+
+class OnlineListItemState extends State<OnlineListItem> {
+  bool isLoading = false;
+
   void onAudioCallTap(BuildContext context) async {
+    if (isLoading) {
+      return;
+    }
+
+    isLoading = true;
+    ToastManager.shared.showLoading();
+
     executeInPermission(context, () {
       ZegoCallManager.interface
-          .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
+          .callUser(
+              ZegoUserInfo(widget.userInfo.userID, widget.userInfo.userName),
               ZegoCallType.kZegoCallTypeVoice)
           .then((error) {
+        isLoading = false;
+        ToastManager.shared.hide();
+
         if (ZegoError.success != error) {
           ToastManager.shared.showToast(ZegoError.callStatusWrong == error
               ? AppLocalizations.of(context)!.callPageCallUnableInitiate
@@ -36,11 +54,22 @@ class OnlineListItem extends StatelessWidget {
   }
 
   void onVideoCallTap(BuildContext context) async {
+    if (isLoading) {
+      return;
+    }
+
+    isLoading = true;
+    ToastManager.shared.showLoading();
+
     executeInPermission(context, () {
       ZegoCallManager.interface
-          .callUser(ZegoUserInfo(userInfo.userID, userInfo.userName),
+          .callUser(
+              ZegoUserInfo(widget.userInfo.userID, widget.userInfo.userName),
               ZegoCallType.kZegoCallTypeVideo)
           .then((error) {
+        isLoading = false;
+        ToastManager.shared.hide();
+
         if (ZegoError.success != error) {
           ToastManager.shared.showToast(ZegoError.callStatusWrong == error
               ? AppLocalizations.of(context)!.callPageCallUnableInitiate
@@ -53,7 +82,7 @@ class OnlineListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      OnlineListAvatar(userName: userInfo.userName),
+      OnlineListAvatar(userName: widget.userInfo.userName),
       SizedBox(width: 26.w),
       Container(
           decoration: const BoxDecoration(
@@ -64,7 +93,8 @@ class OnlineListItem extends StatelessWidget {
           ),
           child: Row(children: [
             OnlineListUserInfo(
-                userName: userInfo.userName, userID: userInfo.userID),
+                userName: widget.userInfo.userName,
+                userID: widget.userInfo.userID),
             SizedBox(width: 36.w),
             Row(children: [
               GestureDetector(

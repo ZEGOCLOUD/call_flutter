@@ -82,9 +82,12 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   @override
   void onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
       List<ZegoStream> streamList, Map<String, dynamic> extendedData) {
-    logInfo('room id:$roomID, '
-        'update type:$updateType, stream list:${streamList.toString()}, extended '
-        'data:$extendedData');
+    logInfo(
+        'room id:$roomID, update type:$updateType, extended data:$extendedData');
+    for (var stream in streamList) {
+      logInfo('streamList: user:${stream.user}, streamID:${stream.streamID}, '
+          'extraInfo:${stream.extraInfo}');
+    }
 
     for (final stream in streamList) {
       if (updateType == ZegoUpdateType.Add) {

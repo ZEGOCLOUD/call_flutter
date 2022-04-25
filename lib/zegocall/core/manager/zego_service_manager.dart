@@ -168,7 +168,11 @@ class ZegoServiceManager extends ChangeNotifier {
   void onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
       List<ZegoStream> streamList, Map<String, dynamic> extendedData) {
     logInfo(
-        '$roomID:roomID, updateType:$updateType, streamList:$streamList, extendedData:$extendedData');
+        '$roomID:roomID, updateType:$updateType, extendedData:$extendedData');
+    for (var stream in streamList) {
+      logInfo('streamList: user:${stream.user}, streamID:${stream.streamID}, '
+          'extraInfo:${stream.extraInfo}');
+    }
 
     for (var delegate in rtcEventDelegates) {
       delegate.onRoomStreamUpdate(roomID, updateType, streamList, extendedData);

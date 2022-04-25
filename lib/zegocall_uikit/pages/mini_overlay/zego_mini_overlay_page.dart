@@ -171,7 +171,7 @@ class ZegoMiniOverlayPageState extends State<ZegoMiniOverlayPage> {
                 height: 160.h,
                 padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
                 decoration: BoxDecoration(
-                  color: const Color(0xff333333).withOpacity(0.8),
+                  color: const Color(0xff333333),
                   borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
                 ),
                 child: ZegoMiniOverlayBeInvite(

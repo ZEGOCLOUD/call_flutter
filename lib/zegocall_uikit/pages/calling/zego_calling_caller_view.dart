@@ -14,7 +14,8 @@ import '../../utils/zego_user_avatar.dart';
 import '../player/zego_avatar_background.dart';
 import '../player/zego_video_player.dart';
 import '../styles.dart';
-import 'toolbar/zego_calling_toolbar.dart';
+import 'toolbar/zego_calling_bottom_toolbar.dart';
+import 'toolbar/zego_calling_top_toolbar.dart';
 
 class ZegoCallingCallerView extends StatelessWidget {
   const ZegoCallingCallerView(
@@ -48,7 +49,9 @@ class ZegoCallingCallerView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        isVideo ? const ZegoCallingCallerVideoTopToolBar() : const SizedBox(),
+        isVideo
+            ? const ZegoCallingCallerVideoTopToolBar()
+            : const ZegoCallingCallerAudioTopToolBar(),
         isVideo ? SizedBox(height: 140.h) : SizedBox(height: 228.h),
         SizedBox(
           width: 200.w,

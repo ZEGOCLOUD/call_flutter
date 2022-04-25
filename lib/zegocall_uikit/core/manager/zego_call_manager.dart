@@ -313,7 +313,7 @@ class ZegoCallManager
     logInfo('callee:${callee.toString()}');
 
     caller = ZegoServiceManager.shared.userService.localUserInfo;
-    callee = callee;
+    this.callee = callee;
 
     callTimeManager.startTimer(currentCallID());
 

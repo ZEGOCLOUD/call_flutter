@@ -40,6 +40,10 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     miniOverlayMachine = ZegoMiniOverlayMachine();
     miniOverlayMachine.init();
+
+    miniOverlayMachine.stateIdle.onEntry(() {
+      callingMachine.stateIdle.enter();
+    });
   }
 
   void restoreToIdle() {
@@ -322,9 +326,9 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
     switch (ZegoCallManager.shared.currentCallStatus) {
       case ZegoCallStatus.free:
       case ZegoCallStatus.wait:
+      case ZegoCallStatus.waitAccept:
         voiceMachine.stateWaiting.enter();
         break;
-      case ZegoCallStatus.waitAccept:
       case ZegoCallStatus.calling:
         voiceMachine.stateOnline.enter();
         break;

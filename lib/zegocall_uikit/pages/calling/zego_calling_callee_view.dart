@@ -13,7 +13,8 @@ import '../../../zegocall/core/zego_call_defines.dart';
 import '../../utils/zego_user_avatar.dart';
 import '../player/zego_avatar_background.dart';
 import '../styles.dart';
-import 'toolbar/zego_calling_toolbar.dart';
+import 'toolbar/zego_calling_bottom_toolbar.dart';
+import 'toolbar/zego_calling_top_toolbar.dart';
 
 class ZegoCallingCalleeView extends StatelessWidget {
   const ZegoCallingCalleeView(
