@@ -45,8 +45,7 @@ class ZegoNotificationManager {
           NotificationChannelGroup(
               channelGroupkey: firebaseChannelGroupName,
               channelGroupName: 'Firebase group')
-        ],
-        debug: true);
+        ]);
     await onInitFinished();
 
     ZegoNotificationRing.shared.init();

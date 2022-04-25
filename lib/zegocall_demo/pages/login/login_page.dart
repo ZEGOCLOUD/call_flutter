@@ -17,6 +17,7 @@ import '../../../logger.dart';
 import '../../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../../constants/page_constant.dart';
 import '../../core/login_manager.dart';
+import '../../core/permission_manager.dart';
 import '../../styles.dart';
 import '../../widgets/toast_manager.dart';
 import 'login_protocol_item.dart';
@@ -39,10 +40,6 @@ class LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
-      checkPermission();
-    });
   }
 
   @override
@@ -133,7 +130,9 @@ class LoginPageState extends State<LoginPage> {
                 height: 45.h),
             Text(AppLocalizations.of(context)!.loginPageGoogleLogin)
           ]),
-          onPressed: isLoading ? null : onLogInGooglePressed,
+          onPressed: () {
+            isLoading ? null : onLogInGooglePressed(context);
+          },
         ));
 
     widgets.add(googleLoginWidget);
@@ -147,20 +146,17 @@ class LoginPageState extends State<LoginPage> {
     });
   }
 
-  void checkPermission() async {
-    await Permission.camera.request();
-    await Permission.microphone.request();
-  }
-
-  void onLogInGooglePressed() {
+  void onLogInGooglePressed(BuildContext context) {
     logInfo('login google');
 
-    if (isPolicyCheck) {
-      logInWithGoogle();
-    } else {
-      ToastManager.shared
-          .showToast(AppLocalizations.of(context)!.toastLoginServicePrivacy);
-    }
+    executeInPermission(context, () {
+      if (isPolicyCheck) {
+        logInWithGoogle();
+      } else {
+        ToastManager.shared
+            .showToast(AppLocalizations.of(context)!.toastLoginServicePrivacy);
+      }
+    });
   }
 
   Future<void> logInWithGoogle() async {
