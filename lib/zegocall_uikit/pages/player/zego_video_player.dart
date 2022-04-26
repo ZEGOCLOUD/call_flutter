@@ -24,6 +24,7 @@ class ZegoVideoPlayer extends StatefulWidget {
 
 class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
   int playingViewID = 0;
+  bool pendingRemoteUserStream = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +34,15 @@ class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
         ValueListenableBuilder<bool>(
           valueListenable: ZegoServiceManager.shared.streamService
               .getCameraStateNotifier(widget.userID),
-          builder: (context, isStreamReady, _) {
+          builder: (context, isCameraEnabled, _) {
+            if (pendingRemoteUserStream) {
+              ZegoServiceManager.shared.streamService
+                  .startPlaying(widget.userID, viewID: playingViewID);
+
+              pendingRemoteUserStream = false;
+            }
             return Visibility(
-                visible: !isStreamReady,
+                visible: !isCameraEnabled,
                 child: ZegoAvatarBackgroundView(userName: widget.userName));
           },
         )
@@ -62,8 +69,15 @@ class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
         ZegoServiceManager.shared.streamService
             .startPreview(viewID: playingViewID);
       } else {
-        ZegoServiceManager.shared.streamService
-            .startPlaying(widget.userID, viewID: playingViewID);
+        if (ZegoServiceManager.shared.userService
+            .getUserInfoByID(widget.userID)
+            .isEmpty()) {
+          //  user is not in room, should play after him enter
+          pendingRemoteUserStream = true;
+        } else {
+          ZegoServiceManager.shared.streamService
+              .startPlaying(widget.userID, viewID: playingViewID);
+        }
       }
     });
   }

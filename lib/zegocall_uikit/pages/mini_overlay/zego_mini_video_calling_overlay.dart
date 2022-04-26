@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../../logger.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../core/machine/zego_mini_video_calling_overlay_machine.dart';
@@ -72,24 +73,37 @@ class ZegoMiniVideoCallingOverlayState
         return const SizedBox();
       case MiniVideoCallingOverlayState.kBothWithoutVideo:
         return const SizedBox();
-      case MiniVideoCallingOverlayState.kLocalUserWithVideo:
+      case MiniVideoCallingOverlayState.kWithVideo:
         return createVideoView(localPlayer, remotePlayer);
-      case MiniVideoCallingOverlayState.kRemoteUserWithVideo:
-        return createVideoView(remotePlayer, localPlayer);
     }
   }
 
-  Widget createVideoView(Widget frontPlayingView, Widget backPlayingView) {
+  Widget createVideoView(
+      ZegoVideoPlayer localPlayer, ZegoVideoPlayer remotePlayer) {
     return Center(
         child: ClipRRect(
             borderRadius: BorderRadius.circular(5),
             child: SizedBox(
                 width: 133.w,
                 height: 237.h,
-                child: IndexedStack(
-                    //  must contain REMOTE user play view, otherwise
-                    //  wouldn't play remote user's stream
-                    index: 0,
-                    children: [frontPlayingView, backPlayingView]))));
+                child: ValueListenableBuilder<bool>(
+                    valueListenable: ZegoServiceManager.shared.streamService
+                        .getStreamStateNotifier(remotePlayer.userID),
+                    builder: (context, isRemoteUserStreamAdded, _) {
+                      if (isRemoteUserStreamAdded) {
+                        return ValueListenableBuilder<bool>(
+                            valueListenable: ZegoServiceManager
+                                .shared.streamService
+                                .getCameraStateNotifier(remotePlayer.userID),
+                            builder: (context, isRemoteUserCameraEnabled, _) {
+                              return IndexedStack(
+                                  //  must contain REMOTE user play view, otherwise
+                                  //  wouldn't play remote user's stream
+                                  index: isRemoteUserCameraEnabled ? 1 : 0,
+                                  children: [localPlayer, remotePlayer]);
+                            });
+                      }
+                      return localPlayer;
+                    }))));
   }
 }

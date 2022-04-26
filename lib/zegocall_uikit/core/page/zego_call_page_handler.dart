@@ -199,8 +199,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
         if (ZegoCallType.kZegoCallTypeVoice == callType) {
           miniOverlayMachine.voiceCallingOverlayMachine.stateOnline.enter();
         } else {
-          miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
-              .enter();
+          miniOverlayMachine.videoCallingOverlayMachine.stateWithVideo.enter();
         }
         break;
       default:
@@ -346,19 +345,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     var hasVideo = remoteUser.camera || localUser.camera;
     if (hasVideo) {
-      if (ZegoCallStatus.calling != ZegoCallManager.shared.currentCallStatus) {
-        //  local is waiting for remote user accept
-        miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
-            .enter();
-      } else {
-        if (remoteUser.camera) {
-          miniOverlayMachine.videoCallingOverlayMachine.stateRemoteUserWithVideo
-              .enter();
-        } else if (localUser.camera) {
-          miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
-              .enter();
-        }
-      }
+      miniOverlayMachine.videoCallingOverlayMachine.stateWithVideo.enter();
     } else {
       //  turn to mini voice
       enterMiniVoiceMachine();
@@ -419,15 +406,13 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     var callType = ZegoCallManager.shared.currentCallType;
     if (isMiniOnline && ZegoCallType.kZegoCallTypeVideo == callType) {
-      if (MiniOverlayPageState.kVideoCalling == miniPageState) {
+      //  call type is video, but page state is not video
+      if (MiniOverlayPageState.kVideoCalling != miniPageState) {
         //  video switch to other user
-        miniOverlayMachine.stateIdle.enter();
+        // miniOverlayMachine.stateIdle.enter();
+        //
 
-        Timer(const Duration(milliseconds: 100), () {
-          //  todo,  need to wait for a while; otherwise, the view is not
-          //   match the state
-          enterMiniVideoMachine();
-        });
+        enterMiniVideoMachine();
       } else {
         //  voice restore to video, because current voice state is switched from
         //  video before

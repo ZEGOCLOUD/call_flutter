@@ -31,8 +31,11 @@ abstract class IZegoStreamService extends ChangeNotifier with ZegoService {
   /// - Parameter userID:  the ID of the user you are connecting
   void stopPlaying(String userID);
 
-  ///  stream state notifier
+  ///  camera enable/disable state notifier
   ValueNotifier<bool> getCameraStateNotifier(String userID);
+
+  ///  stream add/remove state notifier
+  ValueNotifier<bool> getStreamStateNotifier(String userID);
 
   /// notifies the stream service, when the device service changes the local camera status
   void onLocalCameraEnabled(bool enabled);

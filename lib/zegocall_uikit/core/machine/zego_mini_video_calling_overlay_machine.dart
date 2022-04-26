@@ -7,8 +7,7 @@ import '../../../logger.dart';
 enum MiniVideoCallingOverlayState {
   kIdle,
   kWaiting,
-  kRemoteUserWithVideo,
-  kLocalUserWithVideo,
+  kWithVideo,
   kBothWithoutVideo,
 }
 
@@ -20,8 +19,7 @@ class ZegoMiniVideoCallingOverlayMachine {
   MiniVideoCallingOverlayMachineStateChanged? onStateChanged;
 
   late sm.State<MiniVideoCallingOverlayState> stateIdle;
-  late sm.State<MiniVideoCallingOverlayState> stateRemoteUserWithVideo;
-  late sm.State<MiniVideoCallingOverlayState> stateLocalUserWithVideo;
+  late sm.State<MiniVideoCallingOverlayState> stateWithVideo;
 
   void init() {
     machine.onAfterTransition.listen((event) {
@@ -34,10 +32,8 @@ class ZegoMiniVideoCallingOverlayMachine {
 
     // Config state
     stateIdle = machine.newState(MiniVideoCallingOverlayState.kIdle);
-    stateRemoteUserWithVideo =
-        machine.newState(MiniVideoCallingOverlayState.kRemoteUserWithVideo);
-    stateLocalUserWithVideo =
-        machine.newState(MiniVideoCallingOverlayState.kLocalUserWithVideo);
+    stateWithVideo =
+        machine.newState(MiniVideoCallingOverlayState.kWithVideo);
   }
 
   MiniVideoCallingOverlayState getPageState() {
