@@ -65,11 +65,6 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
 
   @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) async {
-    // var result = await ZegoServiceManager.shared.userService.getToken(
-    //     ZegoServiceManager.shared.userService.localUserInfo.userID, 24 * 3600);
-    // if (result.isSuccess) {
-    //   ZegoExpressEngine.instance.renewToken(roomID, result.success as String);
-    // }
     delegate?.onRoomTokenWillExpire(roomID, remainTimeInSecond);
   }
 
