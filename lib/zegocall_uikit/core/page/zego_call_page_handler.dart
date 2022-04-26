@@ -18,6 +18,8 @@ import '../../utils/zego_loading_manager.dart';
 import '../../utils/zego_navigation_service.dart';
 import '../machine/zego_calling_machine.dart';
 import '../machine/zego_mini_overlay_machine.dart';
+import '../machine/zego_mini_video_calling_overlay_machine.dart';
+import '../machine/zego_mini_voice_calling_overlay_machine.dart';
 import '../manager/zego_call_manager.dart';
 import '../manager/zego_call_manager_interface.dart';
 
@@ -355,9 +357,26 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   void onMiniOverlayRestore() {
     logInfo('restore');
 
+    var callType = ZegoCallManager.shared.currentCallType;
+    var videoCallingState =
+        miniOverlayMachine.videoCallingOverlayMachine.getPageState();
+    var voiceCallingState =
+        miniOverlayMachine.voiceCallingOverlayMachine.getPageState();
+    if (ZegoCallType.kZegoCallTypeVoice == callType) {
+      if (MiniVoiceCallingOverlayState.kIdle == voiceCallingState ||
+          MiniVoiceCallingOverlayState.kDeclined == voiceCallingState ||
+          MiniVoiceCallingOverlayState.kMissed == voiceCallingState ||
+          MiniVoiceCallingOverlayState.kEnded == voiceCallingState) {
+        logInfo("voice page state is not right, state:$voiceCallingState");
+        return;
+      }
+    } else if (MiniVideoCallingOverlayState.kIdle == videoCallingState) {
+      logInfo("voice page state is not right, state:$videoCallingState");
+      return;
+    }
+
     miniOverlayMachine.stateIdle.enter();
 
-    var callType = ZegoCallManager.shared.currentCallType;
     if (ZegoCallType.kZegoCallTypeVoice == callType) {
       callingMachine.stateOnlineVoice.enter();
     } else {

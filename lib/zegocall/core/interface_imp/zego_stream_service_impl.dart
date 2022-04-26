@@ -51,6 +51,10 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
         "Must be logged in first.");
     assert(userID.isNotEmpty, "The user ID can not be nil.");
 
+    if (userID.isEmpty) {
+      return;
+    }
+
     ZegoCanvas? canvas;
     if (viewID >= 0) {
       canvas = ZegoCanvas.view(viewID);
