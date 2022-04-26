@@ -107,7 +107,7 @@ class ZegoCallManager
         cancelCall();
         break;
       case ZegoCallStatus.calling:
-        cancelCall();
+        endCall();
         break;
     }
 
