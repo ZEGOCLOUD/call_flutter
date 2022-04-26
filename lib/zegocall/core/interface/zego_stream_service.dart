@@ -8,7 +8,7 @@ import 'zego_service.dart';
 abstract class IZegoStreamService extends ChangeNotifier with ZegoService {
   ZegoStreamServiceDelegate? delegate;
 
-  void startPreview(int viewID);
+  void startPreview({int viewID = -1});
 
   void stopPreview();
 

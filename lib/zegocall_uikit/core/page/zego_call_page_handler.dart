@@ -344,12 +344,21 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
         ? ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.callee)
         : ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.caller);
 
-    if (remoteUser.camera) {
-      miniOverlayMachine.videoCallingOverlayMachine.stateRemoteUserWithVideo
-          .enter();
-    } else if (localUser.camera) {
-      miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
-          .enter();
+    var hasVideo = remoteUser.camera || localUser.camera;
+    if (hasVideo) {
+      if (ZegoCallStatus.calling != ZegoCallManager.shared.currentCallStatus) {
+        //  local is waiting for remote user accept
+        miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
+            .enter();
+      } else {
+        if (remoteUser.camera) {
+          miniOverlayMachine.videoCallingOverlayMachine.stateRemoteUserWithVideo
+              .enter();
+        } else if (localUser.camera) {
+          miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
+              .enter();
+        }
+      }
     } else {
       //  turn to mini voice
       enterMiniVoiceMachine();

@@ -41,6 +41,7 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
             config: config)
         .then((value) {
       // start publish
+      ZegoServiceManager.shared.streamService.startPreview();
       ZegoExpressEngine.instance.startPublishingStream(
           generateStreamIDByUserID(localUserInfo.userID));
     });
@@ -57,6 +58,7 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
 
     roomInfo = ZegoRoomInfo.empty();
 
+    ZegoServiceManager.shared.streamService.stopPreview();
     ZegoExpressEngine.instance.stopPublishingStream();
     ZegoExpressEngine.instance.logoutRoom();
   }

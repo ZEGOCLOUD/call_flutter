@@ -28,7 +28,8 @@ class ZegoMiniVideoCallingOverlay extends StatefulWidget {
       ZegoMiniVideoCallingOverlayState();
 }
 
-class ZegoMiniVideoCallingOverlayState extends State<ZegoMiniVideoCallingOverlay> {
+class ZegoMiniVideoCallingOverlayState
+    extends State<ZegoMiniVideoCallingOverlay> {
   MiniVideoCallingOverlayState currentState =
       MiniVideoCallingOverlayState.kIdle;
 
@@ -61,7 +62,10 @@ class ZegoMiniVideoCallingOverlayState extends State<ZegoMiniVideoCallingOverlay
     var remoteUser = localUser.userID == widget.callee.userID
         ? widget.caller
         : widget.callee;
-
+    var localPlayer =
+        ZegoVideoPlayer(userID: localUser.userID, userName: localUser.userName);
+    var remotePlayer = ZegoVideoPlayer(
+        userID: remoteUser.userID, userName: remoteUser.userName);
     switch (currentState) {
       case MiniVideoCallingOverlayState.kIdle:
       case MiniVideoCallingOverlayState.kWaiting:
@@ -69,22 +73,23 @@ class ZegoMiniVideoCallingOverlayState extends State<ZegoMiniVideoCallingOverlay
       case MiniVideoCallingOverlayState.kBothWithoutVideo:
         return const SizedBox();
       case MiniVideoCallingOverlayState.kLocalUserWithVideo:
-        return createVideoView(ZegoVideoPlayer(
-            userID: localUser.userID, userName: localUser.userName));
+        return createVideoView(localPlayer, remotePlayer);
       case MiniVideoCallingOverlayState.kRemoteUserWithVideo:
-        return createVideoView(ZegoVideoPlayer(
-            userID: remoteUser.userID, userName: remoteUser.userName));
+        return createVideoView(remotePlayer, localPlayer);
     }
   }
 
-  Widget createVideoView(Widget playingView) {
+  Widget createVideoView(Widget frontPlayingView, Widget backPlayingView) {
     return Center(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: SizedBox(
-          width: 133.w,
-          height: 237.h,
-          child: playingView))
-    );
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: SizedBox(
+                width: 133.w,
+                height: 237.h,
+                child: IndexedStack(
+                    //  must contain REMOTE user play view, otherwise
+                    //  wouldn't play remote user's stream
+                    index: 0,
+                    children: [frontPlayingView, backPlayingView]))));
   }
 }

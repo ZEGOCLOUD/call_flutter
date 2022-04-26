@@ -315,6 +315,10 @@ class ZegoCallManager
     caller = ZegoServiceManager.shared.userService.localUserInfo;
     this.callee = callee;
 
+    if (ZegoCallPageType.miniPage == pageHandler.currentPageType()) {
+      ZegoServiceManager.shared.streamService.startPlaying(callee.userID);
+    }
+
     callTimeManager.startTimer(currentCallID());
 
     currentCallStatus = ZegoCallStatus.calling;

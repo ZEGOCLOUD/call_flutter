@@ -19,14 +19,18 @@ class ZegoStreamServiceImpl extends IZegoStreamService with ZegoEventHandler {
   }
 
   @override
-  void startPreview(int viewID) {
+  void startPreview({int viewID = -1}) {
     assert(ZegoServiceManager.shared.isSDKInit,
         "The SDK must be initialised first.");
     assert(!ZegoServiceManager.shared.userService.localUserInfo.isEmpty(),
         "Must be logged in first.");
 
-    ZegoCanvas canvas = ZegoCanvas.view(viewID);
-    canvas.viewMode = ZegoViewMode.AspectFill;
+    ZegoCanvas? canvas;
+    if (viewID >= 0) {
+      canvas = ZegoCanvas.view(viewID);
+      canvas.viewMode = ZegoViewMode.AspectFill;
+      canvas.viewMode = ZegoViewMode.AspectFill;
+    }
 
     //  bind stream to view, by stream id and view id
     ZegoExpressEngine.instance
