@@ -37,14 +37,4 @@ mixin ZegoCallManagerDelegate {
   ///
   /// - Description: This callback will be triggered when called refused the call.
   onReceiveCallDeclined(ZegoUserInfo userInfo, ZegoDeclineType type);
-
-  /// Callback notification that room Token authentication is about to expire.
-  ///
-  /// Description: The callback notification that the room Token authentication is about to expire, please use [renewToken] to update the room Token authentication.
-  ///
-  /// @param roomID Room ID where the user is logged in, a string of up to 128 bytes in length.
-  /// @param remainTimeInSecond The remaining time before the token expires.
-  onRoomTokenWillExpire(String roomID, int remainTimeInSecond);
-
-  Future<String> getRTCToken();
 }

@@ -1,5 +1,7 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:io';
+import 'dart:ui';
 
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
@@ -10,10 +12,14 @@ import '../../../zegocall/core/delegate/zego_call_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
+import '../../../zegocall/notification/zego_notification_call_model.dart';
+import '../../../zegocall/notification/zego_notification_manager.dart';
 import '../../utils/zego_loading_manager.dart';
 import '../../utils/zego_navigation_service.dart';
 import '../machine/zego_calling_machine.dart';
 import '../machine/zego_mini_overlay_machine.dart';
+import '../machine/zego_mini_video_calling_overlay_machine.dart';
+import '../machine/zego_mini_voice_calling_overlay_machine.dart';
 import '../manager/zego_call_manager.dart';
 import '../manager/zego_call_manager_interface.dart';
 
@@ -36,6 +42,10 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     miniOverlayMachine = ZegoMiniOverlayMachine();
     miniOverlayMachine.init();
+
+    miniOverlayMachine.stateIdle.onEntry(() {
+      callingMachine.stateIdle.enter();
+    });
   }
 
   void restoreToIdle() {
@@ -156,7 +166,8 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     callingState = state;
 
-    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
 
     switch (state) {
@@ -190,8 +201,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
         if (ZegoCallType.kZegoCallTypeVoice == callType) {
           miniOverlayMachine.voiceCallingOverlayMachine.stateOnline.enter();
         } else {
-          miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
-              .enter();
+          miniOverlayMachine.videoCallingOverlayMachine.stateWithVideo.enter();
         }
         break;
       default:
@@ -205,7 +215,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   @override
-  void onReceiveCallDecline(ZegoUserInfo callee, ZegoDeclineType type) {
+  void onReceiveCallDeclined(ZegoUserInfo callee, ZegoDeclineType type) {
     switch (currentPageType()) {
       case ZegoCallPageType.callingPage:
         callingMachine.stateIdle.enter();
@@ -247,7 +257,7 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   }
 
   @override
-  void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type) {
+  void onReceiveCallInvited(ZegoUserInfo caller, ZegoCallType type) {
     switch (currentPageType()) {
       case ZegoCallPageType.callingPage:
         break;
@@ -260,6 +270,21 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
         break;
       default:
         break;
+    }
+
+    if (Platform.isIOS) {
+      //  only for iOS
+      if (AppLifecycleState.paused ==
+          ZegoCallManager.shared.appLifecycleState) {
+        ZegoNotificationModel notificationModel = ZegoNotificationModel.empty();
+        notificationModel.callID = ZegoCallManager.shared.currentCallID();
+        notificationModel.callerID = ZegoCallManager.shared.caller.userID;
+        notificationModel.callerName = ZegoCallManager.shared.caller.userName;
+        notificationModel.callTypeID =
+            ZegoCallManager.shared.currentCallType.id.toString();
+
+        ZegoNotificationManager.shared.createNotification(notificationModel);
+      }
     }
   }
 
@@ -302,9 +327,9 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
     switch (ZegoCallManager.shared.currentCallStatus) {
       case ZegoCallStatus.free:
       case ZegoCallStatus.wait:
+      case ZegoCallStatus.waitAccept:
         voiceMachine.stateWaiting.enter();
         break;
-      case ZegoCallStatus.waitAccept:
       case ZegoCallStatus.calling:
         voiceMachine.stateOnline.enter();
         break;
@@ -320,12 +345,9 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
         ? ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.callee)
         : ZegoCallManager.shared.getLatestUser(ZegoCallManager.shared.caller);
 
-    if (remoteUser.camera) {
-      miniOverlayMachine.videoCallingOverlayMachine.stateRemoteUserWithVideo
-          .enter();
-    } else if (localUser.camera) {
-      miniOverlayMachine.videoCallingOverlayMachine.stateLocalUserWithVideo
-          .enter();
+    var hasVideo = remoteUser.camera || localUser.camera;
+    if (hasVideo) {
+      miniOverlayMachine.videoCallingOverlayMachine.stateWithVideo.enter();
     } else {
       //  turn to mini voice
       enterMiniVoiceMachine();
@@ -335,9 +357,26 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
   void onMiniOverlayRestore() {
     logInfo('restore');
 
+    var callType = ZegoCallManager.shared.currentCallType;
+    var videoCallingState =
+        miniOverlayMachine.videoCallingOverlayMachine.getPageState();
+    var voiceCallingState =
+        miniOverlayMachine.voiceCallingOverlayMachine.getPageState();
+    if (ZegoCallType.kZegoCallTypeVoice == callType) {
+      if (MiniVoiceCallingOverlayState.kIdle == voiceCallingState ||
+          MiniVoiceCallingOverlayState.kDeclined == voiceCallingState ||
+          MiniVoiceCallingOverlayState.kMissed == voiceCallingState ||
+          MiniVoiceCallingOverlayState.kEnded == voiceCallingState) {
+        logInfo("voice page state is not right, state:$voiceCallingState");
+        return;
+      }
+    } else if (MiniVideoCallingOverlayState.kIdle == videoCallingState) {
+      logInfo("voice page state is not right, state:$videoCallingState");
+      return;
+    }
+
     miniOverlayMachine.stateIdle.enter();
 
-    var callType = ZegoCallManager.shared.currentCallType;
     if (ZegoCallType.kZegoCallTypeVoice == callType) {
       callingMachine.stateOnlineVoice.enter();
     } else {
@@ -386,15 +425,13 @@ class ZegoCallPageHandler with ZegoCallServiceDelegate {
 
     var callType = ZegoCallManager.shared.currentCallType;
     if (isMiniOnline && ZegoCallType.kZegoCallTypeVideo == callType) {
-      if (MiniOverlayPageState.kVideoCalling == miniPageState) {
+      //  call type is video, but page state is not video
+      if (MiniOverlayPageState.kVideoCalling != miniPageState) {
         //  video switch to other user
-        miniOverlayMachine.stateIdle.enter();
+        // miniOverlayMachine.stateIdle.enter();
+        //
 
-        Timer(const Duration(milliseconds: 100), () {
-          //  todo,  need to wait for a while; otherwise, the view is not
-          //   match the state
-          enterMiniVideoMachine();
-        });
+        enterMiniVideoMachine();
       } else {
         //  voice restore to video, because current voice state is switched from
         //  video before

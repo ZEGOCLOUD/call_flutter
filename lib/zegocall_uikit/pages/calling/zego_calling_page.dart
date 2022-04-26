@@ -76,26 +76,37 @@ class ZegoCallingPageState extends State<ZegoCallingPage> {
     var localUser = caller.userID == localUserInfo.userID ? caller : callee;
     var remoteUser = caller.userID != localUserInfo.userID ? caller : callee;
 
+    late Widget view;
     switch (currentState) {
       case CallingState.kIdle:
-        return const SizedBox();
+        view = const SizedBox();
+        break;
       case CallingState.kCallingWithVoice:
       case CallingState.kCallingWithVideo:
         var localUserIsCaller = localUserInfo.userID == caller.userID;
         var callType = currentState == CallingState.kCallingWithVideo
             ? ZegoCallType.kZegoCallTypeVideo
             : ZegoCallType.kZegoCallTypeVoice;
-        return localUserIsCaller
+        view = localUserIsCaller
             ? ZegoCallingCallerView(
                 caller: caller, callee: callee, callType: callType)
             : ZegoCallingCalleeView(
                 caller: caller, callee: callee, callType: callType);
+        break;
       case CallingState.kOnlineVoice:
-        return ZegoOnlineVoiceView(
+        view = ZegoOnlineVoiceView(
             callID: callID, localUser: localUser, remoteUser: remoteUser);
+        break;
       case CallingState.kOnlineVideo:
-        return ZegoOnlineVideoView(
+        view = ZegoOnlineVideoView(
             callID: callID, localUser: localUser, remoteUser: remoteUser);
+        break;
     }
+
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: view);
   }
 }

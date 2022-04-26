@@ -81,22 +81,26 @@ class ZegoMiniOverlayPageState extends State<ZegoMiniOverlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-        visible: overlayVisibility,
-        child: Positioned(
-          left: overlayTopLeftPos.dx,
-          top: overlayTopLeftPos.dy,
-          child: GestureDetector(
-            //  disable move
-            // onPanUpdate: (d) => setState(
-            //     () => overlayTopLeftPos += Offset(d.delta.dx, d.delta.dy)),
-            child: SizedBox(
-              width: overlaySize.width,
-              height: overlaySize.height,
-              child: overlayItem(),
-            ),
-          ),
-        ));
+    return WillPopScope(
+        onWillPop: () async {
+          return false;
+        },
+        child: Visibility(
+            visible: overlayVisibility,
+            child: Positioned(
+              left: overlayTopLeftPos.dx,
+              top: overlayTopLeftPos.dy,
+              child: GestureDetector(
+                //  disable move
+                // onPanUpdate: (d) => setState(
+                //     () => overlayTopLeftPos += Offset(d.delta.dx, d.delta.dy)),
+                child: SizedBox(
+                  width: overlaySize.width,
+                  height: overlaySize.height,
+                  child: overlayItem(),
+                ),
+              ),
+            )));
   }
 
   Widget overlayItem() {
@@ -167,11 +171,11 @@ class ZegoMiniOverlayPageState extends State<ZegoMiniOverlayPage> {
                 height: 160.h,
                 padding: EdgeInsets.fromLTRB(24.0.w, 0.0, 24.0.w, 0.0),
                 decoration: BoxDecoration(
-                  color: const Color(0xff333333).withOpacity(0.8),
+                  color: const Color(0xff333333),
                   borderRadius: BorderRadius.all(Radius.circular(16.0.w)),
                 ),
-                child:
-                    ZegoMiniOverlayBeInvite(caller: caller, callType: callType)));
+                child: ZegoMiniOverlayBeInvite(
+                    caller: caller, callType: callType)));
     }
   }
 

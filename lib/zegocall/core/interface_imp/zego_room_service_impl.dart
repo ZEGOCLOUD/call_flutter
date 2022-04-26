@@ -41,6 +41,7 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
             config: config)
         .then((value) {
       // start publish
+      ZegoServiceManager.shared.streamService.startPreview();
       ZegoExpressEngine.instance.startPublishingStream(
           generateStreamIDByUserID(localUserInfo.userID));
     });
@@ -57,17 +58,18 @@ class ZegoRoomServiceImpl extends IZegoRoomService with ZegoEventHandler {
 
     roomInfo = ZegoRoomInfo.empty();
 
+    ZegoServiceManager.shared.streamService.stopPreview();
     ZegoExpressEngine.instance.stopPublishingStream();
     ZegoExpressEngine.instance.logoutRoom();
   }
 
   @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) async {
-    // var result = await ZegoServiceManager.shared.userService.getToken(
-    //     ZegoServiceManager.shared.userService.localUserInfo.userID, 24 * 3600);
-    // if (result.isSuccess) {
-    //   ZegoExpressEngine.instance.renewToken(roomID, result.success as String);
-    // }
     delegate?.onRoomTokenWillExpire(roomID, remainTimeInSecond);
+  }
+
+  @override
+  void renewToken(String token, String roomID) {
+    ZegoExpressEngine.instance.renewToken(roomID, token);
   }
 }

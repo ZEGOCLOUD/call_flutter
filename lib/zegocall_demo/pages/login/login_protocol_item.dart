@@ -9,17 +9,17 @@ import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import '../../constants/page_constant.dart';
 import '../../widgets/browser.dart';
 
-class GoogleLoginProtocolItem extends StatefulWidget {
+class LoginProtocolItem extends StatefulWidget {
   final ValueChanged<bool> updatePolicyCheckState;
 
-  const GoogleLoginProtocolItem(this.updatePolicyCheckState, {Key? key})
+  const LoginProtocolItem(this.updatePolicyCheckState, {Key? key})
       : super(key: key);
 
   @override
-  GoogleLoginProtocolItemState createState() => GoogleLoginProtocolItemState();
+  LoginProtocolItemState createState() => LoginProtocolItemState();
 }
 
-class GoogleLoginProtocolItemState extends State<GoogleLoginProtocolItem> {
+class LoginProtocolItemState extends State<LoginProtocolItem> {
   bool isPolicyCheck = false;
 
   @override

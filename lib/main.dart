@@ -21,24 +21,22 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  initManagers();
+  await initManagers();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(const CallApp());
+    runApp(CallDemoApp());
   });
 }
 
-void initManagers() async {
-  LoginManager.shared.init();
+Future<void> initManagers() async {
+  await ZegoSecretReader.instance.loadKeyCenterData();
+
+  // WARNING: DO NOT USE APP ID AND APP SIGN IN PRODUCTION CODE!!!GET IT
+  // FROM SERVER INSTEAD!!!
+  await ZegoCallManager.shared.initWithAppID(ZegoSecretReader.instance.appID);
 
   ZegoPageRoute.shared.init(PageRouteNames.calling, PageRouteNames.onlineList);
-
-  await ZegoSecretReader.instance.loadKeyCenterData().then((_) {
-    // WARNING: DO NOT USE APP ID AND APP SIGN IN PRODUCTION CODE!!!GET IT
-    // FROM SERVER INSTEAD!!!
-    ZegoCallManager.shared.initWithAppID(ZegoSecretReader.instance.appID);
-
-    UIKitManager.shared.init();
-  });
+  LoginManager.shared.init();
+  UIKitManager.shared.init();
 }

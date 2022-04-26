@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 // Project imports:
 import '../../zegocall_uikit/pages/calling/zego_calling_page.dart';
-import '../pages/login/google_login_page.dart';
+import '../pages/login/login_page.dart';
 import '../pages/settings/settings_page.dart';
 import '../pages/users/online_list_page.dart';
 import '../pages/welcome/welcome_page.dart';
@@ -17,7 +17,7 @@ class PageRouteNames {
 }
 
 Map<String, WidgetBuilder> materialRoutes = {
-  PageRouteNames.login: (context) => const GoogleLoginPage(),
+  PageRouteNames.login: (context) => const LoginPage(),
   PageRouteNames.welcome: (context) => const WelcomePage(),
   PageRouteNames.settings: (context) => const SettingsPage(),
   PageRouteNames.calling: (context) => const ZegoCallingPage(),

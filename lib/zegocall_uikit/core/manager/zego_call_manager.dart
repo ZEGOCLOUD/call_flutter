@@ -1,3 +1,6 @@
+// Dart imports:
+import 'dart:ui';
+
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:zego_express_engine/zego_express_engine.dart';
@@ -9,7 +12,6 @@ import '../../../zegocall/core/delegate/zego_device_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_room_service_delegate.dart';
 import '../../../zegocall/core/delegate/zego_user_service_delegate.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
-import '../../../zegocall/core/model/zego_room_info.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import '../../../zegocall/notification/zego_notification_manager.dart';
@@ -20,6 +22,7 @@ import '../../utils/zego_navigation_service.dart';
 import '../page/zego_call_page_handler.dart';
 import 'zego_call_manager_interface.dart';
 import 'zego_calltime_manager.dart';
+import 'zego_token_provider_interface.dart';
 
 class ZegoCallManager
     with
@@ -32,6 +35,8 @@ class ZegoCallManager
 
   static var shared = ZegoCallManager();
 
+  ZegoTokenProviderInterface? tokenProvider;
+
   ZegoCallStatus currentCallStatus = ZegoCallStatus.free;
   ZegoCallType currentCallType = ZegoCallType.kZegoCallTypeVoice;
 
@@ -41,12 +46,17 @@ class ZegoCallManager
   ZegoCallingTimeManager callTimeManager = ZegoCallingTimeManager.empty();
   late ZegoCallPageHandler pageHandler;
 
+  AppLifecycleState appLifecycleState = AppLifecycleState.resumed;
+
   @override
   get localUserInfo => ZegoServiceManager.shared.userService.localUserInfo;
 
   @override
-  void initWithAppID(int appID) {
+  Future<void> initWithAppID(int appID,
+      {ZegoTokenProviderInterface? provider}) async {
     logInfo('app id:$appID');
+
+    tokenProvider = provider;
 
     ZegoNavigationService().init();
 
@@ -55,11 +65,11 @@ class ZegoCallManager
     ZegoServiceManager.shared.callService.delegate = this;
     ZegoServiceManager.shared.deviceService.delegate = this;
 
-    ZegoFireBaseManager.shared.init();
-    ZegoNotificationManager.shared.init();
-
     pageHandler = ZegoCallPageHandler();
     pageHandler.init();
+
+    ZegoFireBaseManager.shared.init();
+    await ZegoNotificationManager.shared.init();
   }
 
   @override
@@ -73,6 +83,11 @@ class ZegoCallManager
     ZegoNotificationManager.shared.uninit();
 
     ZegoServiceManager.shared.uninit();
+  }
+
+  @override
+  void setTokenProvider(ZegoTokenProviderInterface provider) {
+    tokenProvider = provider;
   }
 
   @override
@@ -92,7 +107,7 @@ class ZegoCallManager
         cancelCall();
         break;
       case ZegoCallStatus.calling:
-        cancelCall();
+        endCall();
         break;
     }
 
@@ -119,13 +134,6 @@ class ZegoCallManager
   }
 
   @override
-  void renewToken(String token, String roomID) {
-    logInfo('token:$token, room id:$roomID');
-
-    ZegoExpressEngine.instance.renewToken(roomID, token);
-  }
-
-  @override
   Future<ZegoError> callUser(ZegoUserInfo callee, ZegoCallType callType) async {
     logInfo('call user, user:${callee.toString()}, call '
         'type:${callType.string}');
@@ -143,12 +151,12 @@ class ZegoCallManager
 
     updateDeviceConfigInCalling();
 
-    if (delegate == null) {
-      assert(false, "delegate is null");
+    if (tokenProvider == null) {
+      assert(false, "You must call `setTokenProvider` to set a provider.");
       return ZegoError.failed;
     }
 
-    return delegate!.getRTCToken().then((String token) {
+    return tokenProvider!.getRTCToken().then((String token) {
       if (currentCallStatus != ZegoCallStatus.waitAccept) {
         logInfo('current call status is not wait accept, '
             '$currentCallStatus}');
@@ -194,7 +202,12 @@ class ZegoCallManager
       return ZegoError.failed;
     }
 
-    return delegate!.getRTCToken().then((String token) {
+    if (tokenProvider == null) {
+      assert(false, "You must call `setTokenProvider` to set a provider.");
+      return ZegoError.failed;
+    }
+
+    return tokenProvider!.getRTCToken().then((String token) {
       if (currentCallStatus != ZegoCallStatus.calling) {
         logInfo('current call status is not calling, $currentCallStatus}');
         return ZegoError.callStatusWrong;
@@ -285,7 +298,6 @@ class ZegoCallManager
 
     deviceService.enableCamera(userService.localUserInfo.camera);
     deviceService.enableMic(userService.localUserInfo.mic);
-    deviceService.enableSpeaker(true);
     deviceService.resetDeviceConfig();
   }
 
@@ -301,7 +313,7 @@ class ZegoCallManager
     logInfo('callee:${callee.toString()}');
 
     caller = ZegoServiceManager.shared.userService.localUserInfo;
-    callee = callee;
+    this.callee = callee;
 
     callTimeManager.startTimer(currentCallID());
 
@@ -332,13 +344,13 @@ class ZegoCallManager
   }
 
   @override
-  void onReceiveCallDecline(ZegoUserInfo callee, ZegoDeclineType type) {
+  void onReceiveCallDeclined(ZegoUserInfo callee, ZegoDeclineType type) {
     logInfo('user:${callee.toString()}, type:${type.string}');
 
     callTimeManager.stopTimer(currentCallID());
     ZegoNotificationRing.shared.stopRing();
 
-    pageHandler.onReceiveCallDecline(callee, type);
+    pageHandler.onReceiveCallDeclined(callee, type);
 
     currentCallStatus = ZegoCallStatus.free;
     resetCallUserInfo();
@@ -358,7 +370,7 @@ class ZegoCallManager
   }
 
   @override
-  void onReceiveCallInvite(ZegoUserInfo caller, ZegoCallType type) {
+  void onReceiveCallInvited(ZegoUserInfo caller, ZegoCallType type) {
     logInfo('caller:${caller.toString()}, '
         'type:${type.string}');
 
@@ -378,7 +390,7 @@ class ZegoCallManager
     currentCallStatus = ZegoCallStatus.wait;
     currentCallType = type;
 
-    pageHandler.onReceiveCallInvite(caller, type);
+    pageHandler.onReceiveCallInvited(caller, type);
   }
 
   void onMiniOverlayBeInvitePageEmptyClicked() {
@@ -439,7 +451,7 @@ class ZegoCallManager
     final ZegoNavigationService _navigationService =
         locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
-    ZegoToastManager.shared.showToast(localUserInfo?.userID == userID
+    ZegoToastManager.shared.showToast(localUserInfo.userID == userID
         ? AppLocalizations.of(context)!.networkConnnectMeUnstable
         : AppLocalizations.of(context)!.networkConnnectOtherUnstable);
   }
@@ -465,10 +477,25 @@ class ZegoCallManager
   }
 
   @override
-  void onRoomInfoUpdate(ZegoRoomInfo info) {}
-
-  @override
   void onRoomTokenWillExpire(String roomID, int remainTimeInSecond) {
-    delegate?.onRoomTokenWillExpire(roomID, remainTimeInSecond);
+    var userID = ZegoCallManager.shared.localUserInfo.userID;
+    if (userID.isEmpty) {
+      logInfo('user id is empty');
+      return;
+    }
+
+    if (tokenProvider == null) {
+      assert(false, "You must call `setTokenProvider` to set a provider.");
+      return;
+    }
+
+    logInfo('try get token..');
+    tokenProvider!.getRTCToken().then((String token) {
+      logInfo('get token, $token');
+      if (token.isNotEmpty) {
+        logInfo('renew token.');
+        ZegoServiceManager.shared.roomService.renewToken(token, roomID);
+      }
+    });
   }
 }

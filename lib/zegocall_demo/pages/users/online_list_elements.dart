@@ -42,7 +42,11 @@ class OnlineListUserInfo extends StatelessWidget {
         SizedBox(
           width: 340.w,
           height: 45.h,
-          child: Text(userName, style: StyleConstant.userListNameText),
+          child: Text(userName,
+              style: StyleConstant.userListNameText,
+              softWrap: true,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis),
         ),
         SizedBox(height: 8.h),
         SizedBox(

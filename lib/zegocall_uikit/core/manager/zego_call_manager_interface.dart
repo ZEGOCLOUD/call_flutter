@@ -2,6 +2,7 @@
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../../zegocall/core/zego_call_defines.dart';
 import 'zego_call_manager_delegate.dart';
+import 'zego_token_provider_interface.dart';
 
 /// The call status
 enum ZegoCallStatus {
@@ -23,7 +24,7 @@ mixin ZegoCallManagerInterface {
   ZegoCallManagerDelegate? delegate;
 
   /// The local logged-in user information.
-  ZegoUserInfo? localUserInfo;
+  ZegoUserInfo localUserInfo = ZegoUserInfo.empty();
 
   /// Initialize the SDK
   ///
@@ -32,7 +33,8 @@ mixin ZegoCallManagerInterface {
   /// Call this method at: Before you log in. We recommend you call this method when the application starts.
   ///
   /// - Parameter appID: refers to the project ID. To get this, go to ZEGOCLOUD Admin Console: https://console.zego.im/dashboard?lang=en
-  void initWithAppID(int appID);
+  /// - Parameter tokenProvider: get token notification callback. [nil] means not receiving get token callback notifications.
+  Future<void> initWithAppID(int appID, {ZegoTokenProviderInterface? provider});
 
   /// The method to deinitialize the SDK
   ///
@@ -40,6 +42,9 @@ mixin ZegoCallManagerInterface {
   ///
   /// Call this method at: When the SDK is no longer be used. We recommend you call this method when the application exits.
   void uninit();
+
+  /// Set the proxy object to receive notification of obtaining a token
+  void setTokenProvider(ZegoTokenProviderInterface provider);
 
   /// Set the local user info
   ///
@@ -77,12 +82,4 @@ mixin ZegoCallManagerInterface {
   /// - Parameter type: refers to the call type.  ZegoCallTypeVoice: Voice call.  ZegoCallTypeVideo: Video call.
   /// - Parameter callback: refers to the callback for make a outbound call.
   Future<ZegoError> callUser(ZegoUserInfo callee, ZegoCallType callType);
-
-  /// Renew token.
-  ///
-  /// Description: After the developer receives [onRoomTokenWillExpire], they can use this API to update the token to ensure that the subsequent RTC functions are normal.
-  ///
-  /// @param token The token that needs to be renew.
-  /// @param roomID Room ID.
-  void renewToken(String token, String roomID);
 }

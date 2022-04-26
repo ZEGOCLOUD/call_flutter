@@ -4,7 +4,13 @@ import 'package:result_type/result_type.dart';
 typedef RequestResult = Result<dynamic, ZegoError>;
 typedef RequestParameterType = Map<String, dynamic>;
 
-enum ZegoCallType { kZegoCallTypeVoice, kZegoCallTypeVideo }
+enum ZegoCallType {
+  /// voice: voice call
+  kZegoCallTypeVoice,
+
+  /// video: video call
+  kZegoCallTypeVideo
+}
 
 extension ZegoCallTypeExtension on ZegoCallType {
   int get id {
@@ -81,8 +87,11 @@ extension ZegoCallingStateExtension on ZegoCallingState {
 }
 
 enum ZegoDeclineType {
-  kZegoDeclineTypeDecline, //  Actively refuse
-  kZegoDeclineTypeBusy //  The call was busy, Passive refused
+  /// decline: the call was declined by the callee
+  kZegoDeclineTypeDecline,
+
+  /// busy: the call was timed out because the callee is busy
+  kZegoDeclineTypeBusy
 }
 
 extension ZegoDeclineTypeExtension on ZegoDeclineType {
@@ -110,46 +119,56 @@ extension ZegoDeclineTypeExtension on ZegoDeclineType {
   }
 }
 
-enum ZegoDeviceType {
-  zegoNoiseSuppression,
-  zegoEchoCancellation,
-  zegoVolumeAdjustment,
-}
-
 enum ZegoVideoResolution {
+  /// 1080P: 1920 * 1080
   p1080,
+
+  /// 720P: 1280 * 720
   p720,
+
+  /// 540P: 960 * 540
   p540,
+
+  /// 360P: 640 * 360
   p360,
+
+  /// 270P: 480 * 270
   p270,
+
+  /// 180P: 320 * 180
   p180,
 }
 
 enum ZegoAudioBitrate {
+  /// 16kbps
   b16,
-  b48,
-  b56,
-  b96,
+
+  /// 32kbps
+  b32,
+
+  /// 64kbps
+  b64,
+
+  /// 128kbps
   b128,
 }
 
 enum LocalUserStatus {
-  /// free: Indicates that the state is idle
+  /// free: the state of user is free
   free,
 
-  /// outgoing: Indicates that a call is being made
+  /// outgoing: the user is making a outbound call
   outgoing,
 
-  /// incoming: Indicates that an incoming call is received
+  /// incoming: the user is receiving a call
   incoming,
 
-  /// calling: Indicates that the call is ongoing
+  /// calling: the user is already on a call
   calling,
 }
 
 enum ZegoError {
   success,
-  firebasePathNotExist,
   failed,
   paramInvalid,
   notInit,
@@ -164,9 +183,6 @@ extension ZegoErrorExtension on ZegoError {
     switch (this) {
       case ZegoError.success:
         return 0;
-      case ZegoError.firebasePathNotExist:
-        return 10001;
-
       case ZegoError.failed:
         return 1001;
       case ZegoError.paramInvalid:

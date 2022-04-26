@@ -23,14 +23,12 @@ class ZegoDeviceServiceImpl extends IZegoDeviceService with ZegoEventHandler {
     });
 
     ZegoExpressEngine.instance.getAudioConfig().then((config) {
-      if (config.bitrate < 48) {
+      if (config.bitrate < 32) {
         audioBitrate = ZegoAudioBitrate.b16;
-      } else if (config.bitrate < 56) {
-        audioBitrate = ZegoAudioBitrate.b48;
-      } else if (config.bitrate < 96) {
-        audioBitrate = ZegoAudioBitrate.b56;
+      } else if (config.bitrate < 64) {
+        audioBitrate = ZegoAudioBitrate.b32;
       } else if (config.bitrate < 128) {
-        audioBitrate = ZegoAudioBitrate.b96;
+        audioBitrate = ZegoAudioBitrate.b64;
       } else {
         audioBitrate = ZegoAudioBitrate.b128;
       }
@@ -228,20 +226,17 @@ String getBitrateString(ZegoAudioBitrate bitrate) {
     case ZegoAudioBitrate.b16:
       bitrateString = "16";
       break;
-    case ZegoAudioBitrate.b48:
-      bitrateString = "48";
+    case ZegoAudioBitrate.b32:
+      bitrateString = "32";
       break;
-    case ZegoAudioBitrate.b56:
-      bitrateString = "56";
-      break;
-    case ZegoAudioBitrate.b96:
-      bitrateString = "96";
+    case ZegoAudioBitrate.b64:
+      bitrateString = "64";
       break;
     case ZegoAudioBitrate.b128:
       bitrateString = "128";
       break;
     default:
-      bitrateString = "48";
+      bitrateString = "32";
       break;
   }
 
@@ -252,15 +247,13 @@ int getAudioBitrateValue(ZegoAudioBitrate bitrate) {
   switch (bitrate) {
     case ZegoAudioBitrate.b16:
       return 16;
-    case ZegoAudioBitrate.b48:
-      return 48;
-    case ZegoAudioBitrate.b56:
-      return 56;
-    case ZegoAudioBitrate.b96:
-      return 96;
+    case ZegoAudioBitrate.b32:
+      return 32;
+    case ZegoAudioBitrate.b64:
+      return 64;
     case ZegoAudioBitrate.b128:
       return 128;
     default:
-      return 48;
+      return 32;
   }
 }

@@ -1,5 +1,6 @@
 {
 	"appName": "ZegoCall",
+	"loginPageTitle": "Welcome to experience \n ZEGO Call.",
 	"loginPageUserName": "_x0008_请输入你的用户名",
 	"loginPageLogin": "登录",
 	"loginPageGoogleLogin": "通过 Google 登录 ",
@@ -103,11 +104,46 @@
 	"zegoVideoCall": "视频呼叫",
 	"zegoVoiceCall": "音频呼叫",
 	"floatPermissionTips": "请开启悬浮窗权限以正常使用接收通话呼叫",
-	"callNotification": "与%@ 通话中, 可点击返回。",
-	"receiveCallNotification": "%@ 请求通话，可点击查看。",
-	"inviteCallNotification": "%@ 邀请你加入通话",
-	"requestCallNotification": "正在呼叫%@, 可点击查看。",
-	"cancelCallNotification": "%@ 已取消通话",
+	"callNotification": "与{user} 通话中, 可点击返回。",
+	"@callNotification": {
+		"placeholders": {
+			"user": {
+				"type": "String"
+			}
+		}
+	},
+	"receiveCallNotification": "{caller} 请求通话，可点击查看。",
+	"@receiveCallNotification": {
+		"placeholders": {
+			"caller": {
+				"type": "String"
+			}
+		}
+	},
+	"inviteCallNotification": "{caller} 邀请你加入通话",
+	"@inviteCallNotification": {
+		"placeholders": {
+			"caller": {
+				"type": "String"
+			}
+		}
+	},
+	"requestCallNotification": "正在呼叫{callee}, 可点击查看。",
+	"@requestCallNotification": {
+		"placeholders": {
+			"callee": {
+				"type": "String"
+			}
+		}
+	},
+	"cancelCallNotification": "{caller} 已取消通话",
+	"@cancelCallNotification": {
+		"placeholders": {
+			"caller": {
+				"type": "String"
+			}
+		}
+	},
 	"timeoutCallNotification": "通话接听超时，通话结束",
 	"micOperateFailed": "开关麦克风失败，错误码：{code}",
 	"@micOperateFailed": {

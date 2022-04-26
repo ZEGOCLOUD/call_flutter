@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // Project imports:
+import '../../../logger.dart';
 import '../../../zegocall/core/manager/zego_service_manager.dart';
 import '../../../zegocall/core/model/zego_user_info.dart';
 import '../../core/machine/zego_mini_video_calling_overlay_machine.dart';
@@ -28,7 +29,8 @@ class ZegoMiniVideoCallingOverlay extends StatefulWidget {
       ZegoMiniVideoCallingOverlayState();
 }
 
-class ZegoMiniVideoCallingOverlayState extends State<ZegoMiniVideoCallingOverlay> {
+class ZegoMiniVideoCallingOverlayState
+    extends State<ZegoMiniVideoCallingOverlay> {
   MiniVideoCallingOverlayState currentState =
       MiniVideoCallingOverlayState.kIdle;
 
@@ -61,34 +63,47 @@ class ZegoMiniVideoCallingOverlayState extends State<ZegoMiniVideoCallingOverlay
     var remoteUser = localUser.userID == widget.callee.userID
         ? widget.caller
         : widget.callee;
-
+    var localPlayer =
+        ZegoVideoPlayer(userID: localUser.userID, userName: localUser.userName);
+    var remotePlayer = ZegoVideoPlayer(
+        userID: remoteUser.userID, userName: remoteUser.userName);
     switch (currentState) {
       case MiniVideoCallingOverlayState.kIdle:
       case MiniVideoCallingOverlayState.kWaiting:
         return const SizedBox();
       case MiniVideoCallingOverlayState.kBothWithoutVideo:
         return const SizedBox();
-      case MiniVideoCallingOverlayState.kLocalUserWithVideo:
-        return createVideoView(ZegoVideoPlayer(
-            userID: localUser.userID, userName: localUser.userName));
-      case MiniVideoCallingOverlayState.kRemoteUserWithVideo:
-        return createVideoView(ZegoVideoPlayer(
-            userID: remoteUser.userID, userName: remoteUser.userName));
+      case MiniVideoCallingOverlayState.kWithVideo:
+        return createVideoView(localPlayer, remotePlayer);
     }
   }
 
-  Widget createVideoView(Widget playingView) {
+  Widget createVideoView(
+      ZegoVideoPlayer localPlayer, ZegoVideoPlayer remotePlayer) {
     return Center(
-        child: Container(
-      width: 133.w,
-      height: 237.h,
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(8.0.w),
-            bottomLeft: Radius.circular(8.0.w)),
-      ),
-      child: playingView,
-    ));
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: SizedBox(
+                width: 133.w,
+                height: 237.h,
+                child: ValueListenableBuilder<bool>(
+                    valueListenable: ZegoServiceManager.shared.streamService
+                        .getStreamStateNotifier(remotePlayer.userID),
+                    builder: (context, isRemoteUserStreamAdded, _) {
+                      if (isRemoteUserStreamAdded) {
+                        return ValueListenableBuilder<bool>(
+                            valueListenable: ZegoServiceManager
+                                .shared.streamService
+                                .getCameraStateNotifier(remotePlayer.userID),
+                            builder: (context, isRemoteUserCameraEnabled, _) {
+                              return IndexedStack(
+                                  //  must contain REMOTE user play view, otherwise
+                                  //  wouldn't play remote user's stream
+                                  index: isRemoteUserCameraEnabled ? 1 : 0,
+                                  children: [localPlayer, remotePlayer]);
+                            });
+                      }
+                      return localPlayer;
+                    }))));
   }
 }

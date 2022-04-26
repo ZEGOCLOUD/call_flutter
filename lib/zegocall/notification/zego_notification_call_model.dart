@@ -11,6 +11,8 @@ class ZegoNotificationModel {
   String callTypeID = "";
   String callStatusID = "";
 
+  ZegoNotificationModel.empty();
+
   ZegoNotificationModel.fromMessageMap(Map<dynamic, dynamic> dict) {
     callID = dict["call_id"] as String;
     callerID = dict["caller_id"] as String;

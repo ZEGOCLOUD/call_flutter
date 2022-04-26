@@ -167,12 +167,15 @@ class ZegoOnlineBottomToolBarState extends State<ZegoOnlineBottomToolBar> {
   }
 
   Widget getAudioRouteButtonByRoute(ZegoAudioRoute audioRoute) {
-    if (ZegoAudioRoute.Headphone == audioRoute ||
-        ZegoAudioRoute.Bluetooth == audioRoute) {
-      audioIconURL = StyleIconUrls.toolbarBottomBlueTooth;
+    if (ZegoAudioRoute.Bluetooth == audioRoute) {
+      audioIconURL = StyleIconUrls.toolbarBottomBlueTooth; // always open
+    } else if (ZegoAudioRoute.Headphone == audioRoute) {
+      // always display speaker closed
+      audioIconURL = StyleIconUrls.toolbarBottomSpeakerClosed;
     } else {
       audioIconURL = getAudioRouteIconURLBySpeaker(isSpeakerEnabled);
     }
+
     return ZegoCallingCalleeBottomToolBarButton(
       iconWidth: iconWidth(),
       iconHeight: 120.h,
@@ -192,7 +195,7 @@ class ZegoOnlineBottomToolBarState extends State<ZegoOnlineBottomToolBar> {
         ZegoServiceManager.shared.deviceService.audioRouteNotifier.value;
     if (ZegoAudioRoute.Headphone == audioRoute ||
         ZegoAudioRoute.Bluetooth == audioRoute) {
-      return; //  not support switch
+      return; //  not support close
     }
 
     setState(() {

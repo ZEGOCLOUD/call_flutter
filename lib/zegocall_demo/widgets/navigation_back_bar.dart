@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../styles.dart';
 
 class NavigationBackBar extends HookWidget {
+  final VoidCallback onBackTap;
   final String targetBackUrl;
 
   final Color? iconColor;
@@ -18,7 +19,8 @@ class NavigationBackBar extends HookWidget {
   final TextStyle titleStyle;
 
   const NavigationBackBar(
-      {required this.targetBackUrl,
+      {required this.onBackTap,
+      required this.targetBackUrl,
       required this.titleStyle,
       this.iconColor,
       this.title = "Back",
@@ -33,6 +35,7 @@ class NavigationBackBar extends HookWidget {
         height: 88.h,
         child: TextButton(
           onPressed: () {
+            onBackTap();
             Navigator.pushReplacementNamed(context, targetBackUrl);
           },
           child: Row(

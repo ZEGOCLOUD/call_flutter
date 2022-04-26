@@ -36,7 +36,7 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
     logInfo('path:$path, parameters:$parameters');
 
     if (!functionMap.containsKey(path)) {
-      return Failure(ZegoError.firebasePathNotExist);
+      return Failure(ZegoError.failed);
     }
 
     return functionMap[path]!(parameters);
@@ -348,10 +348,9 @@ class ZegoFireBaseManager extends ZegoRequestProtocol {
       }
       var fcmTokenRef = FirebaseDatabase.instance
           .ref('push_token')
-          .child(user!.uid)
-          .child(token);
+          .child(user!.uid);
       var tokenData = {
-        'token': {
+        token: {
           "device_type": platform,
           "token_id": fcmToken,
           "user_id": user!.uid

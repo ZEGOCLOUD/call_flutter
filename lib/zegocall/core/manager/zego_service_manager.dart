@@ -10,6 +10,7 @@ import 'package:zego_express_engine/zego_express_engine.dart';
 
 // Project imports:
 import '../../../logger.dart';
+import '../../utils/zego_assert_error_code.dart';
 import '../commands/zego_init_command.dart';
 import '../interface/zego_call_service.dart';
 import '../interface/zego_device_service.dart';
@@ -24,19 +25,39 @@ import '../interface_imp/zego_stream_service_impl.dart';
 import '../interface_imp/zego_user_service_impl.dart';
 import '../zego_call_defines.dart';
 
+/// business logic management
+///
+/// Description: This class contains business logic, manages the service instances of different modules, and also distributing the data delivered by the SDK.
 class ZegoServiceManager extends ChangeNotifier {
   static var shared = ZegoServiceManager();
 
   bool isSDKInit = false;
 
+  /// The room information Management instance contains join and leave room logic.
   late IZegoRoomService roomService;
+
+  /// The user information management instance, contains the in-room user information management, logged-in user information and other business logic.
   late IZegoUserService userService;
+
+  /// The call information management instance, contains start, accept, and end call and other busuness logic.
   late IZegoCallService callService;
+
+  /// The stream Management instance contains play and publish stream logic.
   late IZegoStreamService streamService;
+
+  /// The device Information Management instance contains microphone, camera, and speaker infomation and other device Infomation.
   late IZegoDeviceService deviceService;
 
   List<ZegoEventHandler> rtcEventDelegates = [];
 
+  /// Initialize the SDK
+  ///
+  /// Description: This method can be used to initialize the Express SDK.
+  ///
+  /// Call this method at: Before you log in. We recommend you call this method when the application starts.
+  ///
+  /// - Parameter appID: refers to the project ID. To get this, go to ZEGOCLOUD Admin Console: https://console.zego.im/dashboard?lang=en
+  /// - Parameter appSign: refers to the secret key for authentication. To get this, go to ZEGOCLOUD Admin Console: https://console.zego.im/dashboard?lang=en
   Future<void> initWithAPPID(int appID) async {
     logInfo('app id:$appID');
 
@@ -98,6 +119,11 @@ class ZegoServiceManager extends ChangeNotifier {
     ZegoExpressEngine.onApiCalledResult = onApiCalledResult;
   }
 
+  /// The method to deinitialize the SDK
+  ///
+  /// Description: This method can be used to deinitialize the SDK and release the resources it occupies.
+  ///
+  /// Call this method at: When the SDK is no longer be used. We recommend you call this method when the application exits.
   Future<void> uninit() async {
     logInfo('uninit');
 
@@ -106,12 +132,18 @@ class ZegoServiceManager extends ChangeNotifier {
     return await ZegoExpressEngine.destroyEngine();
   }
 
+  /// Upload local logs to the ZEGOCLOUD Server
+  ///
+  /// Description: You can call this method to upload the local logs to the ZEGOCLOUD Server for troubleshooting when exception occurs.
+  ///
+  /// Call this method at: When exceptions occur
   Future<int> uploadLog() async {
     logInfo('upload log');
 
     assert(isSDKInit, "The SDK must be initialised first.");
 
     if (!isSDKInit) {
+      logInfo('sdk not init');
       return ZegoError.notInit.id;
     }
 
@@ -126,6 +158,8 @@ class ZegoServiceManager extends ChangeNotifier {
         '[service manager] onRoomStateUpdate, roomID:$roomID, state:$state, '
         'errorCode:$errorCode, extendedData:$extendedData');
 
+    assertErrorCode(errorCode);
+
     for (var delegate in rtcEventDelegates) {
       delegate.onRoomStateUpdate(roomID, state, errorCode, extendedData);
     }
@@ -133,7 +167,12 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onRoomStreamUpdate(String roomID, ZegoUpdateType updateType,
       List<ZegoStream> streamList, Map<String, dynamic> extendedData) {
-    logInfo('$roomID:roomID, updateType:$updateType, streamList:$streamList, extendedData:$extendedData');
+    logInfo(
+        '$roomID:roomID, updateType:$updateType, extendedData:$extendedData');
+    for (var stream in streamList) {
+      logInfo('streamList: user:${stream.user}, streamID:${stream.streamID}, '
+          'extraInfo:${stream.extraInfo}');
+    }
 
     for (var delegate in rtcEventDelegates) {
       delegate.onRoomStreamUpdate(roomID, updateType, streamList, extendedData);
@@ -151,7 +190,10 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onPlayerStateUpdate(String streamID, ZegoPlayerState state,
       int errorCode, Map<String, dynamic> extendedData) {
-    logInfo('streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
+    logInfo(
+        'streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
+
+    assertErrorCode(errorCode);
 
     for (var delegate in rtcEventDelegates) {
       delegate.onPlayerStateUpdate(streamID, state, errorCode, extendedData);
@@ -168,7 +210,10 @@ class ZegoServiceManager extends ChangeNotifier {
 
   void onPublisherStateUpdate(String streamID, ZegoPublisherState state,
       int errorCode, Map<String, dynamic> extendedData) {
-    logInfo('streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
+    logInfo(
+        'streamID:$streamID, state:$state, errorCode:$errorCode, extendedData:$extendedData');
+
+    assertErrorCode(errorCode);
 
     for (var delegate in rtcEventDelegates) {
       delegate.onPublisherStateUpdate(streamID, state, errorCode, extendedData);

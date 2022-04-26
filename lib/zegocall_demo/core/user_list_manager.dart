@@ -5,10 +5,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 
 // Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 // Project imports:
+import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../constants/user_info.dart' as demo;
 
 class UserListManager extends ChangeNotifier {
@@ -57,12 +57,12 @@ class UserListManager extends ChangeNotifier {
 
     var map = snapshot.value as Map<dynamic, dynamic>?;
     if (map != null) {
-      var currentUser = FirebaseAuth.instance.currentUser!;
+      var currentUser = ZegoCallManager.interface.localUserInfo;
 
       map.forEach((key, value) async {
         var userMap = Map<String, dynamic>.from(value);
         var user = demo.UserInfo.fromJson(userMap);
-        if (currentUser.uid == user.userID) {
+        if (currentUser.userID == user.userID) {
           return;
         }
         userList.add(user);

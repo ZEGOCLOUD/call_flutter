@@ -29,7 +29,7 @@
 
     <application
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:label="zego_call_flutter">
         <activity
             android:name="com.zegocloud.call.MainActivity"

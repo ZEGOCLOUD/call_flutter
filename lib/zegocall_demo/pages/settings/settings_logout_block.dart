@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 // Package imports:
 import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:zego_call_flutter/zegocall_uikit/core/manager/zego_call_manager.dart';
 
 // Project imports:
 import '../../core/login_manager.dart';
@@ -32,6 +34,10 @@ class SettingsLogoutBlock extends StatelessWidget {
   }
 
   Future<void> logout(BuildContext context) async {
+    ZegoCallManager.shared.resetCallData();
+
+    await GoogleSignIn().signOut();
+
     LoginManager.shared.logout();
   }
 }

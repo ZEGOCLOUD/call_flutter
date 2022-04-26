@@ -8,17 +8,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_gen/gen_l10n/zego_call_localizations.dart';
 import 'package:result_type/result_type.dart';
 
 // Project imports:
 import '../../logger.dart';
+import '../../zegocall/core/model/zego_user_info.dart';
 import '../../zegocall_uikit/core/manager/zego_call_manager.dart';
 import '../../zegocall_uikit/utils/zego_navigation_service.dart';
 import '../constants/page_constant.dart';
+import '../widgets/toast_manager.dart';
 import 'user_list_manager.dart';
 
-typedef LoginResult = Result<User, int>;
+typedef LoginResult = Result<ZegoUserInfo, int>;
 
 mixin LoginManagerDelegate {
   onReceiveUserKickOut();
@@ -27,71 +29,73 @@ mixin LoginManagerDelegate {
 class LoginManager extends ChangeNotifier {
   static var shared = LoginManager();
 
-  User? user;
+  ZegoUserInfo user = ZegoUserInfo.empty();
   String fcmToken = "";
   LoginManagerDelegate? delegate;
 
   StreamSubscription<DatabaseEvent>? fcmTokenListenerSubscription;
 
   void init() {
-    user = FirebaseAuth.instance.currentUser;
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      this.user = user;
+    user = convertFirebaseAuthUser(FirebaseAuth.instance.currentUser);
+    if (!user.isEmpty()) {
+      ZegoCallManager.interface.setLocalUser(user.userID, user.userName);
+    }
 
-      if (null != this.user) {
-        addUserToDatabase(this.user!);
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      this.user = convertFirebaseAuthUser(user);
+
+      if (!this.user.isEmpty()) {
+        addUserToDatabase(this.user);
 
         UserListManager.shared.init();
       }
     });
   }
 
-  Future<LoginResult> login(String token) async {
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      idToken: token,
-    );
+  ZegoUserInfo convertFirebaseAuthUser(User? user) {
+    return ZegoUserInfo(user?.uid ?? "", user?.displayName ?? "");
+  }
 
+  Future<LoginResult> login(AuthCredential credential) async {
     // Once signed in, return the UserCredential
     await FirebaseAuth.instance
         .signInWithCredential(credential)
         .then((UserCredential credential) {
-      user = credential.user;
+      user = convertFirebaseAuthUser(credential.user);
     });
 
-    return Success(user!);
+    return Success(user);
   }
 
   void logout() async {
-    await GoogleSignIn().signOut();
-
     await FirebaseAuth.instance.signOut();
 
     fcmTokenListenerSubscription?.cancel();
 
     resetData(removeUserData: true);
 
-    user = null;
+    user = ZegoUserInfo.empty();
 
-    final ZegoNavigationService _navigationService = locator<ZegoNavigationService>();
+    final ZegoNavigationService _navigationService =
+        locator<ZegoNavigationService>();
     var context = _navigationService.navigatorKey.currentContext!;
     Navigator.pushReplacementNamed(context, PageRouteNames.login);
   }
 
-  void addUserToDatabase(User user) {
-    addUser(User user, String token) {
+  void addUserToDatabase(ZegoUserInfo user) {
+    addUser(ZegoUserInfo user, String token) {
       var data = {
-        "user_id": user.uid,
-        "display_name": user.displayName,
+        "user_id": user.userID,
+        "display_name": user.userName,
         "token_id": token,
         "last_changed": DateTime.now().millisecondsSinceEpoch
       };
       var userRef =
-          FirebaseDatabase.instance.ref('online_user').child(user.uid);
+          FirebaseDatabase.instance.ref('online_user').child(user.userID);
       userRef.set(data);
       userRef.onDisconnect().remove();
 
-      addFcmTokenListener(user.uid);
+      addFcmTokenListener(user.userID);
     }
 
     if (fcmToken.isEmpty) {
@@ -114,10 +118,24 @@ class LoginManager extends ChangeNotifier {
       var snapshotValue = event.snapshot.value;
       logInfo('fcm token onValue: $snapshotValue');
 
-      var token = snapshotValue ?? "";
-      if (token == fcmToken) {
+      var token = snapshotValue as String? ?? "";
+      if (token.isEmpty) {
+        logInfo('token is empty');
         return;
       }
+
+      if (token == fcmToken) {
+        logInfo('token is same');
+        return;
+      }
+
+      logInfo('Current User is logging at other device.');
+
+      final ZegoNavigationService _navigationService =
+          locator<ZegoNavigationService>();
+      var context = _navigationService.navigatorKey.currentContext!;
+      ToastManager.shared
+          .showToast(AppLocalizations.of(context)!.toastLoginKickOut);
 
       resetData(removeUserData: false);
 
@@ -130,10 +148,10 @@ class LoginManager extends ChangeNotifier {
   }
 
   void resetData({bool removeUserData = true}) {
-    if (user != null) {
+    if (!user.isEmpty()) {
       FirebaseDatabase.instance
           .ref('push_token')
-          .child(user!.uid)
+          .child(user.userID)
           .child(fcmToken)
           .remove();
 
@@ -142,10 +160,13 @@ class LoginManager extends ChangeNotifier {
       FirebaseDatabase.instance.ref('online_user').onDisconnect().cancel();
 
       if (removeUserData) {
-        FirebaseDatabase.instance.ref('online_user').child(user!.uid).remove();
+        FirebaseDatabase.instance
+            .ref('online_user')
+            .child(user.userID)
+            .remove();
       }
     }
 
-    user = null;
+    user = ZegoUserInfo.empty();
   }
 }

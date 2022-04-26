@@ -12,7 +12,8 @@ class ZegoVideoPlayer extends StatefulWidget {
   final String userID;
   final String userName;
 
-  const ZegoVideoPlayer({required this.userID, required this.userName, Key? key})
+  const ZegoVideoPlayer(
+      {required this.userID, required this.userName, Key? key})
       : super(key: key);
 
   @override
@@ -23,6 +24,7 @@ class ZegoVideoPlayer extends StatefulWidget {
 
 class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
   int playingViewID = 0;
+  bool pendingRemoteUserStream = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +34,15 @@ class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
         ValueListenableBuilder<bool>(
           valueListenable: ZegoServiceManager.shared.streamService
               .getCameraStateNotifier(widget.userID),
-          builder: (context, isStreamReady, _) {
+          builder: (context, isCameraEnabled, _) {
+            if (pendingRemoteUserStream) {
+              ZegoServiceManager.shared.streamService
+                  .startPlaying(widget.userID, viewID: playingViewID);
+
+              pendingRemoteUserStream = false;
+            }
             return Visibility(
-                visible: !isStreamReady,
+                visible: !isCameraEnabled,
                 child: ZegoAvatarBackgroundView(userName: widget.userName));
           },
         )
@@ -45,15 +53,6 @@ class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
   @override
   void dispose() {
     super.dispose();
-
-    var deviceService = ZegoServiceManager.shared.deviceService;
-    deviceService.enableCamera(false);
-    deviceService.enableMic(false);
-
-    var localUserInfo = ZegoServiceManager.shared.userService.localUserInfo;
-    if (localUserInfo.userID == widget.userID) {
-      ZegoServiceManager.shared.streamService.stopPreview();
-    }
   }
 
   Widget? createPlayingView(BuildContext context) {
@@ -67,10 +66,18 @@ class ZegoVideoPlayerState extends State<ZegoVideoPlayer> {
         deviceService.enableMic(localUserInfo.mic);
         deviceService.useFrontCamera(true);
 
-        ZegoServiceManager.shared.streamService.startPreview(playingViewID);
-      } else {
         ZegoServiceManager.shared.streamService
-            .startPlaying(widget.userID, viewID: playingViewID);
+            .startPreview(viewID: playingViewID);
+      } else {
+        if (ZegoServiceManager.shared.userService
+            .getUserInfoByID(widget.userID)
+            .isEmpty()) {
+          //  user is not in room, should play after him enter
+          pendingRemoteUserStream = true;
+        } else {
+          ZegoServiceManager.shared.streamService
+              .startPlaying(widget.userID, viewID: playingViewID);
+        }
       }
     });
   }

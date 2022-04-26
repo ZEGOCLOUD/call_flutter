@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 
 // Flutter imports:
@@ -7,14 +8,12 @@ import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:crypto/crypto.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 // Project imports:
 import '../../logger.dart';
-import '../core/manager/zego_service_manager.dart';
-import '../core/model/zego_user_info.dart';
-import '../core/zego_call_defines.dart';
 import 'zego_notification_call_model.dart';
 import 'zego_notification_ring.dart';
 
@@ -24,32 +23,30 @@ const firebaseChannelKey = 'firebase_channel';
 class ZegoNotificationManager {
   static var shared = ZegoNotificationManager();
 
-  void init() {
-    AwesomeNotifications()
-        .initialize(
-            // set the icon to null if you want to use the default app icon
-            '',
-            [
-              NotificationChannel(
-                  channelGroupKey: firebaseChannelGroupName,
-                  channelKey: firebaseChannelKey,
-                  channelName: 'Firebase notifications',
-                  channelDescription: 'Notification channel for firebase',
-                  defaultColor: const Color(0xFF9D50DD),
-                  playSound: true,
-                  enableVibration: true,
-                  vibrationPattern: lowVibrationPattern,
-                  onlyAlertOnce: false,
-                  ledColor: Colors.white)
-            ],
-            // Channel groups are only visual and are not required
-            channelGroups: [
-              NotificationChannelGroup(
-                  channelGroupkey: firebaseChannelGroupName,
-                  channelGroupName: 'Firebase group')
-            ],
-            debug: true)
-        .then(onInitFinished);
+  Future<void> init() async {
+    await AwesomeNotifications().initialize(
+        // set the icon to null if you want to use the default app icon
+        '',
+        [
+          NotificationChannel(
+              channelGroupKey: firebaseChannelGroupName,
+              channelKey: firebaseChannelKey,
+              channelName: 'Firebase notifications',
+              channelDescription: 'Notification channel for firebase',
+              defaultColor: const Color(0xFF9D50DD),
+              playSound: true,
+              enableVibration: true,
+              vibrationPattern: lowVibrationPattern,
+              onlyAlertOnce: false,
+              ledColor: Colors.white)
+        ],
+        // Channel groups are only visual and are not required
+        channelGroups: [
+          NotificationChannelGroup(
+              channelGroupkey: firebaseChannelGroupName,
+              channelGroupName: 'Firebase group')
+        ]);
+    await onInitFinished();
 
     ZegoNotificationRing.shared.init();
   }
@@ -58,7 +55,7 @@ class ZegoNotificationManager {
     ZegoNotificationRing.shared.uninit();
   }
 
-  void onInitFinished(bool initResult) async {
+  Future<void> onInitFinished() async {
     requestFirebaseMessagePermission();
     requestAwesomeNotificationsPermission();
 
@@ -107,6 +104,7 @@ class ZegoNotificationManager {
   }
 
   void listenAwesomeNotification() {
+    //  BEFORE!! MaterialApp widget, starts to listen the notification actions
     AwesomeNotifications().actionStream.listen((receivedAction) {
       if (receivedAction.channelKey != firebaseChannelKey) {
         logInfo('unknown channel key');
@@ -118,17 +116,18 @@ class ZegoNotificationManager {
       logInfo('receive:${model.toMap()}');
 
       //  dispatch notification message
-      var caller = ZegoUserInfo(model.callerID, model.callerName);
-      var callType =
-          ZegoCallTypeExtension.mapValue[int.parse(model.callTypeID)] ??
-              ZegoCallType.kZegoCallTypeVoice;
-      ZegoServiceManager.shared.callService.delegate
-          ?.onReceiveCallInvite(caller, callType);
+      // var caller = ZegoUserInfo(model.callerID, model.callerName);
+      // var callType =
+      //     ZegoCallTypeExtension.mapValue[int.parse(model.callTypeID)] ??
+      //         ZegoCallType.kZegoCallTypeVoice;
+      // ZegoServiceManager.shared.callService.delegate
+      //     ?.onReceiveCallInvite(caller, callType);
+      //  do nothing! cause can't receive call cancel
     });
   }
 
   Future<void> onFirebaseForegroundMessage(RemoteMessage message) async {
-    // for more reliable, faster notification in foreground
+    // for more reliable and faster notification in foreground,
     // use listener in firebase manager
     return;
 
@@ -136,34 +135,41 @@ class ZegoNotificationManager {
     // onFirebaseRemoteMessageReceive(message);
   }
 
-  Future<void> onFirebaseRemoteMessageReceive(RemoteMessage message) async {
-    ZegoNotificationRing.shared.startRing();
+  int getUserAvatarIndex(String userName) {
+    if (userName.isEmpty) {
+      return 0;
+    }
 
+    var digest = md5.convert(utf8.encode(userName));
+    var value0 = digest.bytes[0] & 0xff;
+    return (value0 % 6).abs();
+  }
+
+  Future<void> onFirebaseRemoteMessageReceive(RemoteMessage message) async {
     logInfo('remote message receive: ${message.data}');
     var notificationModel = ZegoNotificationModel.fromMessageMap(message.data);
+    createNotification(notificationModel);
+  }
 
-    Map<String, dynamic> notificationAdapter = {
-      NOTIFICATION_CONTENT: {
-        NOTIFICATION_ID: Random().nextInt(2147483647),
-        NOTIFICATION_GROUP_KEY: firebaseChannelGroupName,
-        NOTIFICATION_CHANNEL_KEY: firebaseChannelKey,
-        NOTIFICATION_TITLE: ZegoCallTypeExtension
-                .mapValue[int.parse(notificationModel.callTypeID)]?.string ??
-            "",
-        NOTIFICATION_BODY: "${notificationModel.callerName} Calling...",
-        NOTIFICATION_PAYLOAD: notificationModel.toMap(),
-        NOTIFICATION_PLAY_SOUND: false,
-        NOTIFICATION_ENABLE_VIBRATION: false,
-      }
-    };
-    logInfo('create notification: $notificationAdapter');
-    AwesomeNotifications().createNotificationFromJsonData(notificationAdapter);
+  void createNotification(ZegoNotificationModel notificationModel) {
+    var callerIcon =
+        'asset://assets/images/avatar_${getUserAvatarIndex(notificationModel.callerName)}.png';
+    AwesomeNotifications().createNotification(
+        content: NotificationContent(
+            id: Random().nextInt(2147483647),
+            groupKey: firebaseChannelGroupName,
+            channelKey: firebaseChannelKey,
+            title: "You have a new call",
+            body: "${notificationModel.callerName} is calling you.",
+            largeIcon: callerIcon,
+            payload: notificationModel.toMap(),
+            notificationLayout: NotificationLayout.Default));
   }
 }
 
+// Declared as global, outside of any class
 Future<void> onFirebaseBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
 
-  logInfo("message: $message");
   ZegoNotificationManager.shared.onFirebaseRemoteMessageReceive(message);
 }
